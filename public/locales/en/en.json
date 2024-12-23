@@ -1,0 +1,23 @@
+{
+    "About":"About",
+    "Projects":"Projects",
+    "Skills":"Skills",
+    "Contact":"Contact",
+    "Hello":"Hello",
+    "I'm":"I'm",
+    "I'm a full-stack web developer, I have a passion for web development and love to create websites and web applications that are visually appealing and provide a great user experience.":"I'm a full-stack web developer, I have a passion for web development and love to create websites and web applications that are visually appealing and provide a great user experience.",
+    "My Resume":"My Resume",
+    "Web Server":"Web Server",
+    "A lightweight HTTP server built from scratch, focused on handling requests and responses efficiently, simulating real-world web server behavior.":"A lightweight HTTP server built from scratch, focused on handling requests and responses efficiently, simulating real-world web server behavior.",
+    "Pong Game":"Pong Game",
+    "A modern twist on the classic Pong game, combining multiplayer functionality with user authentication and social features for an immersive experience.":"A modern twist on the classic Pong game, combining multiplayer functionality with user authentication and social features for an immersive experience.",
+    "Inception":"Inception",
+    "A Docker-based project showcasing virtualization by creating a multi-container setup for hosting various services securely.":"A Docker-based project showcasing virtualization by creating a multi-container setup for hosting various services securely.",
+    "A personal portfolio showcasing my work as a full-stack developer.":"A personal portfolio showcasing my work as a full-stack developer.",
+    "Drop me a message":"Drop me a message",
+    "Full Name":"Full Name",
+    "Email":"Email",
+    "Message":"Message",
+    "Send":"Send",
+    "Designed and Developed by":"Designed and Developed by"
+}

@@ -1,0 +1,23 @@
+{
+    "About":"À propos",
+    "Projects":"Projets",
+    "Skills":"Compétences",
+    "Contact":"Contact",
+    "Hello":"Bonjour",
+    "I'm":"Je suis",
+    "I'm a full-stack web developer, I have a passion for web development and love to create websites and web applications that are visually appealing and provide a great user experience.":"Je suis un développeur web full-stack, j'ai une passion pour le développement web et j'aime créer des sites web et des applications web qui sont visuellement attrayants et offrent une excellente expérience utilisateur.",
+    "My Resume":"Mon CV",
+    "Web Server":"Serveur Web",
+    "A lightweight HTTP server built from scratch, focused on handling requests and responses efficiently, simulating real-world web server behavior.":"Un serveur HTTP léger construit à partir de zéro, axé sur la gestion efficace des requêtes et des réponses, simulant le comportement d'un serveur web réel.",
+    "Pong Game":"Jeu de Pong",
+    "A modern twist on the classic Pong game, combining multiplayer functionality with user authentication and social features for an immersive experience.":"Une touche moderne sur le jeu classique Pong, combinant la fonctionnalité multijoueur avec l'authentification de l'utilisateur et les fonctionnalités sociales pour une expérience immersive.",
+    "Inception":"Inception",
+    "A Docker-based project showcasing virtualization by creating a multi-container setup for hosting various services securely.":"Un projet basé sur Docker présentant la virtualisation en créant une configuration multi-conteneurs pour héberger divers services en toute sécurité.",
+    "A personal portfolio showcasing my work as a full-stack developer.":"Un portfolio personnel présentant mon travail en tant que développeur full-stack.",
+    "Drop me a message":"Laissez-moi un message",
+    "Full Name":"Nom complet",
+    "Email":"Email",
+    "Message":"Message",
+    "Send":"Envoyer",
+    "Designed and Developed by":"Conçu et développé par"
+}

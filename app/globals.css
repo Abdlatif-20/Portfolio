@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@font-face {
+  font-family: 'IosevkaTerm';
+  src: url('/fonts/Iosevka-Bold.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+html {
+  scroll-behavior: smooth;
+}
