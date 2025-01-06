@@ -2,100 +2,127 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next';
+import { useDarkMode } from './context';
+import { useRef } from 'react';
+import emailjs from '@emailjs/browser';
+import { toast } from 'react-toastify';
+
 
 const Contact = () => {
   const { t } = useTranslation();
+  const { isDarkMode } = useDarkMode();
   const socialMedia = [
     {
       name: 'aben-nei',
       icon: 'in',
       alt: 'LinkedIn',
-      link: ' ',
+      link: 'https://www.linkedin.com/in/aben-nei/',
     },
     {
       name: 'Abdlatif-20',
       icon: 'gb',
       alt: 'Github',
-      link: ' ',
+      link: 'https://www.github.com/Abdlatif-20',
     },
     {
       name: 'Abdellatyf_en_enneiymy',
       icon: 'ig',
       alt: 'Instagram',
-      link: ' ',
+      link: 'https://www.instagram.com/Abdellatyf_en_neiymy',
     },
   ]
-  const Contact = [
-    {
-      name: '+212777191684',
-      icon: 'phone',
-      link: ' ',
-    },
-    {
-      name: 'ab.enneiymy@gmail.com',
-      icon: 'email',
-      link: ' ',
-    },
-  ]
+
+  const form = useRef<HTMLFormElement>(null);
+
+  const sendEmail = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!form.current) {
+      return;
+    }
+    const formElements = form.current?.elements as typeof form.current.elements & {
+      full_name: HTMLInputElement;
+      email: HTMLInputElement;
+      message: HTMLTextAreaElement;
+    };    const fullName = formElements?.full_name.value;
+    const email = formElements?.email.value;
+    const message = formElements?.message.value;
+
+    if (!fullName || !email || !message) {
+      toast.error('Please fill in all fields');
+      return;
+    }
+
+    if (form.current) {
+      emailjs
+      .sendForm('service_8omx4go', 'template_eeg0mof', form.current, {
+        publicKey: '0ABzKUxfF6zbu1lkZ',
+      })
+        .then(
+          () => {
+            toast.success('Message sent successfully');
+            form.current?.reset();
+          },
+          (error) => {
+            toast.error('An error occurred, Please try again later');
+          },
+        );
+    }
+  };
+
   return (
-    <div id='contact' className='flex flex-col justify-center items-center w-[80%] h-screen '>
-      <h1 className='text-[40px] text-shadow-textShadow-green text-white font-bold  h-[35%] w-full flex justify-center items-center brightness-70'>
+    <div id='contact' className='flex flex-col justify-center items-center w-[95%] lg:w-[80%] min-h-[70vh]'>
+      <h1 className='text-[40px] text-shadow-textShadow-green font-bold mb-5 h-[35%] w-full flex justify-center items-center brightness-70'>
         {t("Contact")}
       </h1>
-      <div className='flex flex-col justify-between items-center w-full h-full ' style={{border: '0.3px solid rgba(255, 255, 255, 0.3)'}}>
-        <p className='text-[40px] text-shadow-textShadow-green text-white font-bold   w-full flex justify-center items-start brightness-70 mt-3'>
+      <div className='flex flex-col justify-between items-center w-full h-full '
+        style={{border: `${isDarkMode ? '0.3px solid rgba(255, 255, 255, 0.3)' : '0.3px solid rgba(0, 0, 0, 0.3)'}`
+      }}>
+        <p className='text-[40px] text-shadow-textShadow-green font-bold w-full flex justify-center items-start brightness-70 mt-3 ml-4'>
           {t("Drop me a message")}
         </p>
-        <div className='flex w-full justify-start items-center  h-full'>
-          <form className='flex flex-col justify-center items-center w-1/2 h-[80%]'>
+        <div className='flex w-full flex-col md:flex-row justify-start md:items-center h-full'>
+          <form ref={form} onSubmit={sendEmail} className='flex flex-col justify-center items-center w-full md:w-1/2 h-[80%]'>
             <input
-              className='w-[80%] h-[50px] my-9 bg-transparent border-b border-white border-opacity-50 text-white text-[20px] placeholder-white placeholder-opacity-50 focus:outline-none focus:border-green-500'
+              className={`w-[80%] h-[50px] my-9 bg-transparent border-b ${ isDarkMode ? 'border-white' : 'border-black' }
+              border-opacity-50 text-[20px] ${ isDarkMode ? 'placeholder-white' : 'placeholder-black' }  placeholder-opacity-50 focus:outline-none focus:border-green-500`}
               type='text'
+              name='full_name'
               placeholder={t('Full Name')}
             />
             <input
-              className='w-[80%] h-[50px] my-9 bg-transparent border-b border-white border-opacity-50 text-white text-[20px] placeholder-white placeholder-opacity-50 focus:outline-none focus:border-green-500'
+              className={`w-[80%] h-[50px] my-9 bg-transparent border-b ${ isDarkMode ? 'border-white' : 'border-black' } border-opacity-50 text-[20px] ${ isDarkMode ? 'placeholder-white' : 'placeholder-black' }  placeholder-opacity-50 focus:outline-none focus:border-green-500`}
               type='email'
+              name='email'
               placeholder={t('E-mail')}
             />
             <textarea
-              className='w-[80%] h-[80px] bg-transparent border-b border-white border-opacity-50 text-white text-[20px] placeholder-white placeholder-opacity-50 focus:outline-none focus:border-green-500'
-              placeholder={t('Message')}></textarea>
-              <button className='bg-[#00BD95] text-white w-[40%] py-2 mt-10 rounded-lg shadow-btnShadow'>
-                <h1 className='text-md lg:text-2xl font-bold w-full 
+              className={`w-[80%] h-[80px] bg-transparent border-b ${ isDarkMode ? 'border-white' : 'border-black' } border-opacity-50 text-[20px] ${ isDarkMode ? 'placeholder-white' : 'placeholder-black' }  placeholder-opacity-50 focus:outline-none focus:border-green-500`}
+              placeholder={t('Message')}
+              name='message'
+              >
+              </textarea>
+              <button className='bg-[#00BD95] w-[40%] py-2 my-10 rounded-lg shadow-btnShadow'>
+                <h1 className='text-md lg:text-2xl font-bold w-full
                 '>
                   {t("Send")}
                 </h1>
               </button>
           </form>
-          <div className='flex justify-center items-center w-1/2 h-full'>
-          <div className='border-r border-white border-opacity-50 h-[70%]'></div>
-          <div className='flex flex-col justify-center items-start w-[70%] h-full  '>
+          <div className='flex flex-col md:flex-row justify-center items-center w-full md:w-1/2 h-full'>
+          <div className={`border-t my-5 md:my-0 md:border-r border-opacity-50 w-[80%] md:w-auto md:h-[300px]
+          ${isDarkMode ? 'border-white' : 'border-black'}
+            `}></div>
+          <div className='flex md:flex-col justify-around md:justify-center items-start w-full md:w-[80%] h-full mb-5 md:mb-0'>
             {socialMedia.map((social, index) => (
-              <div key={index} className='flex justify-start items-center w-full h-[20%] ml-3 '>
+              <div key={index} className='flex justify-around md:justify-start w-full items-center h-[20%] md:m-3'>
+                <a href={social.link} target='_blank' rel='noreferrer'>
                 <img src={`images/${social.icon}.png`} alt='' className='w-[61px] h-[56px]' />
-                <p className='text-[20px] text-white ml-5 text-shadow-textShadow-green'>{social.name}</p>
+                </a>
+                <p className='text-[20px] md:ml-5 text-shadow-textShadow-green hidden md:block'>{social.name}</p>
               </div>
             ))}
           </div>
           </div>
-        </div>
-        <div className='flex flex-col justify-center items-center w-full h-[25%]'>
-        <div className='flex justify-center items-center w-full h-[20%] '>
-          {Contact.map((contact, index) => (
-            <div key={index} className='flex justify-around items-center w-full h-full '>
-            <div className='flex justify-start items-center w-[80%] h-full ml-3 '>
-              <img src={`images/${contact.icon}.png`} alt='' className='w-[61px] h-[56px]' />
-              <p className='text-[20px] text-white ml-5 text-shadow-textShadow-green'>{contact.name}</p>
-            </div>
-            </div>
-          ))}
-        </div>
-            <div className='flex justify-start items-center w-[45%] h-full ml-3 '>
-              <img src={`images/location.png`} alt='' className='w-[61px] h-[56px]' />
-              <p className='text-[20px] text-white ml-5 text-shadow-textShadow-green'>Casablanca, Morocco
-              </p>
-            </div>
         </div>
       </div>
     </div>

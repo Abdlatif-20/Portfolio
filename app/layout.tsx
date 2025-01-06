@@ -1,10 +1,9 @@
-
-import type { Metadata } from "next";
-// import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-// import { useEffect, useState } from "react";
+import { ThemeProvider } from "@/components/context";
+import { Metadata } from "next";
+import { ToastContainer } from 'react-toastify';
 
 export const metadata: Metadata = {
   title: "Abdellatyf En-Neiymy",
@@ -16,26 +15,28 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const [theme, setTheme] = useState("dark");
-  // useEffect(() => {
-  //   const localTheme = localStorage.getItem("theme");
-  //   console.log(localTheme);
-  //   if (localTheme) {
-  //     setTheme(localTheme);
-  //   }
-  // }
-  // , [theme]);
   return (
     <html lang="en">
       <body
-        className={`bg-[#21272F]} w-full min-h-screen font-iosevka`}>
-        <div className={`w-full h-22 flex justify-center items-center fixed bg-[#21272F]}`}>
-          <Header />
-        </div>
+        className={`w-full min-h-screen font-iosevka`}>
+        <ThemeProvider>
+        <Header />
         <div className="w-full h-[calc(100%-6rem)] flex justify-center items-center">
         {children}
         </div>
         <Footer />
+        <ToastContainer
+          autoClose={2000}
+          style={{ fontSize: "1rem",
+             fontFamily: "iosevka",
+             width: "80%",
+              textAlign: "center",
+              margin: "auto",
+              borderRadius: "10px",
+          }
+        }
+        />
+        </ThemeProvider>
       </body>
     </html>
   );

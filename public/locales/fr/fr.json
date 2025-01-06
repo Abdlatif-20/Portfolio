@@ -19,5 +19,7 @@
     "Email":"Email",
     "Message":"Message",
     "Send":"Envoyer",
-    "Designed and Developed by":"Conçu et développé par"
+    "Designed and Developed by":"Conçu et développé par",
+    "Backend Developer":"Développeur Backend",
+    "Frontend Developer":"Développeur Frontend"
 }

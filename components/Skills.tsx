@@ -1,43 +1,96 @@
-'use client';
-import React from 'react'
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import React from "react";
+import { useTranslation } from "react-i18next";
+import {
+  FaHtml5,
+  FaCss3Alt,
+  FaReact,
+  FaDocker,
+  FaGithub,
+  FaPython,
+} from "react-icons/fa";
+import { SiTypescript, SiDjango, SiI18Next } from "react-icons/si";
+import { RiNextjsFill, RiTailwindCssFill } from "react-icons/ri";
+import { BiLogoPostgresql } from "react-icons/bi";
+import { TbApi } from "react-icons/tb";
+import { PiFileCppFill } from "react-icons/pi";
+import { VscTerminalBash, VscVscode } from "react-icons/vsc";
+import { DiVim } from "react-icons/di";
+
 const Skills = () => {
   const skills = [
-    { src: 'images/nextjs.png', alt: 'Next.js' },
-    { src: 'images/js.png', alt: 'JavaScript/TypeScript' },
-    { src: 'images/html.png', alt: 'HTML' },
-    { src: 'images/css.png', alt: 'CSS' },
-    { src: 'images/docker.png', alt: 'Docker' },
-    { src: 'images/dj.png', alt: 'django' },
-    { src: 'images/py.png', alt: 'Python' },
-    { src: 'images/cpp.png', alt: 'C++' },
-    { src: 'images/postgreSql.png', alt: 'PostgreSQL' },
-    { src: 'images/git.png', alt: 'Git' },
-    { src: 'images/figma.png', alt: 'Figma' },
-    { src: 'images/react.png', alt: 'React' },
+    {
+      type: "Frontend",
+      list: [
+        { name: "HTML", icon: <FaHtml5 /> },
+        { name: "CSS", icon: <FaCss3Alt /> },
+        { name: "TypeScript", icon: <SiTypescript /> },
+        { name: "React", icon: <FaReact /> },
+        { name: "Next.js", icon: <RiNextjsFill /> },
+        { name: "Tailwind CSS", icon: <RiTailwindCssFill /> },
+        { name: "i18next", icon: <SiI18Next /> },
+      ],
+    },
+    {
+      type: "Backend",
+      list: [
+        { name: "Django", icon: <SiDjango /> },
+        { name: "Python", icon: <FaPython /> },
+        { name: "REST API", icon: <TbApi /> },
+        { name: "PostgreSQL", icon: <BiLogoPostgresql /> },
+      ],
+    },
+    {
+      type: "DevOps",
+      list: [{ name: "Docker", icon: <FaDocker /> }],
+    },
+    {
+      type: "Others",
+      list: [
+        { name: "C/C++", icon: <PiFileCppFill /> },
+        { name: "Bash", icon: <VscTerminalBash /> },
+        { name: "Vim", icon: <DiVim /> },
+        { name: "VSCode", icon: <VscVscode /> },
+        { name: "Git/GitHub", icon: <FaGithub /> },
+      ],
+    },
   ];
-  const [isHovered, setIsHovered] = useState(false);
-  const { t } = useTranslation();
-  return (
-    <div id='skills' className='flex flex-col justify-center items-center w-[40%] h-screen '>
-    <h1 className='text-[40px] text-shadow-textShadow-green text-white font-bold  h-[50%] w-full flex justify-center items-center brightness-70'>
-      {t("Skills")}
-    </h1>
-    <div className='flex flex-wrap justify-between items-center w-full h-full'>
-      {skills.map((skill, index) => (
-        <div key={index} className='flex justify-center items-center p-10'
-        onMouseEnter={() => skill.alt === 'JavaScript/TypeScript' && setIsHovered(true)}
-        onMouseLeave={() => skill.alt === 'JavaScript/TypeScript' && setIsHovered(false)}
-        >
-          <img title={skill.alt}
-          src={isHovered && skill.alt === 'JavaScript/TypeScript' ? 'images/ts.png' : skill.src}
-          alt={skill.alt} className='w-full h-auto' />
-        </div>
-      ))}
-    </div>
-  </div>
-  )
-}
 
-export default Skills
+  const { t } = useTranslation();
+
+  return (
+    <div
+      id="skills"
+      className="flex flex-col justify-center items-center w-[90%] mt-10 md:w-[700px]
+        lg:w-[800px] min-h-screen">
+      <h1 className="text-[40px] text-shadow-textShadow-green font-bold mb-5">
+        {t("Skills")}
+      </h1>
+      <div className="flex flex-wrap w-full h-full gap-4 justify-center">
+        {skills.map((skill, index) => (
+          <div
+            key={index}
+            className="flex flex-col justify-center items-center w-full sm:w-[300px] h-auto
+              text-white rounded-lg bg-[#1A3D3A] p-5 m-5 shadow-md transition-transform
+              transform hover:scale-105 hover:z-10">
+            <h2 className="text-[30px] font-bold  text-shadow-textShadow-green mb-4">
+              {t(skill.type)}
+            </h2>
+            <ul className="list-none text-[20px]">
+              {skill.list.map((item) => (
+                <li
+                  key={item.name}
+                  className="flex items-center space-x-2 text-gray-200"
+                >
+                  <span aria-label={item.name}>{item.icon}</span>
+                  <span>{t(item.name, item.name)}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Skills;
