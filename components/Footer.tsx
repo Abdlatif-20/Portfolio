@@ -27,7 +27,7 @@ const Footer = () => {
     ]
   return (
     <div className={`
-      flex flex-col justify-around items-center w-full h-[20vh] md:h-[15vh] overflow-hidden
+      flex flex-col justify-around items-center w-full h-[30vh] overflow-hidden
       ${isDarkMode ? 'bg-[#21272F] text-gray-400' : 'bg-white text-black'}
     `}>
       <div className='flex justify-center items-center w-full mt-7 md:mt-0'>

@@ -101,12 +101,14 @@ const Contact = () => {
               name='message'
               >
               </textarea>
-              <button className='bg-[#00BD95] w-[40%] py-2 my-10 rounded-lg shadow-btnShadow'>
-                <h1 className='text-md lg:text-2xl font-bold w-full
-                '>
-                  {t("Send")}
-                </h1>
-              </button>
+              <button className="relative bg-[#00BD95] w-[40%] py-2 my-10 rounded-lg shadow-btnShadow overflow-hidden group">
+              <span className="absolute top-0 left-0 w-full h-full -translate-x-full translate-y-full rotate-[-40deg] rounded bg-gradient-to-br
+              from-[#ff8a05] via-[#ff5478] to-[#ff00c6] transition-all duration-500 ease-out group-hover:translate-x-0 group-hover:translate-y-0
+                group-hover:rotate-0"></span>
+              <h1 className="relative text-md lg:text-2xl font-bold w-full text-white transition-colors duration-300 ease-in-out group-hover:text-white">
+                {t("Send")}
+              </h1>
+            </button>
           </form>
           <div className='flex flex-col md:flex-row justify-center items-center w-full md:w-1/2 h-full'>
           <div className={`border-t my-5 md:my-0 md:border-r border-opacity-50 w-[80%] md:w-auto md:h-[300px]
@@ -116,7 +118,8 @@ const Contact = () => {
             {socialMedia.map((social, index) => (
               <div key={index} className='flex justify-around md:justify-start w-full items-center h-[20%] md:m-3'>
                 <a href={social.link} target='_blank' rel='noreferrer'>
-                <img src={`images/${social.icon}.png`} alt='' className='w-[61px] h-[56px]' />
+                <img src={`images/${social.icon}.png`} alt='' className='md:w-[61px] md:h-[56px] w-[50px] h-[45px] brightness-70 hover:brightness-100
+                ' />
                 </a>
                 <p className='text-[20px] md:ml-5 text-shadow-textShadow-green hidden md:block'>{social.name}</p>
               </div>

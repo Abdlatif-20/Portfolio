@@ -35,18 +35,24 @@ export default function Home() {
       <Skills />
       <Contact />
       <FloatingWhatsApp
-        phoneNumber="+212777191684"
-        accountName="Abdellatyf en-neiymy"
-        darkMode={true}
-        notificationDelay={10}
-        notificationSoundSrc="/sound/nottfication.mp3"
-        statusMessage="Typically replies within 30 minutes"
-        avatar="images/aben-nei.jpg"
-        chatMessage="Hello, how can I help you?"
-      />
+      phoneNumber="+212777191684"
+      accountName="Abdellatyf en-neiymy"
+      darkMode={true}
+      notificationDelay={10}
+      statusMessage="Typically replies within 30 minutes"
+      avatar="images/aben-nei.jpg"
+      chatMessage="Hello, how can I help you?"
+      allowClickAway={true}
+      allowEsc={true}
+      style={{
+      }}
+      buttonStyle={{
+        bottom: '8%',
+      }}
+    />
       {isScrolling && (
         <div
-          className="fixed bottom-9 right-28 cursor-pointer"
+          className="animate-bounce fixed bottom-[8%] left-4 cursor-pointer z-50"
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         >
           <FaArrowCircleUp className="text-[#00BD95] text-4xl" />
