@@ -77,7 +77,7 @@ const Contact = () => {
       <div className='flex flex-col justify-between items-center w-full h-full '
         style={{border: `${isDarkMode ? '0.3px solid rgba(255, 255, 255, 0.3)' : '0.3px solid rgba(0, 0, 0, 0.3)'}`
       }}>
-        <p className='text-[40px] text-shadow-textShadow-green font-bold w-full flex justify-center items-start brightness-70 mt-3 ml-4'>
+        <p className='text-[22px] md:text-[40px] text-shadow-textShadow-green font-bold w-full flex justify-center items-start brightness-70 mt-5 '>
           {t("Drop me a message")}
         </p>
         <div className='flex w-full flex-col md:flex-row justify-start md:items-center h-full'>
