@@ -76,7 +76,7 @@ const Skills = () => {
             key={index}
             className={`relative flex flex-col items-center w-[90%] md:w-[300px] 
               rounded-xl p-6 border bg-opacity-30 shadow-md flex-shrink-0 mb-5 transition-transform transform
-              hover:scale-95 hover:shadow-xl
+              md:hover:scale-95 hover:shadow-xl
               ${isDarkMode ? "bg-[#1e293b]/50 border-white" : "bg-white/50 border-gray-200"}
               backdrop-blur-md`}
           >
