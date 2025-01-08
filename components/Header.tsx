@@ -16,6 +16,14 @@ const Header = () => {
     const [showMenu, setShowMenu] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null); // Reference for the menu
 
+
+    useEffect(() => {
+        const lang = localStorage.getItem('lang');
+        localStorage.setItem('lang', lang ? lang : 'en');
+        setActiveLang(lang ? lang : 'en');
+    }
+    , []);
+
     useEffect(() => {
         const lang = localStorage.getItem('lang');
         if (lang) {

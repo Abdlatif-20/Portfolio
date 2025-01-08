@@ -16,6 +16,14 @@ export const useDarkMode = () => useContext(ThemeContext);
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [isDarkMode, setIsDarkMode] = useState(true);
 
+
+  useEffect(() => {
+    const localTheme = localStorage.getItem('darkmode');
+    localStorage.setItem('darkmode', localTheme ? localTheme : 'true');
+    setIsDarkMode(localTheme ? localTheme === 'true' : true);
+  }
+  , []);
+
   useEffect(() => {
     const localTheme = localStorage.getItem('darkmode');
     if (localTheme) {
