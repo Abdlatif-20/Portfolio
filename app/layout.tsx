@@ -31,10 +31,12 @@ export default function RootLayout({
           autoClose={2000}
           stacked={true}
           style={{ fontSize: "1rem",
+
+            color: "#fff",
+            width: "70%",
+            maxWidth: "400px",
              fontFamily: "iosevka",
-             width: "80%",
               textAlign: "center",
-              margin: "auto",
               borderRadius: "10px",
           }
         }
