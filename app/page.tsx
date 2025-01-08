@@ -43,7 +43,6 @@ export default function Home() {
       statusMessage="Typically replies within 30 minutes"
       avatar="images/aben-nei.jpg"
       chatMessage="Hello, how can I help you?"
-      allowClickAway={true}
       allowEsc={true}
       style={{
       }}
