@@ -101,7 +101,7 @@ const Contact = () => {
               name='message'
               >
               </textarea>
-              <button className="relative bg-[#00BD95] w-[40%] py-2 my-10 rounded-lg shadow-btnShadow overflow-hidden group">
+              <button className="relative bg-[#00BD95] w-[60%] md:w-[40%] py-2 my-10 rounded-lg shadow-btnShadow overflow-hidden group">
               <span className="absolute top-0 left-0 w-full h-full -translate-x-full translate-y-full rotate-[-40deg] rounded bg-gradient-to-br
               from-[#ff8a05] via-[#ff5478] to-[#ff00c6] transition-all duration-500 ease-out group-hover:translate-x-0 group-hover:translate-y-0
                 group-hover:rotate-0"></span>
