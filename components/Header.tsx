@@ -13,7 +13,7 @@ const Header = () => {
     const [activeLang, setActiveLang] = useState('');
     const { t, i18n } = useTranslation();
     const [showMenu, setShowMenu] = useState(false);
-    const menuRef = useRef<HTMLDivElement>(null); // Reference for the menu
+    const menuRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const lang = localStorage.getItem('lang');
@@ -156,7 +156,7 @@ const Header = () => {
                         className="cursor-pointer text-xl mb-4"
                         onClick={() => {
                             setShowMenu(false);
-                            scrollToSection('.section-one'); // Scroll to the About section
+                            scrollToSection('#about');
                         }}
                     >
                         {t('About')}
@@ -165,7 +165,7 @@ const Header = () => {
                         className="cursor-pointer text-xl mb-4"
                         onClick={() => {
                             setShowMenu(false);
-                            scrollToSection('.section-two'); // Scroll to the Projects section
+                            scrollToSection('#projects');
                         }}
                     >
                         {t('Projects')}
@@ -174,7 +174,7 @@ const Header = () => {
                         className="cursor-pointer text-xl mb-4"
                         onClick={() => {
                             setShowMenu(false);
-                            scrollToSection('.section-three'); // Scroll to the Skills section
+                            scrollToSection('#skills');
                         }}
                     >
                         {t('Skills')}
@@ -183,7 +183,7 @@ const Header = () => {
                         className="cursor-pointer text-xl mb-4"
                         onClick={() => {
                             setShowMenu(false);
-                            scrollToSection('.section-four'); // Scroll to the Contact section
+                            scrollToSection('.contact');
                         }}
                     >
                         {t('Contact')}
