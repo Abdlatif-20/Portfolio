@@ -33,7 +33,7 @@ const projects = [
 const Projects = () => {
  const { t } = useTranslation();
   return (
-    <div id='projects' className='flex flex-col justify-start items-center w-full lg:w-[70%] min-h-screen'>
+    <div id='projects' className='section-one flex flex-col justify-start items-center w-full lg:w-[70%] min-h-screen'>
       <h1 className='text-[40px] text-shadow-textShadow-green font-bold h-[30vh] w-full flex justify-center items-center brightness-70 shadow-border'>
         {t("Projects")}
       </h1>

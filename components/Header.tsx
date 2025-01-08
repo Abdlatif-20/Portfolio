@@ -1,6 +1,5 @@
 'use client';
 import React, { useEffect, useState, useRef } from 'react';
-import Link from 'next/link';
 import { MdOutlineLightMode } from "react-icons/md";
 import { MdDarkMode } from "react-icons/md";
 import '../i18n';
@@ -16,13 +15,11 @@ const Header = () => {
     const [showMenu, setShowMenu] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null); // Reference for the menu
 
-
     useEffect(() => {
         const lang = localStorage.getItem('lang');
         localStorage.setItem('lang', lang ? lang : 'en');
         setActiveLang(lang ? lang : 'en');
-    }
-    , []);
+    }, []);
 
     useEffect(() => {
         const lang = localStorage.getItem('lang');
@@ -60,6 +57,14 @@ const Header = () => {
         };
     }, [showMenu]);
 
+    // Scroll to section function
+    const scrollToSection = (target: string) => {
+        const element = document.querySelector(target);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    };
+
     return (
         <header className={`flex justify-between items-center w-full h-[60px] md:h-[80px] md:min-w-[500px] fixed top-0 z-50
             ${isDarkMode ? 'bg-[#21272F] text-white' : 'bg-white text-black'}
@@ -74,30 +79,46 @@ const Header = () => {
 
             <div className='sm:flex justify-between items-center hidden w-[400px] h-full text-md sm:text-xl
             '>
-                <Link className={`cursor-pointer ${isActivated == 'about' ? `text-[#00BD95]` : `${isDarkMode ? "text-white" : "text-black"}`}
-                `}
-                    onClick={() => setIsActivated('about')}
-                    href='#about'>
+                <button
+                    className={`cursor-pointer ${isActivated === 'about' ? `text-[#00BD95]` : `${isDarkMode ? "text-white" : "text-black"}`}
+                    `}
+                    onClick={() => {
+                        setIsActivated('about');
+                        scrollToSection('#about');
+                    }}
+                >
                     {t("About")}
-                </Link>
-                <Link className={`cursor-pointer ${isActivated == 'project' ? `text-[#00BD95]` : `${isDarkMode ? "text-white" : "text-black"}`}
-                `}
-                    onClick={() => setIsActivated('project')}
-                    href='#projects'>
+                </button>
+                <button
+                    className={`cursor-pointer ${isActivated === 'project' ? `text-[#00BD95]` : `${isDarkMode ? "text-white" : "text-black"}`}
+                    `}
+                    onClick={() => {
+                        setIsActivated('project');
+                        scrollToSection('#projects');
+                    }}
+                >
                     {t("Projects")}
-                </Link>
-                <Link className={`cursor-pointer ${isActivated == 'skills' ? `text-[#00BD95]` : `${isDarkMode ? "text-white" : "text-black"}`}
-                `}
-                    onClick={() => setIsActivated('skills')}
-                    href='#skills'>
+                </button>
+                <button
+                    className={`cursor-pointer ${isActivated === 'skills' ? `text-[#00BD95]` : `${isDarkMode ? "text-white" : "text-black"}`}
+                    `}
+                    onClick={() => {
+                        setIsActivated('skills');
+                        scrollToSection('#skills');
+                    }}
+                >
                     {t("Skills")}
-                </Link>
-                <Link className={`cursor-pointer ${isActivated == 'contact' ? `text-[#00BD95]` : `${isDarkMode ? "text-white" : "text-black"}`}
-                `}
-                    onClick={() => setIsActivated('contact')}
-                    href='#contact'>
+                </button>
+                <button
+                    className={`cursor-pointer ${isActivated === 'contact' ? `text-[#00BD95]` : `${isDarkMode ? "text-white" : "text-black"}`}
+                    `}
+                    onClick={() => {
+                        setIsActivated('contact');
+                        scrollToSection('.contact');
+                    }}
+                >
                     {t("Contact")}
-                </Link>
+                </button>
             </div>
             <div className='sm:flex hidden justify-around items-center h-full w-[10%]'>
                 <button onClick={() => {
@@ -131,34 +152,42 @@ const Header = () => {
                 `}
             >
                 <div className="flex flex-col justify-center items-start h-full p-6">
-                    <Link
+                    <button
                         className="cursor-pointer text-xl mb-4"
-                        href="#about"
-                        onClick={handleLinkClick}
+                        onClick={() => {
+                            setShowMenu(false);
+                            scrollToSection('.section-one'); // Scroll to the About section
+                        }}
                     >
                         {t('About')}
-                    </Link>
-                    <Link
+                    </button>
+                    <button
                         className="cursor-pointer text-xl mb-4"
-                        href="#projects"
-                        onClick={handleLinkClick}
+                        onClick={() => {
+                            setShowMenu(false);
+                            scrollToSection('.section-two'); // Scroll to the Projects section
+                        }}
                     >
                         {t('Projects')}
-                    </Link>
-                    <Link
+                    </button>
+                    <button
                         className="cursor-pointer text-xl mb-4"
-                        href="#skills"
-                        onClick={handleLinkClick}
+                        onClick={() => {
+                            setShowMenu(false);
+                            scrollToSection('.section-three'); // Scroll to the Skills section
+                        }}
                     >
                         {t('Skills')}
-                    </Link>
-                    <Link
+                    </button>
+                    <button
                         className="cursor-pointer text-xl mb-4"
-                        href="#contact"
-                        onClick={handleLinkClick}
+                        onClick={() => {
+                            setShowMenu(false);
+                            scrollToSection('.section-four'); // Scroll to the Contact section
+                        }}
                     >
                         {t('Contact')}
-                    </Link>
+                    </button>
                     <div className='flex justify-between items-center w-[50%]'>
                         <button
                             onClick={() => {
