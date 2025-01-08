@@ -124,7 +124,7 @@ const Header = () => {
             </div>
             <div
                 ref={menuRef}
-                className={`fixed top-0 right-0 h-screen w-[50%]  z-50 transform ${
+                className={`fixed top-0 right-0 h-screen w-[50%] sm:hidden z-50 transform ${
                     showMenu ? 'translate-x-0' : 'translate-x-full'
                 } transition-transform duration-300 md:hidden
                 ${isDarkMode ? 'bg-[#21272F] text-white' : 'bg-white text-black'}
@@ -159,9 +159,7 @@ const Header = () => {
                     >
                         {t('Contact')}
                     </Link>
-                    <div className='
-        flex justify-between items-center w-[50%]
-        '>
+                    <div className='flex justify-between items-center w-[50%]'>
                         <button
                             onClick={() => {
                                 const newLang = activeLang === 'en' ? 'fr' : 'en';

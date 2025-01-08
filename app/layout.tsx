@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`w-full min-h-screen font-iosevka overflow-auto no-scrollbar
+        className={`w-full min-h-screen font-iosevka overflow-y-auto no-scrollbar overflow-x-hidden
         `}
         >
         <ThemeProvider>
