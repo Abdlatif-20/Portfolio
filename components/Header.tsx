@@ -153,37 +153,42 @@ const Header = () => {
             >
                 <div className="flex flex-col justify-center items-start h-full p-6">
                     <button
-                        className="cursor-pointer text-xl mb-4"
+                        className={`cursor-pointer text-xl mb-4  ${isActivated === 'About' ? `text-[#00BD95]` : `${isDarkMode ? "text-white" : "text-black"}`}
+                        `}
                         onClick={() => {
                             setShowMenu(false);
                             scrollToSection('#about');
+                            setIsActivated('About');
                         }}
                     >
                         {t('About')}
                     </button>
                     <button
-                        className="cursor-pointer text-xl mb-4"
+                        className={`cursor-pointer text-xl mb-4 ${isActivated === 'Projects' ? `text-[#00BD95]` : `${isDarkMode ? "text-white" : "text-black"}`}`}
                         onClick={() => {
                             setShowMenu(false);
                             scrollToSection('#projects');
+                            setIsActivated('Projects');
                         }}
                     >
                         {t('Projects')}
                     </button>
                     <button
-                        className="cursor-pointer text-xl mb-4"
+                        className={`cursor-pointer text-xl mb-4 ${isActivated === 'skills' ? `text-[#00BD95]` : `${isDarkMode ? "text-white" : "text-black"}`}`}
                         onClick={() => {
                             setShowMenu(false);
                             scrollToSection('#skills');
+                            setIsActivated('skills');
                         }}
                     >
                         {t('Skills')}
                     </button>
                     <button
-                        className="cursor-pointer text-xl mb-4"
+                        className={`cursor-pointer text-xl mb-4 ${isActivated === 'contact' ? `text-[#00BD95]` : `${isDarkMode ? "text-white" : "text-black"}`}`}
                         onClick={() => {
                             setShowMenu(false);
                             scrollToSection('.contact');
+                            setIsActivated('contact');
                         }}
                     >
                         {t('Contact')}
