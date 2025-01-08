@@ -29,6 +29,7 @@ export default function RootLayout({
         <Footer />
         <ToastContainer
           autoClose={2000}
+          stacked={true}
           style={{ fontSize: "1rem",
              fontFamily: "iosevka",
              width: "80%",
