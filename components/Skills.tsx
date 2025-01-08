@@ -68,8 +68,8 @@ const Skills = () => {
         {t("Skills")}
       </h1>
       <div
-        className="flex flex-wrap gap-6 justify-center w-full h-full overflow-x-auto 
-          md:flex-wrap md:overflow-visible"
+        className="flex flex-wrap gap-6 justify-center w-full h-full 
+          md:flex-wrap "
       >
         {skills.map((skill, index) => (
           <div

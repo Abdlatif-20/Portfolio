@@ -37,7 +37,7 @@ const Projects = () => {
       <h1 className='text-[40px] text-shadow-textShadow-green font-bold h-[30vh] w-full flex justify-center items-center brightness-70 shadow-border'>
         {t("Projects")}
       </h1>
-      <div className='w-full h-full flex overflow-x-auto md:flex-wrap md:justify-around md:items-center space-x-4 snap-x snap-mandatory hide-scrollbar
+      <div className='w-full h-full flex overflow-x-auto md:flex-wrap md:justify-around md:items-center space-x-4 snap-x snap-mandatory no-scrollbar
       '>
         {projects.map((project, index) => (
           <div key={index} className='snap-center shrink-0 flex-auto md:flex-initial'>

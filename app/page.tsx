@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { FaArrowCircleUp } from "react-icons/fa";
 import React from 'react';
 import { FloatingWhatsApp } from 'react-floating-whatsapp';
+import './globals.css';
 
 export default function Home() {
   const [isScrolling, setIsScrolling] = useState(false);
@@ -26,7 +27,7 @@ export default function Home() {
 
   return (
     <div
-      className={`flex flex-col justify-center items-center w-full h-full font-iosevka
+      className={`flex flex-col justify-center items-center w-full
         ${isDarkMode ? 'bg-[#21272F] text-white' : 'bg-white text-black'}
       `}
     >

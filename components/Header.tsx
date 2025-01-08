@@ -64,7 +64,8 @@ const Header = () => {
                 </h1>
             </div>
 
-            <div className='sm:flex justify-between items-center hidden w-[400px] h-full text-md sm:text-xl'>
+            <div className='sm:flex justify-between items-center hidden w-[400px] h-full text-md sm:text-xl
+            '>
                 <Link className={`cursor-pointer ${isActivated == 'about' ? `text-[#00BD95]` : `${isDarkMode ? "text-white" : "text-black"}`}
                 `}
                     onClick={() => setIsActivated('about')}
@@ -96,8 +97,8 @@ const Header = () => {
                     setActiveLang(activeLang === 'en' ? 'fr' : 'en');
                 }}
                     className={`text-xl
-    ${isDarkMode ? "text-white" : "text-black"}
-    `}>
+                ${isDarkMode ? "text-white" : "text-black"}
+                `}>
                     {activeLang === 'en' ? 'FR' : 'EN'}
                 </button>
                 <div onClick={() => {

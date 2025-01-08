@@ -18,7 +18,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`w-full min-h-screen font-iosevka`}>
+        className={`w-full min-h-screen font-iosevka overflow-auto no-scrollbar
+        `}
+        >
         <ThemeProvider>
         <Header />
         <div className="w-full h-[calc(100%-6rem)] flex justify-center items-center">
