@@ -5,6 +5,12 @@ import { useTranslation } from 'react-i18next';
 
 const projects = [
   {
+    title: 'Cub3D',
+    description: 'A 3D maze game built using raycasting, allowing players to navigate through a maze and collect items to win the game.',
+    href: 'https://github.com/Abdlatif-20/cub3D_42',
+    techStack: ['C', 'raycasting', 'minilibx']
+  },
+  {
     title: 'Web Server',
     description: 'A lightweight HTTP server built from scratch, focused on handling requests and responses efficiently, simulating real-world web server behavior.',
     href: 'https://github.com/Abdlatif-20/webserv',
@@ -33,7 +39,7 @@ const projects = [
 const Projects = () => {
  const { t } = useTranslation();
   return (
-    <div id='projects' className='section-one flex flex-col justify-start items-center w-full lg:w-[70%] min-h-screen'>
+    <div id='projects' className='flex flex-col justify-start items-center w-full lg:w-[70%] min-h-screen'>
       <h1 className='text-[40px] text-shadow-textShadow-green font-bold h-[30vh] w-full flex justify-center items-center brightness-70 shadow-border'>
         {t("Projects")}
       </h1>

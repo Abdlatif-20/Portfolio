@@ -62,7 +62,7 @@ const Skills = () => {
   return (
     <div
       id="skills"
-      className="flex flex-col justify-center items-center w-[90%] min-h-screen"
+      className="skills flex flex-col justify-center items-center w-[90%] min-h-screen"
     >
       <h1 className="text-[40px] text-shadow-textShadow-green font-bold mb-10">
         {t("Skills")}

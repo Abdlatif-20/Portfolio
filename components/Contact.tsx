@@ -70,7 +70,7 @@ const Contact = () => {
   };
 
   return (
-    <div className='flex contact flex-col justify-center items-center w-[95%] lg:w-[80%] min-h-[70vh]'>
+    <div id='contact' className='flex flex-col justify-center items-center w-[95%] lg:w-[80%] min-h-[70vh]'>
       <h1 className='text-[40px] text-shadow-textShadow-green font-bold mb-5 h-[35%] w-full flex justify-center items-center brightness-70'>
         {t("Contact")}
       </h1>
