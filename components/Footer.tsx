@@ -47,7 +47,8 @@ const Footer = () => {
           </div>
         ))}
         </div>
-      <p className={`text-center text-md  ${isDarkMode ? "bg-[#21272F] text-gray-400" : "text-black"}
+      <p className={`text-center text-sm md:text-md 
+      ${isDarkMode ? "bg-[#21272F] text-gray-400" : "text-black"}
       `}>
       {t('Designed and Developed by')} Abdellatyf En-Neiymy © {new Date().getFullYear()}.
       </p>

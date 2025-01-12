@@ -16,6 +16,7 @@ const Header = () => {
 
     useEffect(() => {
         const lang = localStorage.getItem('lang') || 'en';
+        console.log(lang);
         setActiveLang(lang);
         i18n?.changeLanguage(lang);
     }, [i18n]);
@@ -34,11 +35,9 @@ const Header = () => {
                 setShowMenu(false);
             }
         };
-
         if (showMenu) {
             document.addEventListener('mousedown', handleOutsideClick);
         }
-
         return () => {
             document.removeEventListener('mousedown', handleOutsideClick);
         };
@@ -114,6 +113,7 @@ const Header = () => {
                         const newLang = activeLang === 'en' ? 'fr' : 'en';
                         localStorage.setItem('lang', newLang);
                         setActiveLang(newLang);
+                        i18n?.changeLanguage(newLang);
                     }}
                     className={`text-xl ${isDarkMode ? 'text-white' : 'text-black'}`}
                 >
@@ -158,6 +158,7 @@ const Header = () => {
                                 const newLang = activeLang === 'en' ? 'fr' : 'en';
                                 localStorage.setItem('lang', newLang);
                                 setActiveLang(newLang);
+                                i18n?.changeLanguage(newLang);
                             }}
                             className="text-xl"
                         >
