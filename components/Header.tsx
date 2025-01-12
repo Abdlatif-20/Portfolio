@@ -5,6 +5,7 @@ import { IoMdMenu } from "react-icons/io";
 import '../i18n';
 import { useTranslation } from 'react-i18next';
 import { useDarkMode } from './context';
+import { MdOutlineMenuOpen } from "react-icons/md";
 
 const Header = () => {
     const { isDarkMode, setIsDarkMode } = useDarkMode();
@@ -131,12 +132,16 @@ const Header = () => {
             </div>
 
             {/* Mobile Menu */}
-            <div className="flex sm:hidden items-center w-[10%]">
-                <IoMdMenu onClick={() => setShowMenu(!showMenu)} size={30} />
+            <div className="flex sm:hidden items-center w-[10%] z-50 cursor-pointer">
+                {showMenu ? (
+                    <MdOutlineMenuOpen size={30} onClick={() => setShowMenu(false)} />
+                ) : (
+                    <IoMdMenu size={30} onClick={() => setShowMenu(true)} />
+                )}
             </div>
             <div
                 ref={menuRef}
-                className={`fixed top-0 right-0 h-screen w-[50%] sm:hidden z-50 transform ${showMenu ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300 ${isDarkMode ? 'bg-[#21272F] text-white' : 'bg-white text-black'}`}
+                className={`fixed top-0 right-0 h-screen w-[50%] sm:hidden transform ${showMenu ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300 ${isDarkMode ? 'bg-[#21272F] text-white' : 'bg-white text-black'}`}
             >
                 <div className="flex flex-col justify-center items-start h-full p-6">
                     {sectionButtons.map(({ id, label, target }) => (
