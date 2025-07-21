@@ -23,7 +23,7 @@ export default function RootLayout({
         >
         <ThemeProvider>
         <Header />
-        <div className="w-full h-[calc(100%-6rem)] flex justify-center items-center">
+        <div className="w-full h-[calc(100%-6rem)] flex justify-center items-center lg:mt-10">
         {children}
         </div>
         <Footer />

@@ -12,18 +12,53 @@ import './globals.css';
 
 export default function Home() {
   const [isScrolling, setIsScrolling] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [progress, setProgress] = useState(0);
   const { isDarkMode } = useDarkMode();
 
   useEffect(() => {
+    // Animate progress bar from 0 to 100% over 1.5 seconds
+    let interval: NodeJS.Timeout;
+    if (loading) {
+      let current = 0;
+      interval = setInterval(() => {
+        current += 2; // 2% every 30ms ~ 1.5s total
+        if (current >= 100) {
+          current = 100;
+          setProgress(current);
+          setLoading(false);
+          clearInterval(interval);
+        } else {
+          setProgress(current);
+        }
+      }, 30);
+    }
     window.onscroll = () => {
       window.scrollY > 500 ? setIsScrolling(true) : setIsScrolling(false);
     };
-
     const chatBox = document.querySelector(".floating-whatsapp-chatbox");
     if (chatBox) {
       chatBox.removeAttribute("aria-hidden");
     }
-  }, []);
+    return () => clearInterval(interval);
+  }, [loading]);
+
+  if (loading) {
+    return (
+      <div className={`fixed inset-0 flex flex-col items-center justify-center z-[9999] ${isDarkMode ? 'bg-[#21272F]' : 'bg-white'}`}>
+        <div className="w-64 h-4 bg-gray-200 rounded-full overflow-hidden shadow-md">
+          <div
+            className="h-full rounded-full transition-all duration-75"
+            style={{
+              width: `${progress}%`,
+              background: isDarkMode ? 'linear-gradient(90deg, #00BD95 0%, #21272F 100%)' : 'linear-gradient(90deg, #21272F 0%, #00BD95 100%)',
+            }}
+          />
+        </div>
+        <span className={`mt-4 text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-black'}`}>{progress}%</span>
+      </div>
+    );
+  }
 
   return (
     <div
