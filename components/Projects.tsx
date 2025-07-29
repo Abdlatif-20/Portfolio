@@ -46,30 +46,7 @@ const projects = [
     href: 'https://www.job.myjoboard-ma.com/',
     techStack: ['reactjs', 'tailwindcss', 'html', 'css', 'postgreSQL', 'expressjs']
   },
-  {
-    title: 'MyJoboard',
-    description: 'a user-friendly job board platform enabling candidates to search and apply for jobs',
-    href: 'https://www.job.myjoboard-ma.com/',
-    techStack: ['reactjs', 'tailwindcss', 'html', 'css', 'postgreSQL', 'expressjs']
-  },
-  {
-    title: 'MyJoboard',
-    description: 'a user-friendly job board platform enabling candidates to search and apply for jobs',
-    href: 'https://www.job.myjoboard-ma.com/',
-    techStack: ['reactjs', 'tailwindcss', 'html', 'css', 'postgreSQL', 'expressjs']
-  },
-  {
-    title: 'MyJoboard',
-    description: 'a user-friendly job board platform enabling candidates to search and apply for jobs',
-    href: 'https://www.job.myjoboard-ma.com/',
-    techStack: ['reactjs', 'tailwindcss', 'html', 'css', 'postgreSQL', 'expressjs']
-  },
-  {
-    title: 'MyJoboard',
-    description: 'a user-friendly job board platform enabling candidates to search and apply for jobs',
-    href: 'https://www.job.myjoboard-ma.com/',
-    techStack: ['reactjs', 'tailwindcss', 'html', 'css', 'postgreSQL', 'expressjs']
-  },
+  
 ];
 
 const Projects = () => {
