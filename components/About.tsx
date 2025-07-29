@@ -41,7 +41,7 @@ const About = () => {
             transform hover:scale-105 transition-transform duration-300 ease-in-out
             ">
               <a className="text-xl lg:text-2xl font-bold w-full"
-                href="https://drive.google.com/file/d/1ijRNAdF3O1SOUFYIYhcA_XIS0PF8gsBP/view?usp=sharing"
+                href="/resume/resume.pdf"
                 target="_blank">
                 {t("My Resume")}
               </a>
