@@ -46,7 +46,6 @@ const projects = [
     href: 'https://www.job.myjoboard-ma.com/',
     techStack: ['reactjs', 'tailwindcss', 'html', 'css', 'postgreSQL', 'expressjs']
   },
-  
 ];
 
 const Projects = () => {
