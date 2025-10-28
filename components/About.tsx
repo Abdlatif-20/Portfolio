@@ -12,7 +12,7 @@ const About = () => {
     new Typewriter('#text_name', {
       strings: [
         "Abdellatyf En-neiymy",
-        t("Full Stack Developer"),
+        t("Front End Developer"),
       ],
       autoStart: true,
       loop: true,
@@ -34,7 +34,7 @@ const About = () => {
           </h1>
           <p className="text-xl xl:text-3xl my-5 w-full text-[#00BD95] font-bold" id="text_name"></p>
           <p className="text-lg lg:text-xl xl:text-2xl mx-1 sm:min-w-[300px] max-w-[700px]">
-            {t("I'm a full-stack web developer, I have a passion for web development and love to create websites and web applications that are visually appealing and provide a great user experience.")}
+            {t("I'm a passionate Front-End Developer dedicated to building elegant, performant, and responsive web interfaces. With hands-on experience using React, Next.js, and Tailwind CSS, I focus on transforming ideas into intuitive and visually engaging user experiences.")}
           </p>
           <div className="flex w-[270px] sm:w-[200px] items-center justify-center">
             <button className="bg-[#00BD95] w-full py-2 mt-10 rounded-lg shadow-btnShadow
