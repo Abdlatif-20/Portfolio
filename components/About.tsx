@@ -22,7 +22,7 @@ const About = () => {
   }, [t]);
 
   return (
-    <div id="about" className="flex flex-col justify-center items-center w-full min-h-screen">
+    <section id="about" className="flex flex-col justify-center items-center w-full  px-4 py-12 sm:py-16 lg:py-32 md:mt-5">
       <h1 className={`text-[40px] text-shadow-textShadow-green font-bold max-sm:min-h-[150px]
         mt-5 md:mt-0 w-full flex justify-center items-center brightness-70`}>
         {t("About")}
@@ -53,7 +53,7 @@ const About = () => {
           alt="aben-nei"
         />
       </div>
-    </div>
+    </section>
   );
 };
 

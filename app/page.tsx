@@ -4,6 +4,7 @@ import Contact from "@/components/Contact";
 import { useDarkMode } from "@/components/context";
 import Projects from "@/components/Projects";
 import Skills from "@/components/Skills";
+import Education from "@/components/Education";
 import { useEffect, useState } from "react";
 import { FaArrowCircleUp } from "react-icons/fa";
 import React from 'react';
@@ -68,6 +69,7 @@ export default function Home() {
     >
       <About />
       <Projects />
+  <Education />
       <Skills />
       <Contact />
       <FloatingWhatsApp
