@@ -6,6 +6,7 @@ type EducationItem = {
   institution: string;
   degree: string;
   period: string;
+  note?: string;
 };
 
 const EDUCATION: EducationItem[] = [
@@ -13,16 +14,19 @@ const EDUCATION: EducationItem[] = [
     institution: '1337 (UM6P)',
     degree: "Software Engineering",
     period: '2022 — PRESENT',
+    note: 'I learned various programming languages and computer science concepts through hands-on projects and peer-to-peer learning.',
 },
 {
   institution: 'Faculté des Sciences Ben M\'Sik Casablanca',
   degree: 'PHYSICAL SCIENCES',
   period: '2021 — 2022',
+  note: 'Completed foundational coursework in physics and mathematics, preparing for advanced studies in computer science.',
 },
 {
   institution: 'Lycée dakhla',
   degree: 'Life and Earth Sciences Baccalaureate',
   period: '2019 — 2020',
+  note: 'Graduated with a focus on life and earth sciences, developing analytical and scientific skills.',
 },
 ];
 
@@ -51,6 +55,11 @@ export default function Education() {
                 </div>
                 <p className="text-sm opacity-80">{edu.degree}</p>
                 <p className="text-sm mt-1 text-green-500">{edu.period}</p>
+                {edu.note && (
+                  <p className={`mt-2 text-sm ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
+                    {edu.note}
+                  </p>
+                )}
               </div>
             </div>
           ))}

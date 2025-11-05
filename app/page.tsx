@@ -78,23 +78,23 @@ export default function Home() {
       darkMode={true}
       notificationDelay={10}
       statusMessage="Typically replies within 30 minutes"
-      avatar="images/aben-nei.jpg"
+      avatar="images/mee.png"
       chatMessage="Hello, how can I help you?"
       allowEsc={true}
       style={{
       }}
       buttonStyle={{
-        bottom: '8%',
+        bottom: '5%',
       }}
     />
-      {isScrolling && (
+      {/* {isScrolling && (
         <div
           className="animate-bounce fixed bottom-[8%] left-4 cursor-pointer z-50"
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         >
           <FaArrowCircleUp className="text-[#00BD95] text-4xl" />
         </div>
-      )}
+      )} */}
     </div>
   );
 }

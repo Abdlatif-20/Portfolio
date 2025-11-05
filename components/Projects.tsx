@@ -21,7 +21,7 @@ const projects: Project[] = [
       "A 3D maze game built using raycasting, allowing players to navigate through a maze and collect items to win the game.",
     href: "https://github.com/Abdlatif-20/cub3D_42",
     techStack: ["C", "raycasting", "minilibx"],
-    image: "/images/projects/cub3d.svg",
+    image: "/projects/cub3d42.png",
   },
   {
     title: "Web Server",
@@ -29,7 +29,7 @@ const projects: Project[] = [
       "A lightweight HTTP server built from scratch, focused on handling requests and responses efficiently.",
     href: "https://github.com/Abdlatif-20/webserv",
     techStack: ["C++", "HTTP", "Server"],
-    image: "/images/projects/webserver.svg",
+    image: "/projects/webserver.png",
   },
   {
     title: "Inception",
@@ -37,7 +37,7 @@ const projects: Project[] = [
       "Docker-based multi-container setup demonstrating secure service deployment and orchestration.",
     href: "https://github.com/Abdlatif-20/Inception_42",
     techStack: ["Docker", "nginx", "WordPress", "mySQL"],
-    image: "/images/projects/inception.svg",
+    image: "/projects/inception.png",
   },
   {
     title: "Pong Game",
@@ -45,14 +45,14 @@ const projects: Project[] = [
       "A modern take on Pong with multiplayer features, auth, and social elements for an engaging experience.",
     href: "https://github.com/Abdlatif-20/ft_transcendence",
     techStack: ["TypeScript", "Next.js", "Tailwind", "Postgres", "Redis", "WebSockets"],
-    image: "/images/projects/pong.svg",
+    image: "/projects/pong.jpg",
   },
   {
     title: "Portfolio",
     description: "This portfolio site built with Next.js, TailwindCSS and i18n.",
     href: "https://github.com/Abdlatif-20/Portfolio",
     techStack: ["Next.js", "TailwindCSS", "i18next"],
-    image: "/images/projects/portfolio.svg",
+    image: "/projects/portfolio.svg",
   },
   {
     title: "rhmetrics",
@@ -61,7 +61,7 @@ const projects: Project[] = [
     href: "https://rhmetrics.ma/",
     techStack: ["React", "Tailwind", "Strapi", "Postgres"],
     live: true,
-    image: "/images/projects/rhmetrics.svg",
+    image: "/projects/rhmetrics.png",
   },
   {
     title: "MyJoboard",
@@ -69,14 +69,15 @@ const projects: Project[] = [
     href: "https://www.job.myjoboard-ma.com/",
     techStack: ["React", "Tailwind", "Express", "Postgres"],
     live: true,
-    image: "/images/projects/myjoboard.svg",
+    image: "/projects/myjoboard.svg",
   },
 ];
 
 export default function Projects() {
   const { t } = useTranslation();
   const { isDarkMode } = useDarkMode();
-  const [visibleCount, setVisibleCount] = useState(6);
+  // show all projects by default
+  const visibleCount = projects.length;
   const containerRef = useRef<HTMLDivElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
@@ -87,15 +88,8 @@ export default function Projects() {
   const currentXRef = useRef<number>(0);
   const isPausedRef = useRef<boolean>(false);
 
-  const showMore = () => setVisibleCount((c) => Math.min(projects.length, c + 3));
-  const showLess = () => setVisibleCount((c) => Math.max(3, c - 3));
-  const [mobileIndex, setMobileIndex] = useState(0);
+  // removed showMore/showLess controls — all projects are visible
 
-  const prevMobile = () => setMobileIndex((i) => Math.max(0, i - 1));
-  const nextMobile = () => setMobileIndex((i) => Math.min(Math.max(0, visibleCount - 1), i + 1));
-
-  // Auto-scroll logic for the track
-  // keep refs in sync with state so the animation loop doesn't restart on hover/pause
   useEffect(() => {
     isPausedRef.current = isPaused;
   }, [isPaused]);
@@ -109,7 +103,7 @@ export default function Projects() {
     if (!firstGroup) return;
     const singleWidth = firstGroup.getBoundingClientRect().width;
 
-    // don't reset currentXRef here so pause/resume is seamless
+  // don't reset currentXRef here so pause/resume is seamless
     const step = (time: number) => {
       if (lastTimeRef.current == null) lastTimeRef.current = time;
       const dt = time - (lastTimeRef.current || time);
@@ -131,17 +125,17 @@ export default function Projects() {
       animationRef.current = null;
       lastTimeRef.current = null;
     };
+    // run once (layout changes will naturally keep things correct)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visibleCount]);
+  }, []);
 
   return (
     <section
       id="projects"
-      className={`w-full flex flex-col items-center px-4 py-12 md:py-20 ${
-        isDarkMode ? "bg-[#0F1720]" : "bg-transparent"
+      className={`w-full flex flex-col items-center px-4 py-12 md:py-20 bg-transparent
       }`}
     >
-      <div className="max-w-6xl w-full">
+      <div className="max-w-7xl w-full">
         <header className="mb-8 md:mb-12">
           <h2 className={`text-3xl md:text-4xl font-extrabold ${isDarkMode ? "text-white" : "text-black"}`}>
             {t("Projects")}
@@ -162,114 +156,41 @@ export default function Projects() {
               style={{ transform: "translateX(0px)" }}
             >
               {[0, 1].map((copy) => (
-                <div key={copy} className="flex gap-6">
+                <div key={copy} className="flex gap-6 ">
                   {projects.slice(0, visibleCount).map((p, i) => (
-                    <div key={`${copy}-${i}`} className={`inline-block rounded-2xl overflow-hidden ${isDarkMode ? "bg-[#0b1116]" : "bg-white"} shadow-lg`} style={{ minWidth: 280 }}>
-                      {p.image && <img src={p.image} alt={p.title} className="w-full h-40 object-cover" />}
-                      <div className="p-3">
-                        <h3 className={`text-base font-semibold ${isDarkMode ? "text-white" : "text-slate-900"}`}>{t(p.title)}</h3>
-                        <p className={`text-xs mt-1 ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>{t(p.description)}</p>
-                        <div className="mt-2 flex flex-wrap gap-2">
-                          {p.techStack?.map((tech, idx) => (
-                            <span key={idx} className={`text-xs px-2 py-1 rounded-md font-medium ${isDarkMode ? "bg-slate-800 text-slate-200" : "bg-slate-100 text-slate-800"}`}>
-                              {tech}
+                        <a
+                          key={`${copy}-${i}`}
+                          href={p.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`inline-block rounded-2xl overflow-hidden w-[400px] ${isDarkMode ? "bg-[#0b1116]" : "bg-white"} shadow-lg hover:scale-[1.01] transition-transform focus:outline-none focus:ring-2 focus:ring-offset-2`}
+                          aria-label={`${p.title} - open in a new tab`}
+                        >
+                          <div className="relative">
+                            {p.image && <img src={p.image} alt={p.title} className="w-full h-40 object-cover" />}
+                            <span className="absolute top-2 right-2 bg-black/50 text-white rounded-full p-1">
+                              <FaExternalLinkAlt size={12} />
                             </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Mobile carousel */}
-          <div className="md:hidden -mx-4 px-4">
-            {/* mobile single view with prev/next controls */}
-            <div className="relative">
-              {projects.slice(0, visibleCount).map((p, i) => (
-                <div
-                  key={i}
-                  className={`transition-transform duration-300 ${i === mobileIndex ? "block" : "hidden"}`}
-                >
-                  <div className={`rounded-2xl overflow-hidden ${isDarkMode ? "bg-[#0b1116]" : "bg-white"}`}>
-                    {p.image && (
-                      <img src={p.image} alt={p.title} className="w-full h-40 object-cover" />
-                    )}
-                    <div className="p-4">
-                      <h3 className={`text-lg font-semibold mb-2 ${isDarkMode ? "text-white" : "text-slate-900"}`}>{t(p.title)}</h3>
-                      <p className={`text-sm ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>{t(p.description)}</p>
-
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {p.techStack?.map((tech, idx) => (
-                          <span
-                            key={idx}
-                            className={`text-xs px-2 py-1 rounded-md font-medium ${
-                              isDarkMode ? "bg-slate-800 text-slate-200" : "bg-slate-100 text-slate-800"
-                            }`}
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-
-                      <div className="mt-4 flex items-center gap-3">
-                        <a href={p.href} target="_blank" rel="noreferrer" className="text-sm text-[#00BD95] inline-flex items-center gap-2">
-                          {p.live ? t("Visit") : t("Repository")} <FaExternalLinkAlt />
+                          </div>
+                          <div className="p-3">
+                            <h3 className={`text-base font-semibold ${isDarkMode ? "text-white" : "text-slate-900"}`}>{t(p.title)}</h3>
+                            <p className={`text-xs mt-1 ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>{t(p.description)}</p>
+                            <div className="mt-2 flex flex-wrap gap-2">
+                              {p.techStack?.map((tech, idx) => (
+                                <span key={idx} className={`text-xs px-2 py-1 rounded-md font-medium ${isDarkMode ? "bg-slate-800 text-slate-200" : "bg-slate-100 text-slate-800"}`}>
+                                  {tech}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
                         </a>
-                      </div>
-                    </div>
-                  </div>
+                      ))}
                 </div>
               ))}
-
-              {/* controls */}
-              <div className="absolute inset-x-0 -bottom-6 flex justify-center gap-4">
-                <button
-                  onClick={prevMobile}
-                  aria-label="Previous project"
-                  className="px-3 py-2 rounded-full bg-white/90 text-slate-900 shadow-md md:hidden"
-                >
-                  Prev
-                </button>
-                <div className="flex items-center gap-2">
-                  {projects.slice(0, visibleCount).map((_, dotIdx) => (
-                    <button
-                      key={dotIdx}
-                      onClick={() => setMobileIndex(dotIdx)}
-                      aria-label={`Go to project ${dotIdx + 1}`}
-                      className={`w-2 h-2 rounded-full ${dotIdx === mobileIndex ? "bg-[#00BD95]" : "bg-slate-300"}`}
-                    />
-                  ))}
-                </div>
-                <button
-                  onClick={nextMobile}
-                  aria-label="Next project"
-                  className="px-3 py-2 rounded-full bg-white/90 text-slate-900 shadow-md md:hidden"
-                >
-                  Next
-                </button>
-              </div>
             </div>
           </div>
 
-        <div className="mt-8 flex items-center gap-4">
-          {visibleCount < projects.length && (
-            <button
-              onClick={showMore}
-              className="px-5 py-2 rounded-full bg-gradient-to-r from-[#00BD95] to-[#00A884] text-white font-semibold shadow-md hover:scale-105 transition-transform"
-            >
-              {t("Show More")}
-            </button>
-          )}
-
-          {visibleCount > 3 && (
-            <button onClick={showLess} className="px-4 py-2 rounded-full border text-sm">
-              {t("Show Less")}
-            </button>
-          )}
-        </div>
+        {/* all projects are shown; show more / show less controls removed */}
       </div>
     </section>
   );

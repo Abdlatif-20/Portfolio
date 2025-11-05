@@ -48,10 +48,19 @@ const About = () => {
             </button>
           </div>
         </div>
-        <img className="order-1 sm:order-2 w-[80%] md:w-[350px] md:mb-12 lg:w-[500px] h-auto"
-          src={isDarkMode ? "images/Mee.png" : "images/Me.png"}
-          alt="aben-nei"
-        />
+        <div className="order-1 sm:order-2 w-[80%] md:w-[350px] md:mb-12 lg:w-[500px] flex items-center justify-center">
+          <div className={`relative rounded-full p-1 shadow-2xl transition-transform transform motion-safe:hover:scale-105 ${isDarkMode ? 'bg-gradient-to-tr from-[#0ea5a4] to-[#3b82f6]' : 'bg-gradient-to-tr from-[#00BD95] to-[#0066ff]'}`}>
+            <div className={`rounded-full bg-${isDarkMode ? '[#071827]' : 'white'} overflow-hidden w-[260px] h-[260px] md:w-[320px] md:h-[320px] lg:w-[420px] lg:h-[420px] flex items-center justify-center`}> 
+              <img
+                src="images/mee.png"
+                alt="aben-nei"
+                className="rounded-full w-full h-full object-cover block"
+              />
+            </div>
+            {/* subtle inner ring */}
+            <span className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-white/10" />
+          </div>
+        </div>
       </div>
     </section>
   );
