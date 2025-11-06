@@ -14,6 +14,7 @@ const Header = () => {
     const { t, i18n } = useTranslation();
     const [showMenu, setShowMenu] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
+    const headerRef = useRef<HTMLElement | null>(null);
 
     useEffect(() => {
         const lang = localStorage.getItem('lang') || 'en';
@@ -70,17 +71,27 @@ const Header = () => {
         const sections = document.querySelectorAll(selector);
         if (!sections || sections.length === 0) return;
 
+        // compute header height dynamically so rootMargin matches the actual fixed header
+        const headerHeight = headerRef.current?.offsetHeight || 80;
+        const rootMargin = `-${headerHeight}px 0px -40% 0px`;
+
         const observer = new IntersectionObserver(
             (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        setIsActivated(entry.target.id);
+                // choose the entry with the largest intersection ratio to avoid flicker
+                let best: IntersectionObserverEntry | null = null;
+                for (const entry of entries) {
+                    if (!best || entry.intersectionRatio > best.intersectionRatio) {
+                        best = entry;
                     }
-                });
+                }
+                if (best && best.isIntersecting) {
+                    const id = (best.target as HTMLElement).id;
+                    // only activate if id is one of our known sections
+                    if (sectionButtons.some((s) => s.id === id)) setIsActivated(id);
+                }
             },
             {
-                // account for the fixed header height so section headings are considered in-view
-                rootMargin: '-80px 0px -40% 0px',
+                rootMargin,
                 threshold: 0.35,
             }
         );
@@ -112,7 +123,7 @@ const Header = () => {
     }, [sectionButtons]);
 
     return (
-        <header className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b ${isDarkMode ? 'bg-[#0b1220]/80 text-white border-[#111827]/30' : 'bg-white/70 text-black border-gray-200/60'}`}>
+        <header ref={headerRef} className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b ${isDarkMode ? 'bg-[#0b1220]/80 text-white border-[#111827]/30' : 'bg-white/70 text-black border-gray-200/60'}`}>
             <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
                 <div className="flex items-center h-[64px] md:h-[80px] justify-between">
                     {/* Brand / Logo */}

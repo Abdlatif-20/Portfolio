@@ -216,7 +216,9 @@ function GitHubStatsCard({ username, isDarkMode }: { username: string; isDarkMod
         </div>
       ) : data ? (
         <div className="flex flex-col items-center gap-3">
-          <img src={data.avatar_url} alt={data.name} className="w-20 h-20 rounded-full object-cover" />
+          <a href={`https://github.com/${username}`} target="_blank" rel="noopener noreferrer" className="inline-block">
+            <img src={data.avatar_url} alt={data.name} className="w-20 h-20 rounded-full object-cover" />
+          </a>
           <div>
             <a href={`https://github.com/${username}`} target="_blank" rel="noopener noreferrer" className={`font-semibold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
               {data.name}
@@ -246,6 +248,9 @@ function GitHubStatsCard({ username, isDarkMode }: { username: string; isDarkMod
           <div className="mt-3 w-full">
             {/* small generated card as visual flair (third-party image service) */}
             <img src={`https://github-readme-stats.vercel.app/api?username=${username}&show_icons=true&hide_border=true&theme=${isDarkMode ? "dark" : "default"}`} alt="github-stats" className="w-full rounded-md" />
+          </div>
+          <div className="mt-3 w-full flex justify-center">
+            <a href={`https://github.com/${username}`} target="_blank" rel="noopener noreferrer" className="inline-block px-4 py-2 rounded-md bg-[#00BD95]/80 text-white text-sm font-medium hover:brightness-90 transition">View on GitHub</a>
           </div>
         </div>
       ) : null}
