@@ -187,11 +187,11 @@ export default function Projects() {
       className={`w-full flex flex-col items-center px-4 py-12 md:py-20 bg-transparent}`}
     >
       <div className="max-w-7xl w-full">
-        <header className="mb-8 md:mb-12">
-          <h2 className={`text-3xl md:text-4xl font-extrabold ${isDarkMode ? "text-white" : "text-black"}`}>
+        <header className="mb-8 md:mb-12 flex flex-col items-center">
+          <h2 className={`text-3xl text-center md:text-4xl font-extrabold ${isDarkMode ? "text-white" : "text-black"}`}>
             {t("Projects")}
           </h2>
-          <p className={`mt-2 text-sm md:text-base ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>
+          <p className={`mt-2 text-sm md:text-base text-center ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>
             {t(
               "Selected projects that showcase my skills in systems programming, web development and container orchestration."
             )}

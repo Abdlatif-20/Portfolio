@@ -36,16 +36,13 @@ export default function Education() {
   const { t } = useTranslation();
 
   return (
-    <section className={`w-full max-w-4xl px-4 py-12 sm:py-16`} id="education">
-      <div className="mx-auto ">
-        {/* <h2 className={`text-2xl sm:text-3xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-black'}`}>
-          Education
-        </h2> */}
-        <header className="mb-8 md:mb-12">
+    <section className={`w-full max-w-7xl px-4 py-12 sm:py-16`} id="education">
+      <div className="mx-auto">
+        <header className="mb-8 md:mb-12 flex flex-col items-center">
           <h2 className={`text-3xl md:text-4xl font-extrabold ${isDarkMode ? "text-white" : "text-black"}`}>
             {t("Education")}
           </h2>
-          <p className={`mt-2 text-sm md:text-base ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>
+          <p className={`mt-2 text-sm md:text-base text-center ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>
             {t(
               "A summary of my academic background and qualifications."
             )}

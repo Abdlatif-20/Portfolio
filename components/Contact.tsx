@@ -97,10 +97,16 @@ const Contact = () => {
           <a href='#contact' className='px-3 py-2 rounded-full bg-gradient-to-r from-[#00BD95] to-[#00A884] text-white text-sm font-medium'>{t('Contact me')}</a>
         </div>
       </div>
-
-      <h1 className='text-[40px] text-shadow-textShadow-green font-bold mb-5 h-[35%] w-full flex justify-center items-center brightness-70'>
-        {t("Contact")}
-      </h1>
+      <header className="mb-8 md:mb-12 flex flex-col items-center">
+          <h2 className={`text-3xl md:text-4xl font-extrabold ${isDarkMode ? "text-white" : "text-black"}`}>
+            {t("Contact")}
+          </h2>
+          <p className={`mt-2 text-sm md:text-base text-center ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>
+            {t(
+              "Get in touch with me via the form below or through my social media channels."
+            )}
+          </p>
+        </header>
       <div className='flex flex-col justify-between items-center w-full h-full '
         style={{border: `${isDarkMode ? '0.3px solid rgba(255, 255, 255, 0.3)' : '0.3px solid rgba(0, 0, 0, 0.3)'}`
       }}>
