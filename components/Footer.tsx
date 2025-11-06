@@ -20,8 +20,9 @@ const Footer = () => {
   ];
 
   const quickLinks = [
-    { name: t('Home'), href: '/' },
+    { name: t('About'), href: '/' },
     { name: t('Projects'), href: '#projects' },
+    { name: t('Education'), href: '#education' },
     { name: t('Skills'), href: '#skills' },
     { name: t('Contact'), href: '#contact' },
   ];
