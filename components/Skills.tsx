@@ -40,13 +40,13 @@ const Skills = () => {
         { name: "React", icon: <FaReact />, level: 90 },
         { name: "Next.js", icon: <RiNextjsFill />, level: 85 },
         { name: "Tailwind CSS", icon: <RiTailwindCssFill />, level: 90 },
-        { name: "i18next", icon: <SiI18Next />, level: 75 },
+        { name: "i18next", icon: <SiI18Next />, level: 85 },
       ],
     },
     {
       title: "Backend & APIs",
       skills: [
-        { name: "Django", icon: <SiDjango />, level: 82 },
+        { name: "Django", icon: <SiDjango />, level: 72 },
         { name: "Python", icon: <FaPython />, level: 86 },
         { name: "REST API", icon: <TbApi />, level: 84 },
         { name: "PostgreSQL", icon: <BiLogoPostgresql />, level: 80 },
@@ -63,9 +63,9 @@ const Skills = () => {
     {
       title: t("Tools & Others"),
       skills: [
-        { name: "Vim", icon: <DiVim />, level: 70 },
+        { name: "Vim", icon: <DiVim />, level: 85 },
         { name: "VSCode", icon: <VscVscode />, level: 90 },
-        { name: "Git/GitHub", icon: <FaGithub />, level: 88 },
+        { name: "Git/GitHub", icon: <FaGithub />, level: 90 },
       ],
     },
   ];

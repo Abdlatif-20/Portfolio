@@ -112,15 +112,16 @@ const Header = () => {
     }, [sectionButtons]);
 
     return (
-        <header className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b ${isDarkMode ? 'bg-[#0b1220]/60 text-white border-[#111827]/30' : 'bg-white/70 text-black border-gray-200/60'}`}>
+        <header className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b ${isDarkMode ? 'bg-[#0b1220]/80 text-white border-[#111827]/30' : 'bg-white/70 text-black border-gray-200/60'}`}>
             <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
                 <div className="flex items-center h-[64px] md:h-[80px] justify-between">
                     {/* Brand / Logo */}
                     <div className="flex items-center gap-3">
-                        <h1 className="text-lg md:text-2xl font-extrabold tracking-tight select-none bg-gradient-to-r from-green-400 to-blue-500 text-transparent bg-clip-text">
-                            Ab.En-neiymy
-                        </h1>
-                        <span className="text-xs text-muted-foreground hidden md:block">{t('Full Stack Developer')}</span>
+                            <a onClick={() => { scrollToSection('#about'); setIsActivated('about'); }} className="flex items-center gap-3 cursor-pointer" aria-label="Go to About">
+                                <img src="/logo.svg" alt="Abdellatyf logo" className="w-9 h-9 md:w-11 md:h-11 rounded-full" />
+                                <span className="hidden lg:inline-block text-lg lg:text-2xl font-extrabold tracking-tight select-none bg-gradient-to-r from-green-400 to-blue-500 text-transparent bg-clip-text">Ab.En-neiymy</span>
+                            </a>
+                            <span className="text-xs text-muted-foreground hidden lg:block">{t('Front End Developer')}</span>
                     </div>
 
                     {/* Center Navigation (desktop) */}
