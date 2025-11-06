@@ -73,8 +73,8 @@ const Skills = () => {
   return (
     <section id="skills" className={`w-full py-20 bg-transparent"}`}>
       <div className="max-w-6xl mx-auto px-4">
-        <div className="flex md:flex-row flex-col items-center justify-between mb-10">
-          <h2 className={`text-3xl md:text-4xl font-extrabold ${isDarkMode ? "text-white" : "text-black"}`}>
+        <div className="flex lg:flex-row flex-col items-start justify-between mb-10">
+          <h2 className={`text-3xl md:text-4xl font-extrabold mb-2 ${isDarkMode ? "text-white" : "text-black"}`}>
             {t("Skills")}
           </h2>
           <p className={`text-sm ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>

@@ -81,6 +81,8 @@ export default function Projects() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
+  const singleWidthRef = useRef<number>(0);
+  const cardStepRef = useRef<number>(0);
   const animationRef = useRef<number | null>(null);
   const lastTimeRef = useRef<number | null>(null);
   const [isPaused, setIsPaused] = useState(false);
@@ -102,6 +104,19 @@ export default function Projects() {
     const firstGroup = track.children[0] as HTMLElement | undefined;
     if (!firstGroup) return;
     const singleWidth = firstGroup.getBoundingClientRect().width;
+    singleWidthRef.current = singleWidth;
+
+    // determine single card step (distance between two adjacent cards)
+    const firstCard = firstGroup.querySelector('a') as HTMLElement | null;
+    if (firstCard) {
+      const cards = Array.from(firstGroup.querySelectorAll('a')) as HTMLElement[];
+      if (cards.length >= 2) {
+        const step = Math.abs(cards[1].getBoundingClientRect().left - cards[0].getBoundingClientRect().left);
+        cardStepRef.current = step;
+      } else {
+        cardStepRef.current = singleWidth / Math.max(1, Math.min(projects.length, visibleCount));
+      }
+    }
 
   // don't reset currentXRef here so pause/resume is seamless
     const step = (time: number) => {
@@ -129,6 +144,45 @@ export default function Projects() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // manual scroll handlers (left/right)
+  const scrollBy = (delta: number) => {
+    const track = trackRef.current;
+    const singleWidth = singleWidthRef.current || 0;
+    if (!track) return;
+    currentXRef.current += delta;
+    // wrap similarly to the animation logic
+    if (singleWidth > 0) {
+      if (Math.abs(currentXRef.current) >= singleWidth) {
+        // bring back into range
+        if (currentXRef.current < 0) currentXRef.current += singleWidth;
+        else currentXRef.current -= singleWidth;
+      }
+    }
+    track.style.transform = `translateX(${currentXRef.current}px)`;
+  };
+
+  const onLeft = () => {
+    // move content right to reveal previous items
+    const step = cardStepRef.current || 420;
+    scrollBy(Math.abs(step));
+  };
+
+  const onRight = () => {
+    const step = cardStepRef.current || 420;
+    scrollBy(-Math.abs(step));
+  };
+
+  // keyboard control when wrapper is focused
+  const onWrapperKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      onLeft();
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      onRight();
+    }
+  };
+
   return (
     <section
       id="projects"
@@ -149,7 +203,23 @@ export default function Projects() {
 
         {/* responsive grid on md+, horizontal carousel on small screens */}
           {/* Auto-scrolling single-line projects strip */}
-          <div className="w-full overflow-hidden" ref={wrapperRef} onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
+          <div className="w-full overflow-hidden relative" ref={wrapperRef} onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)} onKeyDown={onWrapperKeyDown} tabIndex={0} aria-label="Projects carousel">
+            {/* left / right controls */}
+            <button
+              aria-label="Previous projects"
+              onClick={onLeft}
+              className="absolute left-2 top-1/2 -translate-y-1/2 z-40 p-2 rounded-full bg-white/80 dark:bg-black/60 shadow-md hover:scale-105 transition-transform hover:bg-green-400/60"
+            >
+              ‹
+            </button>
+            <button
+              aria-label="Next projects"
+              onClick={onRight}
+              className="absolute right-2 top-1/2 -translate-y-1/2 z-40 p-2 rounded-full bg-white/80 dark:bg-black/60 shadow-md
+              hover:scale-105 transition-transform hover:bg-green-400/60"
+            >
+              ›
+            </button>
             <div
               ref={trackRef}
               className="flex gap-6 items-stretch whitespace-nowrap will-change-transform"

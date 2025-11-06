@@ -41,7 +41,7 @@ const About = () => {
             transform hover:scale-105 transition-transform duration-300 ease-in-out
             ">
               <a className="text-xl lg:text-2xl font-bold w-full"
-                href="/resume/resume.pdf"
+                href="/resume/my-cv.pdf"
                 target="_blank">
                 {t("My Resume")}
               </a>
@@ -49,8 +49,32 @@ const About = () => {
           </div>
         </div>
         <div className="order-1 sm:order-2 w-[80%] md:w-[350px] md:mb-12 lg:w-[500px] flex items-center justify-center">
-          <div className={`relative rounded-full p-1 shadow-2xl transition-transform transform motion-safe:hover:scale-105 ${isDarkMode ? 'bg-gradient-to-tr from-[#0ea5a4] to-[#3b82f6]' : 'bg-gradient-to-tr from-[#00BD95] to-[#0066ff]'}`}>
-            <div className={`rounded-full bg-${isDarkMode ? '[#071827]' : 'white'} overflow-hidden w-[260px] h-[260px] md:w-[320px] md:h-[320px] lg:w-[420px] lg:h-[420px] flex items-center justify-center`}> 
+          <div className={`relative group rounded-full p-1 shadow-2xl transition-transform transform motion-safe:hover:scale-105`}>
+            {/* animated conic-gradient ring (appears on hover) */}
+            <div className="absolute -inset-1 rounded-full pointer-events-none flex items-center justify-center">
+              <span
+                className="absolute inset-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{
+                  background: isDarkMode
+                    ? 'conic-gradient(from 0deg, #0ea5a4, #3b82f6, #8b5cf6, #0ea5a4)'
+                    : 'conic-gradient(from 0deg, #00BD95, #0066ff, #8b5cf6, #00BD95)',
+                  filter: 'blur(4px)',
+                  animation: 'spin 6s linear infinite, hue 8s linear infinite',
+                }}
+              />
+              <span
+                className="absolute inset-1 rounded-full opacity-100 group-hover:opacity-0 transition-opacity duration-700"
+                style={{
+                  background: isDarkMode
+                    ? 'conic-gradient(from 0deg, #3b82f6, #0ea5a4, #06b6d4, #3b82f6)'
+                    : 'conic-gradient(from 0deg, #0066ff, #00BD95, #06b6d4, #0066ff)',
+                  filter: 'blur(3px)',
+                  animation: 'spin 9s linear reverse infinite, hue 10s linear reverse infinite',
+                }}
+              />
+            </div>
+
+            <div className={`rounded-full bg-${isDarkMode ? '[#071827]' : 'white'} overflow-hidden w-[260px] h-[260px] md:w-[320px] md:h-[320px] lg:w-[420px] lg:h-[420px] flex items-center justify-center relative z-10`}> 
               <img
                 src="images/mee.png"
                 alt="aben-nei"

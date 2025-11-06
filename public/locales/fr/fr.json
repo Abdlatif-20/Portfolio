@@ -23,5 +23,28 @@
     "Full Stack Developer":"Développeur Full Stack",
     "Others":"Autres",
     "Show More":"Voir plus",
-    "Show Less":"Voir moins"
+    "Show Less":"Voir moins",
+    "Availability": "Disponibilité",
+    "Open to full-time, part-time and freelance opportunities": "Ouvert aux opportunités à temps plein, à temps partiel et en freelance",
+    "Full-time": "Temps plein",
+    "Freelance": "Freelance",
+    "Contract": "Contrat",
+    "Contact me": "Contactez-moi",
+    "Quick links": "Liens rapides",
+    "Follow": "Suivez-moi",
+    "Back to top": "Retour en haut",
+    "Built with Next.js • Tailwind CSS": "Construit avec Next.js • Tailwind CSS",
+    "Technologies I use to build reliable, fast and maintainable software.": "Technologies que j'utilise pour construire des logiciels fiables, rapides et maintenables.",
+    "items": "éléments"
+    ,"Education": "Éducation",
+    "Frontend": "Frontend",
+    "Backend & APIs": "Backend et API",
+    "Systems & DevOps": "Systèmes & DevOps",
+    "Tools & Others": "Outils & autres",
+    "Selected projects that showcase my skills in systems programming, web development and container orchestration.": "Projets sélectionnés qui mettent en valeur mes compétences en programmation système, développement web et orchestration de conteneurs.",
+    "Hire me": "Engagez-moi"
+    ,"I learned various programming languages and computer science concepts through hands-on projects and peer-to-peer learning.": "J'ai appris divers langages de programmation et concepts en informatique grâce à des projets pratiques et à l'apprentissage entre pairs.",
+    "Completed foundational coursework in physics and mathematics, preparing for advanced studies in computer science.": "Cours fondamentaux en physique et mathématiques complétés, préparant à des études avancées en informatique.",
+    "Graduated with a focus on life and earth sciences, developing analytical and scientific skills.": "Diplômé avec une spécialisation en sciences de la vie et de la Terre, développant des compétences analytiques et scientifiques.",
+        "A summary of my academic background and qualifications.":"Un résumé de mon parcours académique et de mes qualifications."
 }

@@ -86,7 +86,7 @@ const Contact = () => {
         </div>
 
         <div className='flex items-center gap-3'>
-          <div className='hidden sm:flex gap-2 text-xs'>
+          <div className='hidden sm:flex gap-2 text-[10px] lg:text-xs'>
             <span className='px-2 py-1 rounded-full bg-slate-100/40
               hover:bg-green-500 hover:text-white transition-colors'>{t('Full-time')}</span>
             <span className='px-2 py-1 rounded-full bg-slate-100/40
