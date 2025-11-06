@@ -52,7 +52,7 @@ const projects: Project[] = [
     description: "This portfolio site built with Next.js, TailwindCSS and i18n.",
     href: "https://github.com/Abdlatif-20/Portfolio",
     techStack: ["Next.js", "TailwindCSS", "i18next"],
-    image: "/projects/portfolio.svg",
+    image: "/projects/portfolio.png",
   },
   {
     title: "rhmetrics",
@@ -69,7 +69,7 @@ const projects: Project[] = [
     href: "https://www.job.myjoboard-ma.com/",
     techStack: ["React", "Tailwind", "Express", "Postgres"],
     live: true,
-    image: "/projects/myjoboard.svg",
+    image: "/projects/myjoboard.png",
   },
 ];
 
