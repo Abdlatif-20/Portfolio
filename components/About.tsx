@@ -75,10 +75,21 @@ const About = () => {
             </div>
 
             <div className={`rounded-full bg-${isDarkMode ? '[#071827]' : 'white'} overflow-hidden w-[260px] h-[260px] md:w-[320px] md:h-[320px] lg:w-[420px] lg:h-[420px] flex items-center justify-center relative z-10`}> 
+              {/* invisible overlay to intercept right-click/drag so the image isn't easily saved */}
+              <div
+                aria-hidden
+                className="absolute inset-0 z-20"
+                onContextMenu={(e) => e.preventDefault()}
+                onMouseDown={(e) => e.preventDefault()}
+                onTouchStart={(e) => e.preventDefault()}
+              />
               <img
                 src="images/mee.png"
                 alt="aben-nei"
-                className="rounded-full w-full h-full object-cover block"
+                draggable={false}
+                onDragStart={(e) => e.preventDefault()}
+                onContextMenu={(e) => e.preventDefault()}
+                className="rounded-full w-full h-full object-cover block select-none [-webkit-user-drag:none]"
               />
             </div>
             {/* subtle inner ring */}
