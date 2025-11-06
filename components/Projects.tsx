@@ -49,7 +49,7 @@ const projects: Project[] = [
   },
   {
     title: "Portfolio",
-    description: "This portfolio site built with Next.js, TailwindCSS and i18n.",
+    description: "this Portfolio is Showcasing my skills and projects and developed using Next.js, TailwindCSS, and i18n for multilingual support.",
     href: "https://github.com/Abdlatif-20/Portfolio",
     techStack: ["Next.js", "TailwindCSS", "i18next"],
     image: "/projects/portfolio.png",
@@ -230,7 +230,7 @@ export default function Projects() {
                           href={p.href}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className={`inline-block rounded-2xl overflow-hidden w-[400px] ${isDarkMode ? "bg-[#0b1116]" : "bg-white"} shadow-lg hover:scale-[1.01] transition-transform focus:outline-none focus:ring-2 focus:ring-offset-2`}
+                          className={`group relative inline-block rounded-2xl overflow-hidden w-[400px] ${isDarkMode ? "bg-[#0b1116]" : "bg-white"} shadow-lg hover:scale-[1.01] transition-transform focus:outline-none focus:ring-2 focus:ring-offset-2`}
                           aria-label={`${p.title} - open in a new tab`}
                         >
                           <div className="relative">
@@ -239,15 +239,42 @@ export default function Projects() {
                               <FaExternalLinkAlt size={12} />
                             </span>
                           </div>
+
+                          {/* Compact content (default) */}
                           <div className="p-3">
                             <h3 className={`text-base font-semibold ${isDarkMode ? "text-white" : "text-slate-900"}`}>{t(p.title)}</h3>
-                            <p className={`text-xs mt-1 ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>{t(p.description)}</p>
+                            <p className={`text-xs mt-1 ${isDarkMode ? "text-slate-300" : "text-slate-700"} line-clamp-3`}>{t(p.description)}</p>
                             <div className="mt-2 flex flex-wrap gap-2">
                               {p.techStack?.map((tech, idx) => (
                                 <span key={idx} className={`text-xs px-2 py-1 rounded-md font-medium ${isDarkMode ? "bg-slate-800 text-slate-200" : "bg-slate-100 text-slate-800"}`}>
                                   {tech}
                                 </span>
                               ))}
+                            </div>
+                          </div>
+
+                          {/* Hover overlay with full details */}
+                          <div className={`absolute inset-0 z-40 p-4 transition-opacity duration-300 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 ${isDarkMode ? "bg-[#000000]" : "bg-white"}
+                             flex flex-col`}> 
+                            <div className="overflow-auto pb-4">
+                              <h3 className={`text-lg font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{t(p.title)}</h3>
+                              <p className={`text-sm ${isDarkMode ? 'text-slate-300' : 'text-slate-700'} whitespace-pre-wrap`}>{t(p.description)}</p>
+
+                              {p.techStack && (
+                                <div className="mt-4 flex flex-wrap gap-2">
+                                  {p.techStack.map((tech, idx) => (
+                                    <span key={idx} className={`text-xs px-2 py-1 rounded-md font-medium ${isDarkMode ? "bg-slate-800 text-slate-200" : "bg-slate-100 text-slate-800"}`}>
+                                      {tech}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                            <div className="mt-auto flex gap-2">
+                              {p.live && (
+                                <a href={p.href} target="_blank" rel="noopener noreferrer" className="px-3 py-2 rounded-md bg-green-500 text-white text-sm font-medium">Open Live</a>
+                              )}
+                              <a href={p.href} target="_blank" rel="noopener noreferrer" className="px-3 py-2 rounded-md border border-current text-sm">View Source</a>
                             </div>
                           </div>
                         </a>
