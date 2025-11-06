@@ -90,8 +90,6 @@ export default function Projects() {
   const currentXRef = useRef<number>(0);
   const isPausedRef = useRef<boolean>(false);
 
-  // removed showMore/showLess controls — all projects are visible
-
   useEffect(() => {
     isPausedRef.current = isPaused;
   }, [isPaused]);
@@ -186,8 +184,7 @@ export default function Projects() {
   return (
     <section
       id="projects"
-      className={`w-full flex flex-col items-center px-4 py-12 md:py-20 bg-transparent
-      }`}
+      className={`w-full flex flex-col items-center px-4 py-12 md:py-20 bg-transparent}`}
     >
       <div className="max-w-7xl w-full">
         <header className="mb-8 md:mb-12">
