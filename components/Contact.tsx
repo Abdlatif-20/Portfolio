@@ -71,6 +71,33 @@ const Contact = () => {
 
   return (
     <div id='contact' className='flex flex-col justify-center items-center w-[95%] lg:w-[80%] min-h-[70vh]'>
+
+      {/* Availability section placed above Contact header */}
+      <div className={`w-full mb-6 p-5 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4
+        ${isDarkMode ? 'bg-[#071827]/60 border border-slate-700 text-white' : 'bg-white/70 border border-gray-200 text-slate-900'}`}
+        style={{backdropFilter: 'blur(8px)'}}
+      >
+        <div className='flex items-center gap-4'>
+          <span className='w-4 h-4 rounded-full bg-green-400 animate-pulse' aria-hidden />
+          <div>
+            <div className='text-sm font-semibold'>{t('Availability')}</div>
+            <div className='text-xs text-slate-400'>{t('Open to full-time, part-time and freelance opportunities')}</div>
+          </div>
+        </div>
+
+        <div className='flex items-center gap-3'>
+          <div className='hidden sm:flex gap-2 text-[10px] lg:text-xs'>
+            <span className='px-2 py-1 rounded-full bg-slate-100/40
+              hover:bg-green-500 hover:text-white transition-colors'>{t('Full-time')}</span>
+            <span className='px-2 py-1 rounded-full bg-slate-100/40
+              hover:bg-green-500 hover:text-white transition-colors'>{t('Freelance')}</span>
+            <span className='px-2 py-1 rounded-full bg-slate-100/40
+              hover:bg-green-500 hover:text-white transition-colors'>{t('Contract')}</span>
+          </div>
+          <a href='#contact' className='px-3 py-2 rounded-full bg-gradient-to-r from-[#00BD95] to-[#00A884] text-white text-sm font-medium'>{t('Contact me')}</a>
+        </div>
+      </div>
+
       <h1 className='text-[40px] text-shadow-textShadow-green font-bold mb-5 h-[35%] w-full flex justify-center items-center brightness-70'>
         {t("Contact")}
       </h1>

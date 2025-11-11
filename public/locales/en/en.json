@@ -23,5 +23,28 @@
     "Full Stack Developer":"Full Stack Developer",
     "Others":"Others",
     "Show More":"Show More",
-    "Show Less":"Show Less"
+    "Show Less":"Show Less",
+    "Availability": "Availability",
+    "Open to full-time, part-time and freelance opportunities": "Open to full-time, part-time and freelance opportunities",
+    "Full-time": "Full-time",
+    "Freelance": "Freelance",
+    "Contract": "Contract",
+    "Contact me": "Contact me",
+    "Quick links": "Quick links",
+    "Follow": "Follow",
+    "Back to top": "Back to top",
+    "Built with Next.js • Tailwind CSS": "Built with Next.js • Tailwind CSS",
+    "Technologies I use to build reliable, fast and maintainable software.": "Technologies I use to build reliable, fast and maintainable software.",
+    "items": "items"
+    ,"Education": "Education",
+    "Frontend": "Frontend",
+    "Backend & APIs": "Backend & APIs",
+    "Systems & DevOps": "Systems & DevOps",
+    "Tools & Others": "Tools & Others",
+    "Selected projects that showcase my skills in systems programming, web development and container orchestration.": "Selected projects that showcase my skills in systems programming, web development and container orchestration.",
+    "Hire me": "Hire me"
+    ,"I learned various programming languages and computer science concepts through hands-on projects and peer-to-peer learning.": "I learned various programming languages and computer science concepts through hands-on projects and peer-to-peer learning.",
+    "Completed foundational coursework in physics and mathematics, preparing for advanced studies in computer science.": "Completed foundational coursework in physics and mathematics, preparing for advanced studies in computer science.",
+    "Graduated with a focus on life and earth sciences, developing analytical and scientific skills.": "Graduated with a focus on life and earth sciences, developing analytical and scientific skills.",
+    "A summary of my academic background and qualifications.":"A summary of my academic background and qualifications."
 }

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+  <defs>
+    <linearGradient id="g3" x1="0" x2="1">
+      <stop offset="0%" stop-color="#00BD95"/>
+      <stop offset="100%" stop-color="#00A884"/>
+    </linearGradient>
+  </defs>
+  <rect width="100%" height="100%" fill="#071427"/>
+  <g transform="translate(80,80)">
+    <rect width="1040" height="560" rx="20" fill="#071827" stroke="#0b2a2a" stroke-width="1" />
+    <g transform="translate(60,60)">
+      <text x="0" y="40" fill="#fff" font-size="34" font-family="sans-serif" font-weight="700">MyJoboard</text>
+      <text x="0" y="78" fill="#94a3b8" font-size="14">Job board platform</text>
+
+      <g transform="translate(0,120)">
+        <rect x="0" y="0" width="480" height="220" rx="10" fill="url(#g3)" />
+  <text x="24" y="40" fill="#06363a" font-size="20" font-family="sans-serif" font-weight="700">Search &amp; Apply</text>
+        <text x="24" y="72" fill="#06363a" font-size="12">React • Tailwind • Express • Postgres</text>
+      </g>
+    </g>
+  </g>
+</svg>
