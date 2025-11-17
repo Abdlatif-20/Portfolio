@@ -10,7 +10,6 @@ import { FaArrowCircleUp } from "react-icons/fa";
 import React from 'react';
 import { FloatingWhatsApp } from 'react-floating-whatsapp';
 import './globals.css';
-import Chatbot from '@/components/Chatbot';
 
 export default function Home() {
   const [isScrolling, setIsScrolling] = useState(false);
@@ -47,17 +46,76 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className={`fixed inset-0 flex flex-col items-center justify-center z-[9999] ${isDarkMode ? 'bg-[#21272F]' : 'bg-white'}`}>
-        <div className="w-64 h-4 bg-gray-200 rounded-full overflow-hidden shadow-md">
-          <div
-            className="h-full rounded-full transition-all duration-75"
-            style={{
-              width: `${progress}%`,
-              background: isDarkMode ? 'linear-gradient(90deg, #00BD95 0%, #21272F 100%)' : 'linear-gradient(90deg, #21272F 0%, #00BD95 100%)',
-            }}
-          />
+      <div className={`fixed inset-0 flex flex-col items-center justify-center z-[9999] ${isDarkMode ? 'bg-gradient-to-br from-[#071827] via-[#0b1220] to-[#21272F]' : 'bg-gradient-to-br from-white via-slate-50 to-slate-100'}`}>
+        {/* Animated Logo/Icon */}
+        <div className="mb-8 relative">
+          <div className="absolute inset-0 animate-ping opacity-20">
+            <div className="w-20 h-20 rounded-full bg-[#00BD95]"></div>
+          </div>
+          <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-[#00BD95] to-cyan-600 flex items-center justify-center shadow-2xl animate-pulse">
+            <span className="text-3xl font-bold text-white">AE</span>
+          </div>
         </div>
-        <span className={`mt-4 text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-black'}`}>{progress}%</span>
+
+        {/* Loading Text */}
+        <h2 className={`text-2xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+          Loading Portfolio
+        </h2>
+        <p className={`text-sm mb-8 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+          Please wait...
+        </p>
+
+        {/* Modern Progress Bar Container */}
+        <div className="w-80 relative">
+          {/* Progress Bar Background */}
+          <div className={`h-2 rounded-full overflow-hidden ${isDarkMode ? 'bg-slate-800' : 'bg-slate-200'} shadow-inner`}>
+            {/* Animated Progress Bar */}
+            <div
+              className="h-full rounded-full transition-all duration-300 relative overflow-hidden"
+              style={{
+                width: `${progress}%`,
+                background: 'linear-gradient(90deg, #00BD95 0%, #06b6d4 50%, #00BD95 100%)',
+                backgroundSize: '200% 100%',
+                animation: 'shimmer 2s infinite linear',
+              }}
+            >
+              {/* Shine effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
+            </div>
+          </div>
+
+          {/* Progress Percentage */}
+          <div className="flex justify-between items-center mt-3">
+            <span className={`text-xs font-medium ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>
+              Loading assets...
+            </span>
+            <span className={`text-sm font-bold ${isDarkMode ? 'text-[#00BD95]' : 'text-[#00BD95]'}`}>
+              {progress}%
+            </span>
+          </div>
+        </div>
+
+        {/* Animated Dots */}
+        <div className="flex gap-2 mt-6">
+          <div className={`w-2 h-2 rounded-full ${isDarkMode ? 'bg-[#00BD95]' : 'bg-[#00BD95]'} animate-bounce`} style={{ animationDelay: '0ms' }}></div>
+          <div className={`w-2 h-2 rounded-full ${isDarkMode ? 'bg-[#00BD95]' : 'bg-[#00BD95]'} animate-bounce`} style={{ animationDelay: '150ms' }}></div>
+          <div className={`w-2 h-2 rounded-full ${isDarkMode ? 'bg-[#00BD95]' : 'bg-[#00BD95]'} animate-bounce`} style={{ animationDelay: '300ms' }}></div>
+        </div>
+
+        {/* CSS Animations */}
+        <style jsx>{`
+          @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+          }
+          .animate-shimmer {
+            animation: shimmer-slide 2s infinite;
+          }
+          @keyframes shimmer-slide {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+          }
+        `}</style>
       </div>
     );
   }
