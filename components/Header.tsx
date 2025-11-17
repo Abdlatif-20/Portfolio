@@ -1,23 +1,24 @@
 'use client';
 import React, { useEffect, useState, useRef } from 'react';
 import { MdOutlineLightMode, MdDarkMode } from "react-icons/md";
-import { IoMdMenu } from "react-icons/io";
+import { IoMdMenu, IoMdClose } from "react-icons/io";
+import { HiHome } from "react-icons/hi";
+import { FaCode, FaGraduationCap, FaTools, FaEnvelope } from "react-icons/fa";
 import '../i18n';
 import { useTranslation } from 'react-i18next';
 import { useDarkMode } from './context';
-import { MdOutlineMenuOpen } from "react-icons/md";
 
 const Header = () => {
     const { isDarkMode, setIsDarkMode } = useDarkMode();
     const [isActivated, setIsActivated] = useState('about');
     const [activeLang, setActiveLang] = useState('');
+    const [isScrolled, setIsScrolled] = useState(false);
     const { t, i18n } = useTranslation();
     const [showMenu, setShowMenu] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const lang = localStorage.getItem('lang') || 'en';
-        console.log(lang);
         setActiveLang(lang);
         i18n?.changeLanguage(lang);
     }, [i18n]);
@@ -28,6 +29,15 @@ const Header = () => {
             setIsDarkMode(darkmode === 'true');
         }
     }, [setIsDarkMode]);
+
+    // Handle scroll effect for header
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 20);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     // Close the menu if clicking outside
     useEffect(() => {
@@ -52,132 +62,302 @@ const Header = () => {
         }
     };
 
-    // Intersection Observer for tracking sections
+    // Scroll-based section tracking
     useEffect(() => {
-        const sections = document.querySelectorAll('div[id]');
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        setIsActivated(entry.target.id);
-                    }
-                });
-            },
-            { 
-                threshold: 0.4,
-
-             }
-        );
-
-        sections.forEach((section) => observer.observe(section));
-
-        return () => {
-            sections.forEach((section) => observer.unobserve(section));
+        const handleScroll = () => {
+            const sections = Array.from(document.querySelectorAll('section[id], div[id="contact"]')) as HTMLElement[];
+            const scrollPosition = window.scrollY + 150; // Account for header height
+            
+            // Find which section we're currently in
+            let currentSection = 'about';
+            
+            for (let i = sections.length - 1; i >= 0; i--) {
+                const section = sections[i];
+                const sectionTop = section.offsetTop;
+                
+                if (scrollPosition >= sectionTop) {
+                    currentSection = section.id;
+                    break;
+                }
+            }
+            
+            setIsActivated(currentSection);
         };
-    }, [setIsActivated]);
+
+        // Initial check
+        handleScroll();
+        
+        // Add scroll listener with throttle
+        let ticking = false;
+        const onScroll = () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    handleScroll();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        };
+
+        window.addEventListener('scroll', onScroll);
+        return () => window.removeEventListener('scroll', onScroll);
+    }, []);
 
     const sectionButtons = [
-        { id: 'about', label: t('About'), target: '#about' },
-        { id: 'projects', label: t('Projects'), target: '#projects' },
-        { id: 'skills', label: t('Skills'), target: '#skills' },
-        { id: 'contact', label: t('Contact'), target: '#contact' },
+        { id: 'about', label: t('About'), target: '#about', icon: <HiHome size={18} /> },
+        { id: 'projects', label: t('Projects'), target: '#projects', icon: <FaCode size={16} /> },
+        { id: 'education', label: t('Education'), target: '#education', icon: <FaGraduationCap size={16} /> },
+        { id: 'skills', label: t('Skills'), target: '#skills', icon: <FaTools size={16} /> },
+        { id: 'contact', label: t('Contact'), target: '#contact', icon: <FaEnvelope size={16} /> },
     ];
 
     return (
-        <header className={`flex justify-between items-center w-full h-[60px] md:h-[80px] fixed top-0 z-50 ${isDarkMode ? 'bg-[#21272F] text-white' : 'bg-white text-black'}`}>
+        <header 
+            className={`flex justify-between items-center w-full h-[70px] fixed top-0 z-50 px-4 lg:px-8 transition-all duration-300
+                ${isScrolled 
+                    ? isDarkMode 
+                        ? 'bg-[#21272F]/95 backdrop-blur-md shadow-lg border-b border-slate-700/50' 
+                        : 'bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200/50'
+                    : isDarkMode 
+                        ? 'bg-[#21272F]' 
+                        : 'bg-white'
+                }
+                ${isDarkMode ? 'text-white' : 'text-black'}
+            `}
+        >
+            {/* Logo */}
             <div className="flex justify-center items-center h-full">
-                <h1 className="text-xl sm:text-2xl font-bold ml-3 animate-pulse bg-gradient-to-r from-green-400 to-blue-500 text-transparent bg-clip-text">
-                    Ab.En-neiymy
-                </h1>
+                <button 
+                    onClick={() => scrollToSection('#about')}
+                    className="group flex items-center gap-3 transition-all duration-300"
+                >
+                    {/* Icon Logo */}
+                    <div className="relative">
+                        <div className={`absolute inset-0 rounded-xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity duration-300
+                            bg-gradient-to-br from-[#00BD95] via-cyan-500 to-blue-500`} 
+                        />
+                        <div className={`relative w-10 h-10 lg:w-12 lg:h-12 rounded-xl flex items-center justify-center font-bold text-lg lg:text-xl
+                            bg-gradient-to-br from-[#00BD95] via-cyan-500 to-blue-500 text-white shadow-lg
+                            group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
+                            <span className="drop-shadow-lg">AE</span>
+                        </div>
+                    </div>
+                    
+                    {/* Text Logo (hidden on mobile) */}
+                    <div className="hidden sm:flex flex-col leading-tight">
+                        <span className={`text-sm lg:text-base font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                            Abdellatyf
+                        </span>
+                        <span className="text-xs lg:text-sm text-[#00BD95] font-semibold">
+                            En-neiymy
+                        </span>
+                    </div>
+                </button>
             </div>
 
             {/* Desktop Navigation */}
-            <div className="sm:flex justify-between items-center hidden w-[400px] h-full text-md sm:text-xl">
-                {sectionButtons.map(({ id, label, target }) => (
+            <nav className="hidden lg:flex items-center gap-1">
+                {sectionButtons.map(({ id, label, target, icon }) => (
                     <button
                         key={id}
-                        className={`cursor-pointer ${isActivated === id ? 'text-[#00BD95]' : isDarkMode ? 'text-white' : 'text-black'}`}
+                        className={`relative flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300
+                            ${isDarkMode 
+                                ? 'text-slate-300 hover:text-white hover:bg-slate-800/50' 
+                                : 'text-slate-600 hover:text-black hover:bg-gray-100'
+                            }
+                        `}
                         onClick={() => {
                             scrollToSection(target);
-                            setIsActivated(id);
                         }}
                     >
-                        {label}
+                        {icon}
+                        <span>{label}</span>
                     </button>
                 ))}
-            </div>
+            </nav>
 
-            {/* Language Toggle and Dark Mode */}
-            <div className="sm:flex hidden justify-around items-center h-full w-[10%]">
+            {/* Actions: Language & Dark Mode */}
+            <div className="hidden lg:flex items-center gap-3">
+                {/* Language Switcher */}
+                <div className={`flex items-center gap-1 p-1 rounded-lg ${isDarkMode ? 'bg-slate-800' : 'bg-gray-100'}`}>
+                    <button
+                        onClick={() => {
+                            localStorage.setItem('lang', 'en');
+                            setActiveLang('en');
+                            i18n?.changeLanguage('en');
+                        }}
+                        className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200
+                            ${activeLang === 'en' 
+                                ? 'bg-[#00BD95] text-white shadow-sm' 
+                                : isDarkMode 
+                                    ? 'text-slate-400 hover:text-white' 
+                                    : 'text-slate-600 hover:text-black'
+                            }
+                        `}
+                    >
+                        EN
+                    </button>
+                    <button
+                        onClick={() => {
+                            localStorage.setItem('lang', 'fr');
+                            setActiveLang('fr');
+                            i18n?.changeLanguage('fr');
+                        }}
+                        className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200
+                            ${activeLang === 'fr' 
+                                ? 'bg-[#00BD95] text-white shadow-sm' 
+                                : isDarkMode 
+                                    ? 'text-slate-400 hover:text-white' 
+                                    : 'text-slate-600 hover:text-black'
+                            }
+                        `}
+                    >
+                        FR
+                    </button>
+                </div>
+
+                {/* Dark Mode Toggle */}
                 <button
-                    onClick={() => {
-                        const newLang = activeLang === 'en' ? 'fr' : 'en';
-                        localStorage.setItem('lang', newLang);
-                        setActiveLang(newLang);
-                        i18n?.changeLanguage(newLang);
-                    }}
-                    className={`text-xl ${isDarkMode ? 'text-white' : 'text-black'}`}
-                >
-                    {activeLang === 'en' ? 'FR' : 'EN'}
-                </button>
-                <div
                     onClick={() => {
                         setIsDarkMode(!isDarkMode);
                         localStorage.setItem('darkmode', isDarkMode ? 'false' : 'true');
                     }}
-                    className="cursor-pointer"
+                    className={`p-2.5 rounded-lg transition-all duration-300
+                        ${isDarkMode 
+                            ? 'bg-slate-800 hover:bg-slate-700 text-yellow-400' 
+                            : 'bg-gray-100 hover:bg-gray-200 text-slate-700'
+                        }
+                    `}
+                    aria-label="Toggle dark mode"
                 >
-                    {isDarkMode ? <MdOutlineLightMode size={30} /> : <MdDarkMode size={30} />}
-                </div>
+                    {isDarkMode ? <MdOutlineLightMode size={22} /> : <MdDarkMode size={22} />}
+                </button>
             </div>
 
-            {/* Mobile Menu */}
-            <div className="flex sm:hidden items-center w-[10%] z-50 cursor-pointer">
-                {showMenu ? (
-                    <MdOutlineMenuOpen size={30} onClick={() => setShowMenu(false)} />
-                ) : (
-                    <IoMdMenu size={30} onClick={() => setShowMenu(true)} />
-                )}
-            </div>
+            {/* Mobile Menu Button */}
+            <button 
+                className="lg:hidden p-2 rounded-lg transition-colors"
+                onClick={() => setShowMenu(!showMenu)}
+                aria-label="Toggle menu"
+            >
+                {showMenu ? <IoMdClose size={28} /> : <IoMdMenu size={28} />}
+            </button>
+
+            {/* Mobile Menu Overlay */}
+            {showMenu && (
+                <div 
+                    className="fixed inset-0 bg-black/50 backdrop-blur-sm lg:hidden z-40"
+                    onClick={() => setShowMenu(false)}
+                />
+            )}
+
+            {/* Mobile Menu Panel */}
             <div
                 ref={menuRef}
-                className={`fixed top-0 right-0 h-screen w-[50%] sm:hidden transform ${showMenu ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300 ${isDarkMode ? 'bg-[#21272F] text-white' : 'bg-white text-black'}`}
+                className={`fixed top-0 right-0 h-screen w-[280px] lg:hidden transform transition-transform duration-300 ease-in-out z-50
+                    ${showMenu ? 'translate-x-0' : 'translate-x-full'}
+                    ${isDarkMode ? 'bg-[#21272F] border-l border-slate-700' : 'bg-white border-l border-gray-200'}
+                `}
             >
-                <div className="flex flex-col justify-center items-start h-full p-6">
-                    {sectionButtons.map(({ id, label, target }) => (
-                        <button
-                            key={id}
-                            className={`cursor-pointer text-xl mb-4 ${isActivated === id ? 'text-[#00BD95]' : isDarkMode ? 'text-white' : 'text-black'}`}
-                            onClick={() => {
-                                scrollToSection(target);
-                                setIsActivated(id);
-                                setShowMenu(false);
-                            }}
+                <div className="flex flex-col h-full p-6">
+                    {/* Mobile Menu Header */}
+                    <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-700/50">
+                        <h2 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-black'}`}>
+                            Menu
+                        </h2>
+                        <button 
+                            onClick={() => setShowMenu(false)}
+                            className="p-2 rounded-lg hover:bg-slate-800/50 transition-colors"
                         >
-                            {label}
+                            <IoMdClose size={24} />
                         </button>
-                    ))}
-                    <div className="flex justify-between items-center w-full mt-6">
+                    </div>
+
+                    {/* Mobile Navigation Links */}
+                    <nav className="flex-1 flex flex-col gap-2">
+                        {sectionButtons.map(({ id, label, target, icon }) => (
+                            <button
+                                key={id}
+                                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 border-l-4 border-transparent
+                                    ${isDarkMode 
+                                        ? 'text-slate-300 hover:bg-slate-800/50' 
+                                        : 'text-slate-600 hover:bg-gray-100'
+                                    }
+                                `}
+                                onClick={() => {
+                                    scrollToSection(target);
+                                    setShowMenu(false);
+                                }}
+                            >
+                                <span>{icon}</span>
+                                <span className="font-medium">{label}</span>
+                            </button>
+                        ))}
+                    </nav>
+
+                    {/* Mobile Menu Footer */}
+                    <div className={`pt-6 pb-32 border-t ${isDarkMode ? 'border-slate-700' : 'border-gray-200'}`}>
+                        {/* Language Selector */}
+                        <div className="mb-4">
+                            <p className={`text-xs font-semibold mb-2 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+                                {t('Language')}
+                            </p>
+                            <div className={`flex gap-2 p-1 rounded-lg ${isDarkMode ? 'bg-slate-800' : 'bg-gray-100'}`}>
+                                <button
+                                    onClick={() => {
+                                        localStorage.setItem('lang', 'en');
+                                        setActiveLang('en');
+                                        i18n?.changeLanguage('en');
+                                    }}
+                                    className={`flex-1 px-3 py-2 rounded-md text-sm font-medium transition-all
+                                        ${activeLang === 'en' 
+                                            ? 'bg-[#00BD95] text-white' 
+                                            : isDarkMode 
+                                                ? 'text-slate-400' 
+                                                : 'text-slate-600'
+                                        }
+                                    `}
+                                >
+                                    English
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        localStorage.setItem('lang', 'fr');
+                                        setActiveLang('fr');
+                                        i18n?.changeLanguage('fr');
+                                    }}
+                                    className={`flex-1 px-3 py-2 rounded-md text-sm font-medium transition-all
+                                        ${activeLang === 'fr' 
+                                            ? 'bg-[#00BD95] text-white' 
+                                            : isDarkMode 
+                                                ? 'text-slate-400' 
+                                                : 'text-slate-600'
+                                        }
+                                    `}
+                                >
+                                    Français
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Dark Mode Toggle */}
                         <button
-                            onClick={() => {
-                                const newLang = activeLang === 'en' ? 'fr' : 'en';
-                                localStorage.setItem('lang', newLang);
-                                setActiveLang(newLang);
-                                i18n?.changeLanguage(newLang);
-                            }}
-                            className="text-xl"
-                        >
-                            {activeLang === 'en' ? 'FR' : 'EN'}
-                        </button>
-                        <div
                             onClick={() => {
                                 setIsDarkMode(!isDarkMode);
                                 localStorage.setItem('darkmode', isDarkMode ? 'false' : 'true');
                             }}
-                            className="cursor-pointer"
+                            className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all
+                                ${isDarkMode 
+                                    ? 'bg-slate-800 hover:bg-slate-700' 
+                                    : 'bg-gray-100 hover:bg-gray-200'
+                                }
+                            `}
                         >
-                            {isDarkMode ? <MdOutlineLightMode size={30} /> : <MdDarkMode size={30} />}
-                        </div>
+                            <span className="font-medium text-sm">
+                                {isDarkMode ? t('Light Mode') : t('Dark Mode')}
+                            </span>
+                            {isDarkMode ? <MdOutlineLightMode size={22} /> : <MdDarkMode size={22} />}
+                        </button>
                     </div>
                 </div>
             </div>

@@ -9,6 +9,9 @@ import {
   FaDocker,
   FaGithub,
   FaPython,
+  FaStar,
+  FaCode,
+  FaUserFriends,
 } from "react-icons/fa";
 import { SiTypescript, SiDjango, SiI18Next } from "react-icons/si";
 import { RiNextjsFill, RiTailwindCssFill } from "react-icons/ri";
@@ -23,117 +26,189 @@ const Skills = () => {
   const { t } = useTranslation();
   const { isDarkMode } = useDarkMode();
   const [mounted, setMounted] = useState(false);
+  const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
 
   useEffect(() => {
     const id = setTimeout(() => setMounted(true), 60);
     return () => clearTimeout(id);
   }, []);
 
-  // Add explicit proficiency levels to make animated bars
-  const groups = [
+  const skillCategories = [
     {
       title: "Frontend",
+      icon: <FaReact className="text-[#00BD95]" />,
+      color: "from-cyan-500 to-blue-500",
       skills: [
-        { name: "HTML", icon: <FaHtml5 />, level: 95 },
-        { name: "CSS", icon: <FaCss3Alt />, level: 92 },
-        { name: "TypeScript", icon: <SiTypescript />, level: 88 },
-        { name: "React", icon: <FaReact />, level: 90 },
-        { name: "Next.js", icon: <RiNextjsFill />, level: 85 },
-        { name: "Tailwind CSS", icon: <RiTailwindCssFill />, level: 90 },
-        { name: "i18next", icon: <SiI18Next />, level: 75 },
+        { name: "HTML", icon: <FaHtml5 />, level: 95, color: "#E34F26" },
+        { name: "CSS", icon: <FaCss3Alt />, level: 92, color: "#1572B6" },
+        { name: "TypeScript", icon: <SiTypescript />, level: 88, color: "#3178C6" },
+        { name: "React", icon: <FaReact />, level: 90, color: "#61DAFB" },
+        { name: "Next.js", icon: <RiNextjsFill />, level: 85, color: "#000000" },
+        { name: "Tailwind CSS", icon: <RiTailwindCssFill />, level: 90, color: "#06B6D4" },
+        { name: "i18next", icon: <SiI18Next />, level: 75, color: "#26A69A" },
       ],
     },
     {
       title: "Backend & APIs",
+      icon: <FaPython className="text-[#00BD95]" />,
+      color: "from-green-500 to-emerald-500",
       skills: [
-        { name: "Django", icon: <SiDjango />, level: 82 },
-        { name: "Python", icon: <FaPython />, level: 86 },
-        { name: "REST API", icon: <TbApi />, level: 84 },
-        { name: "PostgreSQL", icon: <BiLogoPostgresql />, level: 80 },
+        { name: "Django", icon: <SiDjango />, level: 82, color: "#092E20" },
+        { name: "Python", icon: <FaPython />, level: 86, color: "#3776AB" },
+        { name: "REST API", icon: <TbApi />, level: 84, color: "#00BD95" },
+        { name: "PostgreSQL", icon: <BiLogoPostgresql />, level: 80, color: "#4169E1" },
       ],
     },
     {
       title: "Systems & DevOps",
+      icon: <FaDocker className="text-[#00BD95]" />,
+      color: "from-blue-500 to-indigo-500",
       skills: [
-        { name: "Docker", icon: <FaDocker />, level: 78 },
-        { name: "C/C++", icon: <PiFileCppFill />, level: 82 },
-        { name: "Bash", icon: <VscTerminalBash />, level: 80 },
+        { name: "Docker", icon: <FaDocker />, level: 78, color: "#2496ED" },
+        { name: "C/C++", icon: <PiFileCppFill />, level: 82, color: "#00599C" },
+        { name: "Bash", icon: <VscTerminalBash />, level: 80, color: "#4EAA25" },
       ],
     },
     {
-      title: t("Tools & Others"),
+      title: "Tools & Others",
+      icon: <FaGithub className="text-[#00BD95]" />,
+      color: "from-purple-500 to-pink-500",
       skills: [
-        { name: "Vim", icon: <DiVim />, level: 70 },
-        { name: "VSCode", icon: <VscVscode />, level: 90 },
-        { name: "Git/GitHub", icon: <FaGithub />, level: 88 },
+        { name: "Vim", icon: <DiVim />, level: 70, color: "#019733" },
+        { name: "VSCode", icon: <VscVscode />, level: 90, color: "#007ACC" },
+        { name: "Git/GitHub", icon: <FaGithub />, level: 88, color: "#181717" },
       ],
     },
   ];
 
   return (
-    <section id="skills" className={`w-full py-20 bg-transparent"}`}>
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="flex lg:flex-row flex-col items-start justify-between mb-10">
-          <h2 className={`text-3xl md:text-4xl font-extrabold mb-2 ${isDarkMode ? "text-white" : "text-black"}`}>
+    <section id="skills" className="w-full px-4 py-12 sm:py-16">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <header className="mb-8 md:mb-12">
+          <h2 className={`text-3xl md:text-4xl font-extrabold ${isDarkMode ? "text-white" : "text-black"}`}>
             {t("Skills")}
           </h2>
-          <p className={`text-sm ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>
+          <p className={`mt-2 text-sm md:text-base ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>
             {t("Technologies I use to build reliable, fast and maintainable software.")}
           </p>
-        </div>
+        </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Profile / User card on the left (col-span 1 on md) */}
-          <div
-            className={`hidden md:flex flex-col items-center gap-4 p-6 rounded-2xl shadow-lg select-none transform transition-all ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-            } ${isDarkMode ? "bg-[#071827]/60 border border-slate-700" : "bg-white/60 border border-gray-100"}`}
-            style={{ backdropFilter: "blur(8px)" }}
-          >
-            {/* GitHub statistics card */}
-            <GitHubStatsCard username="Abdlatif-20" isDarkMode={isDarkMode} />
-          </div>
-
-          {/* Skills grid — occupies 2 columns on md */}
-          <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {groups.map((group, gi) => (
-              <div
-                key={group.title}
-                className={`p-5 rounded-2xl shadow-md transform transition-all ${
-                  mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-                } ${isDarkMode ? "bg-[#0b1116]/70 border border-slate-700" : "bg-white/80 border border-gray-100"}`}
-                style={{ transitionDelay: `${gi * 90}ms`, backdropFilter: "blur(6px)" }}
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className={`text-lg font-semibold ${isDarkMode ? "text-white" : "text-slate-900"}`}>{t(group.title)}</h4>
-                  <span className="text-xs text-slate-400">{group.skills.length} {t("items")}</span>
-                </div>
-
-                <div className="flex flex-col gap-3">
-                  {group.skills.map((s, si) => (
-                    <div key={s.name} className="flex flex-col">
-                      <div className="flex items-center justify-between gap-3">
-                        <div className="flex items-center gap-3">
-                          <span className="text-2xl text-green-300 dark:text-green-400">{s.icon}</span>
-                          <span className={`font-medium ${isDarkMode ? "text-white" : "text-slate-800"}`}>{t(s.name)}</span>
-                        </div>
-                        <div className="text-xs text-slate-400">{s.level}%</div>
-                      </div>
-
-                      <div className="w-full h-2 mt-2 rounded-full bg-slate-200/40 overflow-hidden">
-                        <div
-                          className={`h-full rounded-full transition-all duration-900 ease-out ${isDarkMode ? "bg-gradient-to-r from-green-500 to-cyan-400" : "bg-gradient-to-r from-[#00BD95] to-[#00A884]"}`}
-                          style={{ width: mounted ? `${s.level}%` : "0%", transitionDelay: `${gi * 70 + si * 40}ms` }}
-                        />
-                      </div>
-                    </div>
-                  ))}
+        {/* Skills Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {skillCategories.map((category, categoryIndex) => (
+            <div
+              key={category.title}
+              className={`group relative rounded-2xl p-6 transition-all duration-500 ${
+                mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              } ${
+                isDarkMode
+                  ? "bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 hover:border-[#00BD95]/50"
+                  : "bg-gradient-to-br from-white to-slate-50 border border-gray-200 hover:border-[#00BD95]/50"
+              } shadow-lg hover:shadow-2xl`}
+              style={{ transitionDelay: `${categoryIndex * 100}ms` }}
+            >
+              {/* Category Header */}
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                    isDarkMode ? "bg-slate-700/50" : "bg-slate-100"
+                  }`}>
+                    <span className="text-2xl">{category.icon}</span>
+                  </div>
+                  <div>
+                    <h3 className={`text-xl font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                      {t(category.title)}
+                    </h3>
+                    <p className="text-xs text-slate-400">
+                      {category.skills.length} {t("technologies")}
+                    </p>
+                  </div>
                 </div>
               </div>
-            ))}
+
+              {/* Skills List */}
+              <div className="space-y-4">
+                {category.skills.map((skill, skillIndex) => (
+                  <div
+                    key={skill.name}
+                    onMouseEnter={() => setHoveredSkill(`${category.title}-${skill.name}`)}
+                    onMouseLeave={() => setHoveredSkill(null)}
+                    className={`group/skill relative rounded-xl p-4 transition-all duration-300 ${
+                      hoveredSkill === `${category.title}-${skill.name}`
+                        ? isDarkMode
+                          ? "bg-slate-700/50 shadow-lg transform -translate-y-1"
+                          : "bg-white shadow-lg transform -translate-y-1"
+                        : isDarkMode
+                          ? "bg-slate-800/30 hover:bg-slate-700/30"
+                          : "bg-slate-50/50 hover:bg-white/80"
+                    }`}
+                  >
+                    {/* Skill Info */}
+                    <div className="flex items-center gap-3">
+                      <span 
+                        className="text-3xl transition-transform duration-300 group-hover/skill:scale-110"
+                        style={{ 
+                          color: hoveredSkill === `${category.title}-${skill.name}` 
+                            ? skill.color 
+                            : isDarkMode ? "#00BD95" : "#00BD95" 
+                        }}
+                      >
+                        {skill.icon}
+                      </span>
+                      <span className={`font-semibold ${isDarkMode ? "text-white" : "text-slate-800"}`}>
+                        {skill.name}
+                      </span>
+                    </div>
+
+                    {/* Hover indicator */}
+                    {hoveredSkill === `${category.title}-${skill.name}` && (
+                      <div className={`absolute top-2 right-2 w-2 h-2 rounded-full bg-[#00BD95] animate-pulse`} />
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Decorative Corner */}
+              <div 
+                className={`absolute bottom-0 right-0 w-24 h-24 opacity-5 transition-opacity duration-300 group-hover:opacity-10`}
+                style={{
+                  background: `linear-gradient(135deg, transparent 50%, ${isDarkMode ? "#00BD95" : "#00BD95"} 50%)`,
+                }}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* GitHub Stats Card */}
+        <div className={`rounded-2xl p-6 ${
+          isDarkMode 
+            ? "bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700" 
+            : "bg-gradient-to-br from-white to-slate-50 border border-gray-200"
+        } shadow-lg`}>
+          <div className="flex items-center gap-3 mb-6">
+            <FaGithub className="text-3xl text-[#00BD95]" />
+            <div>
+              <h3 className={`text-xl font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                {t("GitHub Statistics")}
+              </h3>
+              <p className="text-xs text-slate-400">{t("Live stats from my repositories")}</p>
+            </div>
           </div>
+          <GitHubStatsCard username="Abdlatif-20" isDarkMode={isDarkMode} />
         </div>
       </div>
+
+      {/* Add shimmer animation */}
+      <style jsx>{`
+        @keyframes shimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+        .animate-shimmer {
+          animation: shimmer 2s infinite;
+        }
+      `}</style>
     </section>
   );
 };
@@ -142,6 +217,7 @@ export default Skills;
 
 // --- GitHubStatsCard (client-side) ---
 function GitHubStatsCard({ username, isDarkMode }: { username: string; isDarkMode: boolean }) {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<{
@@ -163,7 +239,6 @@ function GitHubStatsCard({ username, isDarkMode }: { username: string; isDarkMod
         if (!uRes.ok) throw new Error(`GitHub user fetch failed: ${uRes.status}`);
         const u = await uRes.json();
 
-        // fetch up to 100 repos (good for most users). For >100 you'd need pagination.
         const rRes = await fetch(`https://api.github.com/users/${username}/repos?per_page=100`);
         if (!rRes.ok) throw new Error(`GitHub repos fetch failed: ${rRes.status}`);
         const repos = await rRes.json();
@@ -200,55 +275,115 @@ function GitHubStatsCard({ username, isDarkMode }: { username: string; isDarkMod
     };
   }, [username]);
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="flex flex-col items-center gap-4">
+          <div className="relative">
+            <div className={`w-16 h-16 rounded-full border-4 ${
+              isDarkMode ? "border-slate-700" : "border-slate-200"
+            } border-t-[#00BD95] animate-spin`} />
+          </div>
+          <p className="text-sm text-slate-400">{t("Loading GitHub stats...")}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={`p-6 rounded-xl text-center ${
+        isDarkMode ? "bg-red-500/10 border border-red-500/30" : "bg-red-50 border border-red-200"
+      }`}>
+        <p className="text-sm text-red-400 mb-2">{error}</p>
+        <a 
+          href={`https://github.com/${username}`} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-sm text-[#00BD95] hover:underline"
+        >
+          {t("View on GitHub")}
+        </a>
+      </div>
+    );
+  }
+
+  if (!data) return null;
+
   return (
-    <div className="w-full text-center">
-      {loading ? (
-        <div className="py-8">
-          <div className="animate-pulse h-12 w-12 rounded-full mx-auto bg-slate-300/40" />
-          <p className="mt-3 text-xs text-slate-400">Loading GitHub stats…</p>
-        </div>
-      ) : error ? (
-        <div className="p-4">
-          <p className="text-xs text-red-400">{error}</p>
-          <a href={`https://github.com/${username}`} target="_blank" rel="noopener noreferrer" className="text-xs underline mt-2 inline-block">
-            View on GitHub
-          </a>
-        </div>
-      ) : data ? (
-        <div className="flex flex-col items-center gap-3">
-          <img src={data.avatar_url} alt={data.name} className="w-20 h-20 rounded-full object-cover" />
-          <div>
-            <a href={`https://github.com/${username}`} target="_blank" rel="noopener noreferrer" className={`font-semibold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
-              {data.name}
-            </a>
-            {data.bio && <p className="text-xs text-slate-400">{data.bio}</p>}
-          </div>
-
-          <div className="w-full grid grid-cols-3 gap-2 mt-2 text-xs">
-            <div className="p-2 rounded-md bg-slate-100/40 ">
-              <div className="font-semibold">{data.public_repos}</div>
-              <div className="text-slate-500 text-[11px]">Repos</div>
-            </div>
-            <div className="p-2 rounded-md bg-slate-100/40">
-              <div className="font-semibold">{data.totalStars}</div>
-              <div className="text-slate-500 text-[11px]">Stars</div>
-            </div>
-            <div className="p-2 rounded-md bg-slate-100/40">
-              <div className="font-semibold">{data.followers}</div>
-              <div className="text-slate-500 text-[11px]">Followers</div>
-            </div>
-          </div>
-
-          {data.topLanguage && (
-            <div className="mt-3 text-xs text-slate-400">Top language: <span className="font-medium text-slate-700 dark:text-slate-200">{data.topLanguage}</span></div>
-          )}
-
-          <div className="mt-3 w-full">
-            {/* small generated card as visual flair (third-party image service) */}
-            <img src={`https://github-readme-stats.vercel.app/api?username=${username}&show_icons=true&hide_border=true&theme=${isDarkMode ? "dark" : "default"}`} alt="github-stats" className="w-full rounded-md" />
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* Profile Card */}
+      <div className={`rounded-xl p-6 text-center ${
+        isDarkMode ? "bg-slate-800/50" : "bg-white"
+      }`}>
+        <div className="relative inline-block mb-4">
+          <img 
+            src={data.avatar_url} 
+            alt={data.name} 
+            className="w-24 h-24 rounded-full object-cover ring-4 ring-[#00BD95]/20"
+          />
+          <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-[#00BD95] rounded-full flex items-center justify-center">
+            <FaGithub className="text-white text-sm" />
           </div>
         </div>
-      ) : null}
+        <a 
+          href={`https://github.com/${username}`} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className={`font-bold text-lg hover:text-[#00BD95] transition-colors ${
+            isDarkMode ? "text-white" : "text-slate-900"
+          }`}
+        >
+          {data.name}
+        </a>
+        {data.bio && (
+          <p className="text-xs text-slate-400 mt-2 line-clamp-2">{data.bio}</p>
+        )}
+        {data.topLanguage && (
+          <div className="mt-4 px-3 py-1 rounded-full bg-[#00BD95]/10 text-[#00BD95] text-xs font-medium inline-block">
+            {data.topLanguage}
+          </div>
+        )}
+      </div>
+
+      {/* Stats Cards */}
+      <div className="md:col-span-2 grid grid-cols-3 gap-4">
+        <div className={`rounded-xl p-6 text-center transition-all hover:scale-105 ${
+          isDarkMode 
+            ? "bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30" 
+            : "bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200"
+        }`}>
+          <FaCode className="text-3xl mx-auto mb-2 text-blue-500" />
+          <div className={`text-3xl font-bold mb-1 ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+            {data.public_repos}
+          </div>
+          <div className="text-xs text-slate-400">{t("Repositories")}</div>
+        </div>
+
+        <div className={`rounded-xl p-6 text-center transition-all hover:scale-105 ${
+          isDarkMode 
+            ? "bg-gradient-to-br from-yellow-500/20 to-yellow-600/20 border border-yellow-500/30" 
+            : "bg-gradient-to-br from-yellow-50 to-yellow-100 border border-yellow-200"
+        }`}>
+          <FaStar className="text-3xl mx-auto mb-2 text-yellow-500" />
+          <div className={`text-3xl font-bold mb-1 ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+            {data.totalStars}
+          </div>
+          <div className="text-xs text-slate-400">{t("Total Stars")}</div>
+        </div>
+
+        <div className={`rounded-xl p-6 text-center transition-all hover:scale-105 ${
+          isDarkMode 
+            ? "bg-gradient-to-br from-purple-500/20 to-purple-600/20 border border-purple-500/30" 
+            : "bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200"
+        }`}>
+          <FaUserFriends className="text-3xl mx-auto mb-2 text-purple-500" />
+          <div className={`text-3xl font-bold mb-1 ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+            {data.followers}
+          </div>
+          <div className="text-xs text-slate-400">{t("Followers")}</div>
+        </div>
+      </div>
     </div>
   );
 }

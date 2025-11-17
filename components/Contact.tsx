@@ -1,162 +1,320 @@
 'use client';
 
-import React from 'react'
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDarkMode } from './context';
 import { useRef } from 'react';
 import emailjs from '@emailjs/browser';
 import { toast } from 'react-toastify';
-
+import { FaLinkedin, FaGithub, FaInstagram, FaEnvelope, FaPhone, FaMapMarkerAlt, FaPaperPlane } from 'react-icons/fa';
 
 const Contact = () => {
   const { t } = useTranslation();
   const { isDarkMode } = useDarkMode();
+  const [isSending, setIsSending] = useState(false);
+  const [focusedInput, setFocusedInput] = useState<string | null>(null);
+
   const socialMedia = [
     {
-      name: 'aben-nei',
-      icon: 'in',
-      alt: 'LinkedIn',
+      name: 'LinkedIn',
+      username: 'aben-nei',
+      icon: <FaLinkedin />,
       link: 'https://www.linkedin.com/in/aben-nei/',
+      color: '#0A66C2',
     },
     {
-      name: 'Abdlatif-20',
-      icon: 'gb',
-      alt: 'Github',
+      name: 'GitHub',
+      username: 'Abdlatif-20',
+      icon: <FaGithub />,
       link: 'https://www.github.com/Abdlatif-20',
+      color: '#181717',
     },
     {
-      name: 'Abdellatyf_en_enneiymy',
-      icon: 'ig',
-      alt: 'Instagram',
+      name: 'Instagram',
+      username: 'Abdellatyf_en_neiymy',
+      icon: <FaInstagram />,
       link: 'https://www.instagram.com/Abdellatyf_en_neiymy',
+      color: '#E4405F',
     },
-  ]
+  ];
+
+  const contactInfo = [
+    {
+      icon: <FaEnvelope />,
+      label: 'Email',
+      value: 'ab.enneiymy@gmail.com',
+      link: 'mailto:ab.enneiymy@gmail.com',
+    },
+    {
+      icon: <FaMapMarkerAlt />,
+      label: 'Location',
+      value: 'Casablanca, Morocco',
+      link: null,
+    },
+  ];
 
   const form = useRef<HTMLFormElement>(null);
 
-  const sendEmail = (e: React.FormEvent<HTMLFormElement>) => {
+  const sendEmail = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!form.current) {
-      return;
-    }
+    if (!form.current) return;
+
     const formElements = form.current?.elements as typeof form.current.elements & {
       full_name: HTMLInputElement;
       email: HTMLInputElement;
       message: HTMLTextAreaElement;
-    };    const fullName = formElements?.full_name.value;
+    };
+    
+    const fullName = formElements?.full_name.value;
     const email = formElements?.email.value;
     const message = formElements?.message.value;
 
     if (!fullName || !email || !message) {
-      toast.error('Please fill in all fields');
+      toast.error(t('Please fill in all fields'));
       return;
     }
 
-    if (form.current) {
-      emailjs
-      .sendForm('service_8omx4go', 'template_eeg0mof', form.current, {
+    setIsSending(true);
+    
+    try {
+      await emailjs.sendForm('service_8omx4go', 'template_eeg0mof', form.current, {
         publicKey: '0ABzKUxfF6zbu1lkZ',
-      })
-        .then(
-          () => {
-            toast.success('Message sent successfully');
-            form.current?.reset();
-          },
-          (error) => {
-            toast.error('An error occurred, Please try again later');
-          },
-        );
+      });
+      toast.success(t('Message sent successfully'));
+      form.current?.reset();
+    } catch (error) {
+      toast.error(t('An error occurred, Please try again later'));
+    } finally {
+      setIsSending(false);
     }
   };
 
   return (
-    <div id='contact' className='flex flex-col justify-center items-center w-[95%] lg:w-[80%] min-h-[70vh]'>
+    <section id='contact' className='w-full px-4 py-12 sm:py-16'>
+      <div className='max-w-6xl mx-auto'>
+        {/* Header */}
+        <header className="mb-8 md:mb-12">
+          <h2 className={`text-3xl md:text-4xl font-extrabold ${isDarkMode ? "text-white" : "text-black"}`}>
+            {t("Contact")}
+          </h2>
+          <p className={`mt-2 text-sm md:text-base ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>
+            {t("Let's work together on your next project")}
+          </p>
+        </header>
 
-      {/* Availability section placed above Contact header */}
-      <div className={`w-full mb-6 p-5 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4
-        ${isDarkMode ? 'bg-[#071827]/60 border border-slate-700 text-white' : 'bg-white/70 border border-gray-200 text-slate-900'}`}
-        style={{backdropFilter: 'blur(8px)'}}
-      >
-        <div className='flex items-center gap-4'>
-          <span className='w-4 h-4 rounded-full bg-green-400 animate-pulse' aria-hidden />
-          <div>
-            <div className='text-sm font-semibold'>{t('Availability')}</div>
-            <div className='text-xs text-slate-400'>{t('Open to full-time, part-time and freelance opportunities')}</div>
-          </div>
-        </div>
-
-        <div className='flex items-center gap-3'>
-          <div className='hidden sm:flex gap-2 text-[10px] lg:text-xs'>
-            <span className='px-2 py-1 rounded-full bg-slate-100/40
-              hover:bg-green-500 hover:text-white transition-colors'>{t('Full-time')}</span>
-            <span className='px-2 py-1 rounded-full bg-slate-100/40
-              hover:bg-green-500 hover:text-white transition-colors'>{t('Freelance')}</span>
-            <span className='px-2 py-1 rounded-full bg-slate-100/40
-              hover:bg-green-500 hover:text-white transition-colors'>{t('Contract')}</span>
-          </div>
-          <a href='#contact' className='px-3 py-2 rounded-full bg-gradient-to-r from-[#00BD95] to-[#00A884] text-white text-sm font-medium'>{t('Contact me')}</a>
-        </div>
-      </div>
-
-      <h1 className='text-[40px] text-shadow-textShadow-green font-bold mb-5 h-[35%] w-full flex justify-center items-center brightness-70'>
-        {t("Contact")}
-      </h1>
-      <div className='flex flex-col justify-between items-center w-full h-full '
-        style={{border: `${isDarkMode ? '0.3px solid rgba(255, 255, 255, 0.3)' : '0.3px solid rgba(0, 0, 0, 0.3)'}`
-      }}>
-        <p className='text-[22px] md:text-[40px] text-shadow-textShadow-green font-bold w-full flex justify-center items-start brightness-70 mt-5 '>
-          {t("Drop me a message")}
-        </p>
-        <div className='flex w-full flex-col md:flex-row justify-start md:items-center h-full'>
-          <form ref={form} onSubmit={sendEmail} className='flex flex-col justify-center items-center w-full md:w-1/2 h-[80%]'>
-            <input
-              className={`w-[80%] h-[50px] my-9 bg-transparent border-b ${ isDarkMode ? 'border-white' : 'border-black' }
-              border-opacity-50 text-[20px] ${ isDarkMode ? 'placeholder-white' : 'placeholder-black' }  placeholder-opacity-50 focus:outline-none focus:border-green-500`}
-              type='text'
-              name='full_name'
-              placeholder={t('Full Name')}
-            />
-            <input
-              className={`w-[80%] h-[50px] my-9 bg-transparent border-b ${ isDarkMode ? 'border-white' : 'border-black' } border-opacity-50 text-[20px] ${ isDarkMode ? 'placeholder-white' : 'placeholder-black' }  placeholder-opacity-50 focus:outline-none focus:border-green-500`}
-              type='email'
-              name='email'
-              placeholder={t('E-mail')}
-            />
-            <textarea
-              className={`w-[80%] h-[80px] bg-transparent border-b ${ isDarkMode ? 'border-white' : 'border-black' } border-opacity-50 text-[20px] ${ isDarkMode ? 'placeholder-white' : 'placeholder-black' }  placeholder-opacity-50 focus:outline-none focus:border-green-500`}
-              placeholder={t('Message')}
-              name='message'
-              >
-              </textarea>
-              <button className="relative bg-[#00BD95] w-[60%] md:w-[40%] py-2 my-10 rounded-lg shadow-btnShadow overflow-hidden group">
-              <span className="absolute top-0 left-0 w-full h-full -translate-x-full translate-y-full rotate-[-40deg] rounded bg-gradient-to-br
-              from-[#ff8a05] via-[#ff5478] to-[#ff00c6] transition-all duration-500 ease-out group-hover:translate-x-0 group-hover:translate-y-0
-                group-hover:rotate-0"></span>
-              <h1 className="relative text-md lg:text-2xl font-bold w-full text-white transition-colors duration-300 ease-in-out group-hover:text-white">
-                {t("Send")}
-              </h1>
-            </button>
-          </form>
-          <div className='flex flex-col md:flex-row justify-center items-center w-full md:w-1/2 h-full'>
-          <div className={`border-t my-5 md:my-0 md:border-r border-opacity-50 w-[80%] md:w-auto md:h-[300px]
-          ${isDarkMode ? 'border-white' : 'border-black'}
-            `}></div>
-          <div className='flex md:flex-col justify-around md:justify-center items-start w-full md:w-[80%] h-full mb-5 md:mb-0'>
-            {socialMedia.map((social, index) => (
-              <div key={index} className='flex justify-around md:justify-start w-full items-center h-[20%] md:m-3'>
-                <a href={social.link} target='_blank' rel='noreferrer'>
-                <img src={`images/${social.icon}.png`} alt='' className='md:w-[61px] md:h-[56px] w-[50px] h-[45px] brightness-70 hover:brightness-100
-                ' />
-                </a>
-                <p className='text-[20px] md:ml-5 text-shadow-textShadow-green hidden md:block'>{social.name}</p>
+        <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
+          {/* Contact Info Cards */}
+          <div className='space-y-6'>
+            {/* Contact Information */}
+            <div className={`rounded-2xl p-6 ${
+              isDarkMode 
+                ? "bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700" 
+                : "bg-gradient-to-br from-white to-slate-50 border border-gray-200"
+            } shadow-lg`}>
+              <h3 className={`text-lg font-bold mb-4 ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                {t("Contact Information")}
+              </h3>
+              <div className="space-y-4">
+                {contactInfo.map((info, index) => (
+                  <div key={index} className="flex items-start gap-3">
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                      isDarkMode ? "bg-[#00BD95]/20 text-[#00BD95]" : "bg-[#00BD95]/10 text-[#00BD95]"
+                    }`}>
+                      <span className="text-lg">{info.icon}</span>
+                    </div>
+                    <div className="flex-1">
+                      <p className={`text-xs font-medium ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
+                        {t(info.label)}
+                      </p>
+                      {info.link ? (
+                        <a 
+                          href={info.link}
+                          className={`text-sm font-semibold hover:text-[#00BD95] transition-colors ${
+                            isDarkMode ? "text-white" : "text-slate-900"
+                          }`}
+                        >
+                          {info.value}
+                        </a>
+                      ) : (
+                        <p className={`text-sm font-semibold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                          {info.value}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+
+            {/* Social Media */}
+            <div className={`rounded-2xl p-6 ${
+              isDarkMode 
+                ? "bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700" 
+                : "bg-gradient-to-br from-white to-slate-50 border border-gray-200"
+            } shadow-lg`}>
+              <h3 className={`text-lg font-bold mb-4 ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                {t("Connect with me")}
+              </h3>
+              <div className="space-y-3">
+                {socialMedia.map((social, index) => (
+                  <a
+                    key={index}
+                    href={social.link}
+                    target='_blank'
+                    rel='noreferrer'
+                    className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-300 group ${
+                      isDarkMode 
+                        ? "bg-slate-800/50 hover:bg-slate-700/50" 
+                        : "bg-slate-50 hover:bg-white hover:shadow-md"
+                    }`}
+                  >
+                    <div 
+                      className="w-10 h-10 rounded-lg flex items-center justify-center text-white text-xl transition-transform duration-300 group-hover:scale-110"
+                      style={{ backgroundColor: social.color }}
+                    >
+                      {social.icon}
+                    </div>
+                    <div className="flex-1">
+                      <p className={`font-semibold text-sm ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                        {social.name}
+                      </p>
+                      <p className="text-xs text-slate-400">@{social.username}</p>
+                    </div>
+                    <svg 
+                      className={`w-5 h-5 transition-transform duration-300 group-hover:translate-x-1 ${
+                        isDarkMode ? "text-slate-400" : "text-slate-600"
+                      }`} 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </a>
+                ))}
+              </div>
+            </div>
           </div>
+
+          {/* Contact Form */}
+          <div className='lg:col-span-2'>
+            <div className={`rounded-2xl p-8 ${
+              isDarkMode 
+                ? "bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700" 
+                : "bg-gradient-to-br from-white to-slate-50 border border-gray-200"
+            } shadow-lg`}>
+              <h3 className={`text-2xl font-bold mb-2 ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                {t("Drop me a message")}
+              </h3>
+              <p className={`text-sm mb-8 ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
+                {t("I'll get back to you as soon as possible")}
+              </p>
+
+              <form ref={form} onSubmit={sendEmail} className='space-y-6'>
+                {/* Full Name Input */}
+                <div>
+                  <label 
+                    htmlFor="full_name"
+                    className={`block text-sm font-medium mb-2 ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}
+                  >
+                    {t('Full Name')}
+                  </label>
+                  <input
+                    id="full_name"
+                    type='text'
+                    name='full_name'
+                    onFocus={() => setFocusedInput('name')}
+                    onBlur={() => setFocusedInput(null)}
+                    className={`w-full px-4 py-3 rounded-xl transition-all duration-300 ${
+                      isDarkMode 
+                        ? "bg-slate-700/50 border-2 border-slate-600 text-white placeholder-slate-400" 
+                        : "bg-white border-2 border-slate-200 text-slate-900 placeholder-slate-400"
+                    } ${
+                      focusedInput === 'name' ? "border-[#00BD95] ring-4 ring-[#00BD95]/20" : ""
+                    } focus:outline-none`}
+                    placeholder={t('Enter your full name')}
+                  />
+                </div>
+
+                {/* Email Input */}
+                <div>
+                  <label 
+                    htmlFor="email"
+                    className={`block text-sm font-medium mb-2 ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}
+                  >
+                    {t('Email')}
+                  </label>
+                  <input
+                    id="email"
+                    type='email'
+                    name='email'
+                    onFocus={() => setFocusedInput('email')}
+                    onBlur={() => setFocusedInput(null)}
+                    className={`w-full px-4 py-3 rounded-xl transition-all duration-300 ${
+                      isDarkMode 
+                        ? "bg-slate-700/50 border-2 border-slate-600 text-white placeholder-slate-400" 
+                        : "bg-white border-2 border-slate-200 text-slate-900 placeholder-slate-400"
+                    } ${
+                      focusedInput === 'email' ? "border-[#00BD95] ring-4 ring-[#00BD95]/20" : ""
+                    } focus:outline-none`}
+                    placeholder={t('your.email@example.com')}
+                  />
+                </div>
+
+                {/* Message Textarea */}
+                <div>
+                  <label 
+                    htmlFor="message"
+                    className={`block text-sm font-medium mb-2 ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}
+                  >
+                    {t('Message')}
+                  </label>
+                  <textarea
+                    id="message"
+                    name='message'
+                    rows={6}
+                    onFocus={() => setFocusedInput('message')}
+                    onBlur={() => setFocusedInput(null)}
+                    className={`w-full px-4 py-3 rounded-xl transition-all duration-300 resize-none ${
+                      isDarkMode 
+                        ? "bg-slate-700/50 border-2 border-slate-600 text-white placeholder-slate-400" 
+                        : "bg-white border-2 border-slate-200 text-slate-900 placeholder-slate-400"
+                    } ${
+                      focusedInput === 'message' ? "border-[#00BD95] ring-4 ring-[#00BD95]/20" : ""
+                    } focus:outline-none`}
+                    placeholder={t('Tell me about your project...')}
+                  />
+                </div>
+
+                {/* Submit Button */}
+                <button 
+                  type="submit"
+                  disabled={isSending}
+                  className={`w-full py-4 rounded-xl font-bold text-white transition-all duration-300 flex items-center justify-center gap-3 ${
+                    isSending
+                      ? "bg-slate-400 cursor-not-allowed"
+                      : "bg-gradient-to-r from-[#00BD95] to-cyan-600 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
+                  }`}
+                >
+                  {isSending ? (
+                    <>
+                      <div className="w-5 h-5 border-3 border-white border-t-transparent rounded-full animate-spin" />
+                      {t('Sending...')}
+                    </>
+                  ) : (
+                    <>
+                      <FaPaperPlane />
+                      {t("Send Message")}
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  )
-}
+    </section>
+  );
+};
 
-export default Contact
+export default Contact;
