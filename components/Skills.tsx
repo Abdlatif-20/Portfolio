@@ -317,18 +317,18 @@ function GitHubStatsCard({ username, isDarkMode }: { username: string; isDarkMod
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {/* Profile Card */}
-      <div className={`rounded-xl p-6 text-center ${
+      <div className={`  rounded-xl p-6 text-center ${
         isDarkMode ? "bg-slate-800/50" : "bg-white"
       }`}>
-        <div className="relative inline-block mb-4">
+        <div className=" flex flex-col items-center relative mb-4">
           <img 
             src={data.avatar_url} 
             alt={data.name} 
             className="w-24 h-24 rounded-full object-cover ring-4 ring-[#00BD95]/20"
           />
-          <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-[#00BD95] rounded-full flex items-center justify-center">
+          {/* <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-[#00BD95] rounded-full flex items-center justify-center">
             <FaGithub className="text-white text-sm" />
-          </div>
+          </div> */}
           <div className="mt-3 w-full flex justify-center">
             <a href={`https://github.com/${username}`} target="_blank" rel="noopener noreferrer" className="inline-block px-4 py-2 rounded-md bg-[#00BD95]/80 text-white text-sm font-medium hover:brightness-90 transition">View on GitHub</a>
           </div>
@@ -346,11 +346,11 @@ function GitHubStatsCard({ username, isDarkMode }: { username: string; isDarkMod
         {data.bio && (
           <p className="text-xs text-slate-400 mt-2 line-clamp-2">{data.bio}</p>
         )}
-        {data.topLanguage && (
-          <div className="mt-4 px-3 py-1 rounded-full bg-[#00BD95]/10 text-[#00BD95] text-xs font-medium inline-block">
-            {data.topLanguage}
+          <div className="mt-4  flex items-center justify-center gap-3 px-3 py-1.5 rounded-full bg-[#00BD95]/10 text-[#00BD95] text-xs font-medium mx-auto w-fit">
+            <FaReact className="text-xl" />
+            <RiNextjsFill className="text-xl" />
+            <SiTypescript className="text-xl" />
           </div>
-        )}
       </div>
 
       {/* Stats Cards */}
