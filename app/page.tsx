@@ -10,6 +10,7 @@ import { FaArrowCircleUp } from "react-icons/fa";
 import React from 'react';
 import { FloatingWhatsApp } from 'react-floating-whatsapp';
 import './globals.css';
+import Chatbot from '@/components/Chatbot';
 
 export default function Home() {
   const [isScrolling, setIsScrolling] = useState(false);
@@ -72,6 +73,8 @@ export default function Home() {
   <Education />
       <Skills />
       <Contact />
+      {/* Chatbot floating icon layered above the WhatsApp button */}
+      {/* <Chatbot /> */}
       <FloatingWhatsApp
       phoneNumber="+212777191684"
       accountName="Abdellatyf en-neiymy"

@@ -1,16 +1,18 @@
 'use client';
 import React, { useEffect, useState, useRef } from 'react';
 import { MdOutlineLightMode, MdDarkMode } from "react-icons/md";
-import { IoMdMenu } from "react-icons/io";
+import { IoMdMenu, IoMdClose } from "react-icons/io";
+import { HiHome } from "react-icons/hi";
+import { FaCode, FaGraduationCap, FaTools, FaEnvelope } from "react-icons/fa";
 import '../i18n';
 import { useTranslation } from 'react-i18next';
 import { useDarkMode } from './context';
-import { MdOutlineMenuOpen } from "react-icons/md";
 
 const Header = () => {
     const { isDarkMode, setIsDarkMode } = useDarkMode();
     const [isActivated, setIsActivated] = useState('about');
     const [activeLang, setActiveLang] = useState('');
+    const [isScrolled, setIsScrolled] = useState(false);
     const { t, i18n } = useTranslation();
     const [showMenu, setShowMenu] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
@@ -18,7 +20,6 @@ const Header = () => {
 
     useEffect(() => {
         const lang = localStorage.getItem('lang') || 'en';
-        console.log(lang);
         setActiveLang(lang);
         i18n?.changeLanguage(lang);
     }, [i18n]);
@@ -29,6 +30,15 @@ const Header = () => {
             setIsDarkMode(darkmode === 'true');
         }
     }, [setIsDarkMode]);
+
+    // Handle scroll effect for header
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 20);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     // Close the menu if clicking outside
     useEffect(() => {
@@ -53,197 +63,301 @@ const Header = () => {
         }
     };
 
-    
-
-    const sectionButtons = React.useMemo(() => [
-        { id: 'about', label: t('About'), target: '#about' },
-        { id: 'projects', label: t('Projects'), target: '#projects' },
-        { id: 'education', label: t('Education'), target: '#education' },
-        { id: 'skills', label: t('Skills'), target: '#skills' },
-        { id: 'contact', label: t('Contact'), target: '#contact' },
-    ], [t]);
-
-    // Intersection Observer for tracking sections (observe known section ids)
+    // Scroll-based section tracking
     useEffect(() => {
-        // build selector for known sections only (avoids observing unrelated ids)
-        const selector = sectionButtons.map((s) => `#${s.id}`).join(',');
-        if (!selector) return;
-        const sections = document.querySelectorAll(selector);
-        if (!sections || sections.length === 0) return;
-
-        // compute header height dynamically so rootMargin matches the actual fixed header
-        const headerHeight = headerRef.current?.offsetHeight || 80;
-        const rootMargin = `-${headerHeight}px 0px -40% 0px`;
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                // choose the entry with the largest intersection ratio to avoid flicker
-                let best: IntersectionObserverEntry | null = null;
-                for (const entry of entries) {
-                    if (!best || entry.intersectionRatio > best.intersectionRatio) {
-                        best = entry;
-                    }
+        const handleScroll = () => {
+            const sections = Array.from(document.querySelectorAll('section[id], div[id="contact"]')) as HTMLElement[];
+            const scrollPosition = window.scrollY + 150; // Account for header height
+            
+            // Find which section we're currently in
+            let currentSection = 'about';
+            
+            for (let i = sections.length - 1; i >= 0; i--) {
+                const section = sections[i];
+                const sectionTop = section.offsetTop;
+                
+                if (scrollPosition >= sectionTop) {
+                    currentSection = section.id;
+                    break;
                 }
-                if (best && best.isIntersecting) {
-                    const id = (best.target as HTMLElement).id;
-                    // only activate if id is one of our known sections
-                    if (sectionButtons.some((s) => s.id === id)) setIsActivated(id);
-                }
-            },
-            {
-                rootMargin,
-                threshold: 0.35,
             }
-        );
-
-        sections.forEach((section) => observer.observe(section));
-
-        return () => {
-            sections.forEach((section) => observer.unobserve(section));
-            observer.disconnect();
+            
+            setIsActivated(currentSection);
         };
-    }, [sectionButtons, setIsActivated]);
 
-    // Also track focus changes: when a focusable element inside a section receives focus,
-    // mark that section as active so keyboard users see the correct nav highlight.
-    useEffect(() => {
-        const onFocusIn = (e: FocusEvent) => {
-            const target = e.target as HTMLElement | null;
-            if (!target) return;
-            const section = target.closest('[id]') as HTMLElement | null;
-            if (section && section.id) {
-                // Only activate known sections (avoids activating unrelated ids)
-                const known = sectionButtons.some((s) => s.id === section.id);
-                if (known) setIsActivated(section.id);
+        // Initial check
+        handleScroll();
+        
+        // Add scroll listener with throttle
+        let ticking = false;
+        const onScroll = () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    handleScroll();
+                    ticking = false;
+                });
+                ticking = true;
             }
         };
 
-        document.addEventListener('focusin', onFocusIn);
-        return () => document.removeEventListener('focusin', onFocusIn);
-    }, [sectionButtons]);
+        window.addEventListener('scroll', onScroll);
+        return () => window.removeEventListener('scroll', onScroll);
+    }, []);
+
+    const sectionButtons = [
+        { id: 'about', label: t('About'), target: '#about', icon: <HiHome size={18} /> },
+        { id: 'projects', label: t('Projects'), target: '#projects', icon: <FaCode size={16} /> },
+        { id: 'education', label: t('Education'), target: '#education', icon: <FaGraduationCap size={16} /> },
+        { id: 'skills', label: t('Skills'), target: '#skills', icon: <FaTools size={16} /> },
+        { id: 'contact', label: t('Contact'), target: '#contact', icon: <FaEnvelope size={16} /> },
+    ];
 
     return (
-        <header ref={headerRef} className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b ${isDarkMode ? 'bg-[#0b1220]/80 text-white border-[#111827]/30' : 'bg-white/70 text-black border-gray-200/60'}`}>
-            <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
-                <div className="flex items-center h-[64px] md:h-[80px] justify-between">
-                    {/* Brand / Logo */}
-                    <div className="flex items-center gap-3">
-                            <a onClick={() => { scrollToSection('#about'); setIsActivated('about'); }} className="flex items-center gap-3 cursor-pointer" aria-label="Go to About">
-                                <img src="/logo.svg" alt="Abdellatyf logo" className="w-9 h-9 md:w-11 md:h-11 rounded-full" />
-                                <span className="hidden lg:inline-block text-lg lg:text-2xl font-extrabold tracking-tight select-none bg-gradient-to-r from-green-400 to-blue-500 text-transparent bg-clip-text">Ab.En-neiymy</span>
-                            </a>
-                            <span className="text-xs text-muted-foreground hidden lg:block">{t('Front End Developer')}</span>
+        <header 
+            className={`flex justify-between items-center w-full h-[70px] fixed top-0 z-50 px-4 lg:px-8 transition-all duration-300
+                ${isScrolled 
+                    ? isDarkMode 
+                        ? 'bg-[#21272F]/95 backdrop-blur-md shadow-lg border-b border-slate-700/50' 
+                        : 'bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200/50'
+                    : isDarkMode 
+                        ? 'bg-[#21272F]' 
+                        : 'bg-white'
+                }
+                ${isDarkMode ? 'text-white' : 'text-black'}
+            `}
+        >
+            {/* Logo */}
+            <div className="flex justify-center items-center h-full">
+                <button 
+                    onClick={() => scrollToSection('#about')}
+                    className="group flex items-center gap-3 transition-all duration-300"
+                >
+                    {/* Icon Logo */}
+                    <div className="relative">
+                        <div className={`absolute inset-0 rounded-xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity duration-300
+                            bg-gradient-to-br from-[#00BD95] via-cyan-500 to-blue-500`} 
+                        />
+                        <div className={`relative w-10 h-10 lg:w-12 lg:h-12 rounded-xl flex items-center justify-center font-bold text-lg lg:text-xl
+                            bg-gradient-to-br from-[#00BD95] via-cyan-500 to-blue-500 text-white shadow-lg
+                            group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
+                            <span className="drop-shadow-lg">AE</span>
+                        </div>
+                    </div>
+                    
+                    {/* Text Logo (hidden on mobile) */}
+                    <div className="hidden sm:flex flex-col leading-tight">
+                        <span className={`text-sm lg:text-base font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                            Abdellatyf
+                        </span>
+                        <span className="text-xs lg:text-sm text-[#00BD95] font-semibold">
+                            En-neiymy
+                        </span>
+                    </div>
+                </button>
+            </div>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center gap-1">
+                {sectionButtons.map(({ id, label, target, icon }) => (
+                    <button
+                        key={id}
+                        className={`relative flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300
+                            ${isDarkMode 
+                                ? 'text-slate-300 hover:text-white hover:bg-slate-800/50' 
+                                : 'text-slate-600 hover:text-black hover:bg-gray-100'
+                            }
+                        `}
+                        onClick={() => {
+                            scrollToSection(target);
+                        }}
+                    >
+                        {icon}
+                        <span>{label}</span>
+                    </button>
+                ))}
+            </nav>
+
+            {/* Actions: Language & Dark Mode */}
+            <div className="hidden lg:flex items-center gap-3">
+                {/* Language Switcher */}
+                <div className={`flex items-center gap-1 p-1 rounded-lg ${isDarkMode ? 'bg-slate-800' : 'bg-gray-100'}`}>
+                    <button
+                        onClick={() => {
+                            localStorage.setItem('lang', 'en');
+                            setActiveLang('en');
+                            i18n?.changeLanguage('en');
+                        }}
+                        className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200
+                            ${activeLang === 'en' 
+                                ? 'bg-[#00BD95] text-white shadow-sm' 
+                                : isDarkMode 
+                                    ? 'text-slate-400 hover:text-white' 
+                                    : 'text-slate-600 hover:text-black'
+                            }
+                        `}
+                    >
+                        EN
+                    </button>
+                    <button
+                        onClick={() => {
+                            localStorage.setItem('lang', 'fr');
+                            setActiveLang('fr');
+                            i18n?.changeLanguage('fr');
+                        }}
+                        className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200
+                            ${activeLang === 'fr' 
+                                ? 'bg-[#00BD95] text-white shadow-sm' 
+                                : isDarkMode 
+                                    ? 'text-slate-400 hover:text-white' 
+                                    : 'text-slate-600 hover:text-black'
+                            }
+                        `}
+                    >
+                        FR
+                    </button>
+                </div>
+
+                {/* Dark Mode Toggle */}
+                <button
+                    onClick={() => {
+                        setIsDarkMode(!isDarkMode);
+                        localStorage.setItem('darkmode', isDarkMode ? 'false' : 'true');
+                    }}
+                    className={`p-2.5 rounded-lg transition-all duration-300
+                        ${isDarkMode 
+                            ? 'bg-slate-800 hover:bg-slate-700 text-yellow-400' 
+                            : 'bg-gray-100 hover:bg-gray-200 text-slate-700'
+                        }
+                    `}
+                    aria-label="Toggle dark mode"
+                >
+                    {isDarkMode ? <MdOutlineLightMode size={22} /> : <MdDarkMode size={22} />}
+                </button>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button 
+                className="lg:hidden p-2 rounded-lg transition-colors"
+                onClick={() => setShowMenu(!showMenu)}
+                aria-label="Toggle menu"
+            >
+                {showMenu ? <IoMdClose size={28} /> : <IoMdMenu size={28} />}
+            </button>
+
+            {/* Mobile Menu Overlay */}
+            {showMenu && (
+                <div 
+                    className="fixed inset-0 bg-black/50 backdrop-blur-sm lg:hidden z-40"
+                    onClick={() => setShowMenu(false)}
+                />
+            )}
+
+            {/* Mobile Menu Panel */}
+            <div
+                ref={menuRef}
+                className={`fixed top-0 right-0 h-screen w-[280px] lg:hidden transform transition-transform duration-300 ease-in-out z-50
+                    ${showMenu ? 'translate-x-0' : 'translate-x-full'}
+                    ${isDarkMode ? 'bg-[#21272F] border-l border-slate-700' : 'bg-white border-l border-gray-200'}
+                `}
+            >
+                <div className="flex flex-col h-full p-6">
+                    {/* Mobile Menu Header */}
+                    <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-700/50">
+                        <h2 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-black'}`}>
+                            Menu
+                        </h2>
+                        <button 
+                            onClick={() => setShowMenu(false)}
+                            className="p-2 rounded-lg hover:bg-slate-800/50 transition-colors"
+                        >
+                            <IoMdClose size={24} />
+                        </button>
                     </div>
 
-                    {/* Center Navigation (desktop) */}
-                    <nav aria-label="Primary" className="hidden sm:flex items-center gap-6">
-                        {sectionButtons.map(({ id, label, target }) => (
-                            <div key={id} className="flex flex-col items-center">
-                                <button
-                                    onClick={() => {
-                                        scrollToSection(target);
-                                        setIsActivated(id);
-                                    }}
-                                    className={`px-2 py-1 text-sm md:text-base font-medium transition-colors focus:outline-none ${isActivated === id ? 'text-[#00BD95]' : isDarkMode ? 'text-white/90' : 'text-black/85'}`}
-                                    aria-current={isActivated === id ? 'page' : undefined}
-                                >
-                                    {label}
-                                </button>
-                                <div className={`h-1 mt-1 rounded-full w-full transition-all duration-300 ${isActivated === id ? 'bg-[#00BD95]' : 'bg-transparent'}`} />
-                            </div>
+                    {/* Mobile Navigation Links */}
+                    <nav className="flex-1 flex flex-col gap-2">
+                        {sectionButtons.map(({ id, label, target, icon }) => (
+                            <button
+                                key={id}
+                                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 border-l-4 border-transparent
+                                    ${isDarkMode 
+                                        ? 'text-slate-300 hover:bg-slate-800/50' 
+                                        : 'text-slate-600 hover:bg-gray-100'
+                                    }
+                                `}
+                                onClick={() => {
+                                    scrollToSection(target);
+                                    setShowMenu(false);
+                                }}
+                            >
+                                <span>{icon}</span>
+                                <span className="font-medium">{label}</span>
+                            </button>
                         ))}
                     </nav>
 
-                    {/* Actions (lang + theme + mobile toggle) */}
-                    <div className="flex items-center gap-4">
-                        <div className="hidden sm:flex items-center gap-3">
-                            <button
-                                onClick={() => {
-                                    const newLang = activeLang === 'en' ? 'fr' : 'en';
-                                    localStorage.setItem('lang', newLang);
-                                    setActiveLang(newLang);
-                                    i18n?.changeLanguage(newLang);
-                                }}
-                                className="px-2 py-1 rounded text-sm font-semibold bg-transparent border border-transparent hover:border-gray-200/30 transition"
-                                aria-label="Toggle language"
-                            >
-                                {activeLang === 'en' ? 'FR' : 'EN'}
-                            </button>
-                            <button
-                                onClick={() => {
-                                    setIsDarkMode(!isDarkMode);
-                                    localStorage.setItem('darkmode', isDarkMode ? 'false' : 'true');
-                                }}
-                                className="p-1 rounded focus:ring-2 focus:ring-offset-2"
-                                aria-label="Toggle theme"
-                            >
-                                {isDarkMode ? <MdOutlineLightMode size={22} /> : <MdDarkMode size={22} />}
-                            </button>
+                    {/* Mobile Menu Footer */}
+                    <div className={`pt-6 pb-32 border-t ${isDarkMode ? 'border-slate-700' : 'border-gray-200'}`}>
+                        {/* Language Selector */}
+                        <div className="mb-4">
+                            <p className={`text-xs font-semibold mb-2 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+                                {t('Language')}
+                            </p>
+                            <div className={`flex gap-2 p-1 rounded-lg ${isDarkMode ? 'bg-slate-800' : 'bg-gray-100'}`}>
+                                <button
+                                    onClick={() => {
+                                        localStorage.setItem('lang', 'en');
+                                        setActiveLang('en');
+                                        i18n?.changeLanguage('en');
+                                    }}
+                                    className={`flex-1 px-3 py-2 rounded-md text-sm font-medium transition-all
+                                        ${activeLang === 'en' 
+                                            ? 'bg-[#00BD95] text-white' 
+                                            : isDarkMode 
+                                                ? 'text-slate-400' 
+                                                : 'text-slate-600'
+                                        }
+                                    `}
+                                >
+                                    English
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        localStorage.setItem('lang', 'fr');
+                                        setActiveLang('fr');
+                                        i18n?.changeLanguage('fr');
+                                    }}
+                                    className={`flex-1 px-3 py-2 rounded-md text-sm font-medium transition-all
+                                        ${activeLang === 'fr' 
+                                            ? 'bg-[#00BD95] text-white' 
+                                            : isDarkMode 
+                                                ? 'text-slate-400' 
+                                                : 'text-slate-600'
+                                        }
+                                    `}
+                                >
+                                    Français
+                                </button>
+                            </div>
                         </div>
 
-                        {/* Mobile menu toggle */}
-                        <button
-                            onClick={() => setShowMenu(!showMenu)}
-                            className="sm:hidden p-2 rounded focus:ring-2"
-                            aria-label="Open menu"
-                            aria-expanded={showMenu}
-                        >
-                            {showMenu ? <MdOutlineMenuOpen size={26} /> : <IoMdMenu size={26} />}
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            {/* Mobile slide-over menu */}
-            <div
-                ref={menuRef}
-                className={`fixed top-0 right-0 h-screen w-full sm:hidden transform ${showMenu ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300 ${isDarkMode ? 'bg-[#0b1220] text-white' : 'bg-white text-black'}`}
-            >
-                <div className="flex flex-col h-full p-6">
-                    <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-xl font-bold">Menu</h2>
-                        <button onClick={() => setShowMenu(false)} aria-label="Close menu" className="p-1">
-                            <MdOutlineMenuOpen size={26} />
-                        </button>
-                    </div>
-
-                    <div className="flex flex-col gap-4">
-                        {sectionButtons.map(({ id, label, target }) => (
-                            <button
-                                key={id}
-                                onClick={() => {
-                                    scrollToSection(target);
-                                    setIsActivated(id);
-                                    setShowMenu(false);
-                                }}
-                                className={`text-lg text-left py-2 ${isActivated === id ? 'text-[#00BD95]' : ''}`}
-                            >
-                                {label}
-                            </button>
-                        ))}
-                    </div>
-
-                    <div className="mt-auto flex items-center justify-between">
-                        <button
-                            onClick={() => {
-                                const newLang = activeLang === 'en' ? 'fr' : 'en';
-                                localStorage.setItem('lang', newLang);
-                                setActiveLang(newLang);
-                                i18n?.changeLanguage(newLang);
-                                setShowMenu(false);
-                            }}
-                            className="text-base"
-                        >
-                            {activeLang === 'en' ? 'FR' : 'EN'}
-                        </button>
+                        {/* Dark Mode Toggle */}
                         <button
                             onClick={() => {
                                 setIsDarkMode(!isDarkMode);
                                 localStorage.setItem('darkmode', isDarkMode ? 'false' : 'true');
                                 setShowMenu(false);
                             }}
-                            className="p-1"
+                            className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all
+                                ${isDarkMode 
+                                    ? 'bg-slate-800 hover:bg-slate-700' 
+                                    : 'bg-gray-100 hover:bg-gray-200'
+                                }
+                            `}
                         >
+                            <span className="font-medium text-sm">
+                                {isDarkMode ? t('Light Mode') : t('Dark Mode')}
+                            </span>
                             {isDarkMode ? <MdOutlineLightMode size={22} /> : <MdDarkMode size={22} />}
                         </button>
                     </div>

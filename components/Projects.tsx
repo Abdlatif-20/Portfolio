@@ -1,9 +1,10 @@
 "use client";
-import React, { useRef, useState, useEffect } from "react";
-import Card from "@/components/Card";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDarkMode } from "@/components/context";
-import { FaExternalLinkAlt } from "react-icons/fa";
+import { FaExternalLinkAlt, FaGithub, FaGlobe, FaCode, FaServer, FaReact } from "react-icons/fa";
+import { SiDocker, SiNextdotjs, SiCplusplus } from "react-icons/si";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 type Project = {
   title: string;
@@ -12,280 +13,469 @@ type Project = {
   techStack?: string[];
   live?: boolean;
   image?: string;
+  category?: string;
+  featured?: boolean;
 };
 
 const projects: Project[] = [
   {
-    title: "Cub3D",
-    description:
-      "A 3D maze game built using raycasting, allowing players to navigate through a maze and collect items to win the game.",
-    href: "https://github.com/Abdlatif-20/cub3D_42",
-    techStack: ["C", "raycasting", "minilibx"],
-    image: "/projects/cub3d42.png",
-  },
-  {
-    title: "Web Server",
-    description:
-      "A lightweight HTTP server built from scratch, focused on handling requests and responses efficiently.",
-    href: "https://github.com/Abdlatif-20/webserv",
-    techStack: ["C++", "HTTP", "Server"],
-    image: "/projects/webserver.png",
-  },
-  {
-    title: "Inception",
-    description:
-      "Docker-based multi-container setup demonstrating secure service deployment and orchestration.",
-    href: "https://github.com/Abdlatif-20/Inception_42",
-    techStack: ["Docker", "nginx", "WordPress", "mySQL"],
-    image: "/projects/inception.png",
-  },
-  {
     title: "Pong Game",
-    description:
-      "A modern take on Pong with multiplayer features, auth, and social elements for an engaging experience.",
+    description: "Pong Game_desc",
     href: "https://github.com/Abdlatif-20/ft_transcendence",
     techStack: ["TypeScript", "Next.js", "Tailwind", "Postgres", "Redis", "WebSockets"],
     image: "/projects/pong.jpg",
-  },
-  {
-    title: "Portfolio",
-    description: "this Portfolio is Showcasing my skills and projects and developed using Next.js, TailwindCSS, and i18n for multilingual support.",
-    href: "https://github.com/Abdlatif-20/Portfolio",
-    techStack: ["Next.js", "TailwindCSS", "i18next"],
-    image: "/projects/portfolio.png",
+    category: "Web Development",
+    featured: true,
   },
   {
     title: "rhmetrics",
-    description:
-      "HR market research platform with multilingual support and data-driven dashboards.",
+    description: "rhmetrics_desc",
     href: "https://rhmetrics.ma/",
     techStack: ["React", "Tailwind", "Strapi", "Postgres"],
     live: true,
     image: "/projects/rhmetrics.png",
+    category: "Web Development",
+    featured: true,
+  },
+  {
+    title: "Cub3D",
+    description: "Cub3D_desc",
+    href: "https://github.com/Abdlatif-20/cub3D_42",
+    techStack: ["C", "raycasting", "minilibx"],
+    image: "/projects/cub3d42.png",
+    category: "Systems Programming",
+  },
+  {
+    title: "Web Server",
+    description: "Web Server_desc",
+    href: "https://github.com/Abdlatif-20/webserv",
+    techStack: ["C++", "HTTP", "Server"],
+    image: "/projects/webserver.png",
+    category: "Systems Programming",
+  },
+  {
+    title: "Inception",
+    description: "Inception_desc",
+    href: "https://github.com/Abdlatif-20/Inception_42",
+    techStack: ["Docker", "nginx", "WordPress", "mySQL"],
+    image: "/projects/inception.png",
+    category: "DevOps",
+  },
+  {
+    title: "Portfolio",
+    description: "Portfolio_desc",
+    href: "https://github.com/Abdlatif-20/Portfolio",
+    techStack: ["Next.js", "TailwindCSS", "i18next"],
+    image: "/projects/portfolio.png",
+    category: "Web Development",
   },
   {
     title: "MyJoboard",
-    description: "Job board platform with search and application features.",
+    description: "MyJoboard_desc",
     href: "https://www.job.myjoboard-ma.com/",
     techStack: ["React", "Tailwind", "Express", "Postgres"],
     live: true,
     image: "/projects/myjoboard.png",
+    category: "Web Development",
   },
 ];
+
+const categories = ["All", "Web Development", "Systems Programming", "DevOps"];
 
 export default function Projects() {
   const { t } = useTranslation();
   const { isDarkMode } = useDarkMode();
-  // show all projects by default
-  const visibleCount = projects.length;
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const trackRef = useRef<HTMLDivElement | null>(null);
-  const singleWidthRef = useRef<number>(0);
-  const cardStepRef = useRef<number>(0);
-  const animationRef = useRef<number | null>(null);
-  const lastTimeRef = useRef<number | null>(null);
-  const [isPaused, setIsPaused] = useState(false);
-  const SCROLL_SPEED = 60; // px per second
-  const currentXRef = useRef<number>(0);
-  const isPausedRef = useRef<boolean>(false);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [hoveredProject, setHoveredProject] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const projectsPerPage = 6;
+  const { ref, isVisible } = useScrollAnimation(0.1);
 
-  useEffect(() => {
-    isPausedRef.current = isPaused;
-  }, [isPaused]);
+  const filteredProjects = selectedCategory === "All" 
+    ? projects 
+    : projects.filter(p => p.category === selectedCategory);
 
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredProjects.length / projectsPerPage);
+  const startIndex = (currentPage - 1) * projectsPerPage;
+  const endIndex = startIndex + projectsPerPage;
+  const currentProjects = filteredProjects.slice(startIndex, endIndex);
 
-    // width of one sequence (first child)
-    const firstGroup = track.children[0] as HTMLElement | undefined;
-    if (!firstGroup) return;
-    const singleWidth = firstGroup.getBoundingClientRect().width;
-    singleWidthRef.current = singleWidth;
-
-    // determine single card step (distance between two adjacent cards)
-    const firstCard = firstGroup.querySelector('a') as HTMLElement | null;
-    if (firstCard) {
-      const cards = Array.from(firstGroup.querySelectorAll('a')) as HTMLElement[];
-      if (cards.length >= 2) {
-        const step = Math.abs(cards[1].getBoundingClientRect().left - cards[0].getBoundingClientRect().left);
-        cardStepRef.current = step;
-      } else {
-        cardStepRef.current = singleWidth / Math.max(1, Math.min(projects.length, visibleCount));
-      }
-    }
-
-  // don't reset currentXRef here so pause/resume is seamless
-    const step = (time: number) => {
-      if (lastTimeRef.current == null) lastTimeRef.current = time;
-      const dt = time - (lastTimeRef.current || time);
-      lastTimeRef.current = time;
-      if (!isPausedRef.current) {
-        currentXRef.current -= (SCROLL_SPEED * dt) / 1000;
-        if (Math.abs(currentXRef.current) >= singleWidth) {
-          // wrap
-          currentXRef.current += singleWidth;
-        }
-        track.style.transform = `translateX(${currentXRef.current}px)`;
-      }
-      animationRef.current = requestAnimationFrame(step);
-    };
-
-    animationRef.current = requestAnimationFrame(step);
-    return () => {
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
-      animationRef.current = null;
-      lastTimeRef.current = null;
-    };
-    // run once (layout changes will naturally keep things correct)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // manual scroll handlers (left/right)
-  const scrollBy = (delta: number) => {
-    const track = trackRef.current;
-    const singleWidth = singleWidthRef.current || 0;
-    if (!track) return;
-    currentXRef.current += delta;
-    // wrap similarly to the animation logic
-    if (singleWidth > 0) {
-      if (Math.abs(currentXRef.current) >= singleWidth) {
-        // bring back into range
-        if (currentXRef.current < 0) currentXRef.current += singleWidth;
-        else currentXRef.current -= singleWidth;
-      }
-    }
-    track.style.transform = `translateX(${currentXRef.current}px)`;
+  // Reset to page 1 when category changes
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    setCurrentPage(1);
+    scrollToProjects();
   };
 
-  const onLeft = () => {
-    // move content right to reveal previous items
-    const step = cardStepRef.current || 420;
-    scrollBy(Math.abs(step));
-  };
-
-  const onRight = () => {
-    const step = cardStepRef.current || 420;
-    scrollBy(-Math.abs(step));
-  };
-
-  // keyboard control when wrapper is focused
-  const onWrapperKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'ArrowLeft') {
-      e.preventDefault();
-      onLeft();
-    } else if (e.key === 'ArrowRight') {
-      e.preventDefault();
-      onRight();
+  // Scroll to projects section
+  const scrollToProjects = () => {
+    const projectsSection = document.getElementById('projects');
+    if (projectsSection) {
+      const offset = 100; // Account for fixed header
+      const elementPosition = projectsSection.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+      
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
     }
+  };
+
+  // Handle page change with scroll
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    scrollToProjects();
   };
 
   return (
     <section
+      ref={ref as React.RefObject<HTMLElement>}
       id="projects"
-      className={`w-full flex flex-col items-center px-4 py-12 md:py-20 bg-transparent}`}
+      className={`w-full flex flex-col items-center px-4 py-12 md:py-20 bg-transparent transition-all duration-1000 ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'
+      }`}
     >
-      <div className="max-w-7xl w-full">
-        <header className="mb-8 md:mb-12 flex flex-col items-center">
-          <h2 className={`text-3xl text-center md:text-4xl font-extrabold ${isDarkMode ? "text-white" : "text-black"}`}>
-            {t("Projects")}
-          </h2>
-          <p className={`mt-2 text-sm md:text-base text-center ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>
-            {t(
-              "Selected projects that showcase my skills in systems programming, web development and container orchestration."
-            )}
-          </p>
-        </header>
-
-        {/* responsive grid on md+, horizontal carousel on small screens */}
-          {/* Auto-scrolling single-line projects strip */}
-          <div className="w-full overflow-hidden relative" ref={wrapperRef} onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)} onKeyDown={onWrapperKeyDown} tabIndex={0} aria-label="Projects carousel">
-            {/* left / right controls */}
-            <button
-              aria-label="Previous projects"
-              onClick={onLeft}
-              className="absolute left-2 top-1/2 -translate-y-1/2 z-40 p-2 rounded-full bg-white/80 dark:bg-black/60 shadow-md hover:scale-105 transition-transform hover:bg-green-400/60"
-            >
-              ‹
-            </button>
-            <button
-              aria-label="Next projects"
-              onClick={onRight}
-              className="absolute right-2 top-1/2 -translate-y-1/2 z-40 p-2 rounded-full bg-white/80 dark:bg-black/60 shadow-md
-              hover:scale-105 transition-transform hover:bg-green-400/60"
-            >
-              ›
-            </button>
-            <div
-              ref={trackRef}
-              className="flex gap-6 items-stretch whitespace-nowrap will-change-transform"
-              style={{ transform: "translateX(0px)" }}
-            >
-              {[0, 1].map((copy) => (
-                <div key={copy} className="flex gap-6 ">
-                  {projects.slice(0, visibleCount).map((p, i) => (
-                        <a
-                          key={`${copy}-${i}`}
-                          href={p.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`group relative inline-block rounded-2xl overflow-hidden w-[400px] ${isDarkMode ? "bg-[#0b1116]" : "bg-white"} shadow-lg hover:scale-[1.01] transition-transform focus:outline-none focus:ring-2 focus:ring-offset-2`}
-                          aria-label={`${p.title} - open in a new tab`}
-                        >
-                          <div className="relative">
-                            {p.image && <img src={p.image} alt={p.title} className="w-full h-40 object-cover" />}
-                            <span className="absolute top-2 right-2 bg-black/50 text-white rounded-full p-1">
-                              <FaExternalLinkAlt size={12} />
-                            </span>
-                          </div>
-
-                          {/* Compact content (default) */}
-                          <div className="p-3">
-                            <h3 className={`text-base font-semibold ${isDarkMode ? "text-white" : "text-slate-900"}`}>{t(p.title)}</h3>
-                            <p className={`text-xs mt-1 ${isDarkMode ? "text-slate-300" : "text-slate-700"} line-clamp-3`}>{t(p.description)}</p>
-                            <div className="mt-2 flex flex-wrap gap-2">
-                              {p.techStack?.map((tech, idx) => (
-                                <span key={idx} className={`text-xs px-2 py-1 rounded-md font-medium ${isDarkMode ? "bg-slate-800 text-slate-200" : "bg-slate-100 text-slate-800"}`}>
-                                  {tech}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-
-                          {/* Hover overlay with full details */}
-                          <div className={`absolute inset-0 z-40 p-4 transition-opacity duration-300 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 ${isDarkMode ? "bg-[#000000]" : "bg-white"}
-                             flex flex-col`}> 
-                            <div className="overflow-auto pb-4">
-                              <h3 className={`text-lg font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{t(p.title)}</h3>
-                              <p className={`text-sm ${isDarkMode ? 'text-slate-300' : 'text-slate-700'} whitespace-pre-wrap`}>{t(p.description)}</p>
-
-                              {p.techStack && (
-                                <div className="mt-4 flex flex-wrap gap-2">
-                                  {p.techStack.map((tech, idx) => (
-                                    <span key={idx} className={`text-xs px-2 py-1 rounded-md font-medium ${isDarkMode ? "bg-slate-800 text-slate-200" : "bg-slate-100 text-slate-800"}`}>
-                                      {tech}
-                                    </span>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                            <div className="mt-auto flex gap-2">
-                              {p.live && (
-                                <a href={p.href} target="_blank" rel="noopener noreferrer" className="px-3 py-2 rounded-md bg-green-500 text-white text-sm font-medium">Open Live</a>
-                              )}
-                              <a href={p.href} target="_blank" rel="noopener noreferrer" className="px-3 py-2 rounded-md border border-current text-sm">View Source</a>
-                            </div>
-                          </div>
-                        </a>
-                      ))}
-                </div>
-              ))}
+      <div className="max-w-6xl w-full mx-auto">
+        {/* Header with Stats */}
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between mb-8 md:mb-12 gap-4">
+          <div>
+            <h2 className={`text-3xl md:text-4xl font-extrabold ${isDarkMode ? "text-white" : "text-black"}`}>
+              {t("Projects")}
+            </h2>
+            <p className={`mt-2 text-sm md:text-base ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>
+              {t(
+                "Selected projects that showcase my skills in systems programming, web development and container orchestration."
+              )}
+            </p>
+          </div>
+          
+          {/* Quick Stats */}
+          <div className="flex gap-4">
+            <div className={`text-center px-4 py-2 rounded-lg ${isDarkMode ? "bg-slate-800" : "bg-slate-100"}`}>
+              <div className={`text-2xl font-bold ${isDarkMode ? "text-[#00BD95]" : "text-[#00BD95]"}`}>
+                {projects.length}
+              </div>
+              <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
+                {t("Projects")}
+              </div>
+            </div>
+            <div className={`text-center px-4 py-2 rounded-lg ${isDarkMode ? "bg-slate-800" : "bg-slate-100"}`}>
+              <div className={`text-2xl font-bold ${isDarkMode ? "text-[#00BD95]" : "text-[#00BD95]"}`}>
+                {projects.filter(p => p.live).length}
+              </div>
+              <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
+                {t("Live")}
+              </div>
             </div>
           </div>
+        </div>
 
-        {/* all projects are shown; show more / show less controls removed */}
+        {/* Category Filter */}
+        <div className="flex flex-wrap gap-2 mb-8">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => handleCategoryChange(category)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 transform hover:scale-105
+                ${selectedCategory === category
+                  ? "bg-[#00BD95] text-white shadow-lg"
+                  : isDarkMode
+                    ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                    : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                }
+              `}
+            >
+              {t(category)}
+            </button>
+          ))}
+        </div>
+
+        {/* Professional Grid Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {currentProjects.map((project, index) => (
+            <div
+              key={index}
+              className={`transition-all duration-700 ${
+                isVisible 
+                  ? 'opacity-100 translate-y-0' 
+                  : 'opacity-0 translate-y-20'
+              }`}
+              style={{ transitionDelay: `${index * 150}ms` }}
+            >
+              <ProjectCard 
+                project={project} 
+                isDarkMode={isDarkMode} 
+                t={t}
+                isHovered={hoveredProject === index}
+                onHover={() => setHoveredProject(index)}
+                onLeave={() => setHoveredProject(null)}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-12">
+            {/* Previous Button */}
+            <button
+              onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+              disabled={currentPage === 1}
+              className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 transform hover:scale-105
+                ${currentPage === 1
+                  ? isDarkMode
+                    ? "bg-slate-800 text-slate-600 cursor-not-allowed"
+                    : "bg-slate-100 text-slate-400 cursor-not-allowed"
+                  : isDarkMode
+                    ? "bg-slate-800 text-white hover:bg-[#00BD95]"
+                    : "bg-slate-200 text-slate-900 hover:bg-[#00BD95] hover:text-white"
+                }
+              `}
+            >
+              {t("Previous")}
+            </button>
+
+            {/* Page Numbers */}
+            <div className="flex gap-2">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  onClick={() => handlePageChange(page)}
+                  className={`w-10 h-10 rounded-lg font-medium text-sm transition-all duration-300 transform hover:scale-110
+                    ${currentPage === page
+                      ? "bg-[#00BD95] text-white shadow-lg scale-110"
+                      : isDarkMode
+                        ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                        : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                    }
+                  `}
+                >
+                  {page}
+                </button>
+              ))}
+            </div>
+
+            {/* Next Button */}
+            <button
+              onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+              disabled={currentPage === totalPages}
+              className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 transform hover:scale-105
+                ${currentPage === totalPages
+                  ? isDarkMode
+                    ? "bg-slate-800 text-slate-600 cursor-not-allowed"
+                    : "bg-slate-100 text-slate-400 cursor-not-allowed"
+                  : isDarkMode
+                    ? "bg-slate-800 text-white hover:bg-[#00BD95]"
+                    : "bg-slate-200 text-slate-900 hover:bg-[#00BD95] hover:text-white"
+                }
+              `}
+            >
+              {t("Next")}
+            </button>
+          </div>
+        )}
+
+        {/* No Results */}
+        {filteredProjects.length === 0 && (
+          <div className={`text-center py-12 ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
+            <p className="text-lg">{t("No projects found in this category")}</p>
+          </div>
+        )}
       </div>
     </section>
+  );
+}
+
+// Project Card Component
+function ProjectCard({ 
+  project, 
+  isDarkMode, 
+  t, 
+  isHovered, 
+  onHover, 
+  onLeave 
+}: { 
+  project: Project; 
+  isDarkMode: boolean; 
+  t: any;
+  isHovered: boolean;
+  onHover: () => void;
+  onLeave: () => void;
+}) {
+  return (
+    <div
+      onMouseEnter={onHover}
+      onMouseLeave={onLeave}
+      className={`group relative rounded-2xl overflow-hidden transition-all duration-500 transform
+        ${isHovered ? "-translate-y-3 shadow-2xl" : "hover:-translate-y-2 hover:shadow-xl"}
+        ${project.featured 
+          ? isDarkMode 
+            ? "bg-gradient-to-br from-[#0b1116] via-[#0b1116] to-slate-900 border-2 border-[#00BD95]/30" 
+            : "bg-gradient-to-br from-white via-white to-slate-50 border-2 border-[#00BD95]/30"
+          : isDarkMode 
+            ? "bg-[#0b1116] border border-slate-800 hover:border-slate-700" 
+            : "bg-white border border-gray-200 hover:border-gray-300"
+        }
+      `}
+    >
+      {/* Featured Badge */}
+      {project.featured && (
+        <div className="absolute top-3 left-3 z-20 flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r from-[#00BD95] to-cyan-500 shadow-lg">
+          <span className="text-xs font-bold text-white">⭐ {t("Featured")}</span>
+        </div>
+      )}
+
+      {/* Project Image */}
+      <div className="relative h-48 overflow-hidden bg-gradient-to-br from-slate-800 to-slate-900">
+        {project.image && (
+          <>
+            <img 
+              src={project.image} 
+              alt={project.title} 
+              className={`w-full h-full object-cover transition-all duration-700 ${
+                isHovered ? "scale-110 blur-[2px]" : "scale-100"
+              }`}
+            />
+            <div className={`absolute inset-0 bg-gradient-to-t transition-opacity duration-500 ${
+              isDarkMode 
+                ? "from-[#0b1116] via-[#0b1116]/50 to-transparent" 
+                : "from-white via-white/50 to-transparent"
+            } ${isHovered ? "opacity-80" : "opacity-0"}`} />
+          </>
+        )}
+        
+        {/* Live Badge */}
+        {project.live && (
+          <div className="absolute top-3 right-3 z-20 flex items-center gap-1 px-3 py-1 rounded-full bg-green-500/90 backdrop-blur-sm shadow-lg">
+            <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
+            <span className="text-xs font-semibold text-white">{t("Live")}</span>
+          </div>
+        )}
+        
+        {/* Overlay Buttons */}
+        <div className={`absolute inset-0 flex items-center justify-center gap-3 transition-opacity duration-300 ${
+          isHovered ? "opacity-100" : "opacity-0"
+        }`}>
+          <a
+            href={project.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-3 rounded-full bg-[#00BD95] text-white shadow-lg transform hover:scale-110 transition-all duration-300 hover:rotate-12"
+            aria-label={`Open ${project.title}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {project.live ? <FaGlobe size={20} /> : <FaGithub size={20} />}
+          </a>
+        </div>
+      </div>
+
+      {/* Project Content */}
+      <div className={`p-5 transition-colors duration-500 ${
+        isHovered 
+          ? isDarkMode
+            ? "bg-gradient-to-br from-[#0d6b5e] to-[#0a5d5d]"
+            : "bg-gradient-to-br from-[#00BD95] to-cyan-600"
+          : isDarkMode ? "bg-[#0b1116]" : "bg-white"
+      }`}>
+        {/* Category Tag */}
+        {project.category && (
+          <div className="mb-2">
+            <span className={`text-xs font-semibold px-2 py-1 rounded ${
+              isHovered ? "text-white" : isDarkMode ? "text-[#00BD95]" : "text-[#00BD95]"
+            }`}>
+              {t(project.category)}
+            </span>
+          </div>
+        )}
+
+        {/* Title */}
+        <h3 className={`text-lg font-bold mb-2 transition-colors duration-300 ${
+          isHovered ? "text-white" : isDarkMode ? "text-white" : "text-slate-900"
+        }`}>
+          {t(project.title)}
+        </h3>
+
+        {/* Description */}
+        <p className={`text-sm mb-4 line-clamp-2 transition-colors duration-300 ${
+          isHovered ? "text-white/90" : isDarkMode ? "text-slate-400" : "text-slate-600"
+        }`}>
+          {t(project.description)}
+        </p>
+
+        {/* Tech Stack */}
+        <div className="flex flex-wrap gap-2 mb-4">
+          {project.techStack?.slice(0, 3).map((tech, idx) => (
+            <span
+              key={idx}
+              className={`text-xs px-3 py-1 rounded-full font-medium transition-all duration-200 transform hover:scale-105 ${
+                isHovered
+                  ? "bg-white/20 text-white backdrop-blur-sm"
+                  : isDarkMode 
+                    ? "bg-slate-800 text-slate-300 hover:bg-[#00BD95] hover:text-white" 
+                    : "bg-slate-100 text-slate-700 hover:bg-[#00BD95] hover:text-white"
+              }`}
+            >
+              {tech}
+            </span>
+          ))}
+          {project.techStack && project.techStack.length > 3 && (
+            <span className={`text-xs px-3 py-1 rounded-full font-medium ${
+              isHovered 
+                ? "bg-white/20 text-white backdrop-blur-sm"
+                : isDarkMode ? "bg-slate-800 text-slate-400" : "bg-slate-100 text-slate-600"
+            }`}>
+              +{project.techStack.length - 3}
+            </span>
+          )}
+        </div>
+
+        {/* View Project Link */}
+        <a
+          href={project.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`group/btn w-full flex items-center justify-center gap-2 py-2.5 rounded-lg font-medium text-sm transition-all duration-300 transform hover:scale-[1.02] relative overflow-hidden ${
+            isHovered
+              ? "bg-slate-900 text-white shadow-lg"
+              : isDarkMode
+                ? "bg-slate-800 text-white hover:bg-slate-700"
+                : "bg-slate-100 text-slate-900 hover:bg-slate-200"
+          }`}
+        >
+          <span className="relative z-10">{project.live ? t("Visit Website") : t("View Code")}</span>
+          <FaExternalLinkAlt size={12} className="relative z-10 transition-transform duration-300 group-hover/btn:translate-x-1" />
+          
+          {/* Button shine effect */}
+          <span className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12" />
+        </a>
+      </div>
+
+      {/* Decorative Corner */}
+      <div className={`absolute bottom-0 right-0 w-24 h-24 transition-all duration-500
+        ${isHovered ? "opacity-30" : "opacity-10"}
+        ${isDarkMode ? "bg-[#00BD95]" : "bg-slate-900"}
+      `}
+        style={{
+          clipPath: "polygon(100% 0, 100% 100%, 0 100%)"
+        }}
+      />
+
+      {/* Animated border glow for featured projects */}
+      {project.featured && (
+        <div className="absolute inset-0 rounded-2xl pointer-events-none">
+          <div className={`absolute inset-0 rounded-2xl transition-opacity duration-500 ${
+            isHovered ? "opacity-100" : "opacity-0"
+          }`}
+            style={{
+              background: "linear-gradient(45deg, #00BD95, #06b6d4, #00BD95)",
+              filter: "blur(8px)",
+              zIndex: -1
+            }}
+          />
+        </div>
+      )}
+    </div>
   );
 }

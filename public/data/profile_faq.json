@@ -1,0 +1,22 @@
+[
+  {
+    "question": "What's your name?",
+    "answer": "I'm Abdellatyf En-neiymy (aben-nei)."
+  },
+  {
+    "question": "What do you do?",
+    "answer": "I'm a full-stack developer focused on building performant web apps with React, Next.js and TypeScript."
+  },
+  {
+    "question": "Where can I find your resume?",
+    "answer": "You can download my resume here: /resume/resume.pdf"
+  },
+  {
+    "question": "What are your main skills?",
+    "answer": "My main skills are JavaScript/TypeScript, React, Next.js, Node.js, Tailwind CSS and UI/UX-focused front-end development."
+  },
+  {
+    "question": "How can I contact you?",
+    "answer": "You can contact me via WhatsApp using the floating widget on this page or via the contact form in the Contact section."
+  }
+]
