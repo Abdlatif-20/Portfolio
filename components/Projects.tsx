@@ -193,27 +193,34 @@ export default function Projects() {
         </div>
 
         {/* Professional Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {currentProjects.map((project, index) => (
-            <div
-              key={index}
-              className={`transition-all duration-700 ${
-                isVisible 
-                  ? 'opacity-100 translate-y-0' 
-                  : 'opacity-0 translate-y-20'
-              }`}
-              style={{ transitionDelay: `${index * 150}ms` }}
-            >
-              <ProjectCard 
-                project={project} 
-                isDarkMode={isDarkMode} 
-                t={t}
-                isHovered={hoveredProject === index}
-                onHover={() => setHoveredProject(index)}
-                onLeave={() => setHoveredProject(null)}
-              />
-            </div>
-          ))}
+        <div
+          className="w-full"
+        >
+          <div
+            className="flex md:flex-row flex-nowrap gap-6 overflow-x-auto md:overflow-x-auto lg:grid lg:grid-cols-3 lg:gap-6 scroll-snap-x pb-4"
+            style={{ WebkitOverflowScrolling: 'touch' }}
+          >
+            {currentProjects.map((project, index) => (
+              <div
+                key={index}
+                className={`min-w-[80vw] md:min-w-[48vw] lg:min-w-0 transition-all duration-700 scroll-snap-align-start ${
+                  isVisible 
+                    ? 'opacity-100 translate-y-0' 
+                    : 'opacity-0 translate-y-20'
+                }`}
+                style={{ transitionDelay: `${index * 150}ms` }}
+              >
+                <ProjectCard 
+                  project={project} 
+                  isDarkMode={isDarkMode} 
+                  t={t}
+                  isHovered={hoveredProject === index}
+                  onHover={() => setHoveredProject(index)}
+                  onLeave={() => setHoveredProject(null)}
+                />
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Pagination */}

@@ -5,16 +5,19 @@ import { useDarkMode } from "@/components/context";
 import Projects from "@/components/Projects";
 import Skills from "@/components/Skills";
 import Education from "@/components/Education";
+import Experience from "@/components/Experience";
 import { useEffect, useState } from "react";
-import { FaArrowCircleUp } from "react-icons/fa";
+import { FaArrowCircleUp, FaDownload } from "react-icons/fa";
 import React from 'react';
 import { FloatingWhatsApp } from 'react-floating-whatsapp';
+import { useTranslation } from 'react-i18next';
 import './globals.css';
 
 export default function Home() {
   const [isScrolling, setIsScrolling] = useState(false);
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
+  const [showResumeModal, setShowResumeModal] = useState(false);
   const { isDarkMode } = useDarkMode();
 
   useEffect(() => {
@@ -126,13 +129,115 @@ export default function Home() {
         ${isDarkMode ? 'bg-[#21272F] text-white' : 'bg-white text-black'}
       `}
     >
-      <About />
+      <About showResumeModal={showResumeModal} setShowResumeModal={setShowResumeModal} />
       <Projects />
-  <Education />
+      <Education />
+      <Experience />
       <Skills />
       <Contact />
-      {/* Chatbot floating icon layered above the WhatsApp button */}
-      {/* <Chatbot /> */}
+
+      {/* Resume Modal - Full Screen Floating - Global */}
+      {showResumeModal && (
+        <div 
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-md animate-fadeIn"
+          onClick={() => setShowResumeModal(false)}
+        >
+          <div 
+            className={`relative w-[95vw] md:w-[70vw] lg:w-[60vw] h-[95vh] rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-100 ${
+              isDarkMode ? 'bg-slate-900 border border-slate-700' : 'bg-white border border-gray-200'
+            }`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header - Floating */}
+            <div className={`absolute top-0 left-0 right-0 z-10 flex items-center justify-between p-4 md:p-6 backdrop-blur-xl ${
+              isDarkMode ? 'bg-slate-900/90 border-b border-slate-700/50' : 'bg-white/90 border-b border-slate-200/50'
+            }`}>
+              <div className="flex items-center gap-3">
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                  isDarkMode ? 'bg-[#00BD95]/20' : 'bg-[#00BD95]/10'
+                }`}>
+                  <FaDownload className="text-[#00BD95] text-lg" />
+                </div>
+                <div>
+                  <h3 className={`text-xl md:text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                    My Resume
+                  </h3>
+                  <p className={`text-xs md:text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+                    Full curriculum vitae
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <a
+                  href="/resume/my-cv.pdf"
+                  download
+                  className="group flex items-center gap-2 px-4 py-2 rounded-xl bg-[#00BD95] text-white hover:bg-cyan-600 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105"
+                  title="Download Resume"
+                >
+                  <FaDownload size={16} />
+                  <span className="hidden md:inline text-sm font-medium">Download</span>
+                </a>
+                <button
+                  onClick={() => setShowResumeModal(false)}
+                  className={`p-3 rounded-xl transition-all duration-200 hover:scale-105 ${
+                    isDarkMode 
+                      ? 'hover:bg-slate-800 text-slate-400 hover:text-white' 
+                      : 'hover:bg-slate-100 text-slate-600 hover:text-slate-900'
+                  }`}
+                  aria-label="Close modal"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {/* PDF Viewer - Full Height */}
+            <div className="w-full h-full pt-20 md:pt-24">
+              <embed
+                src="/resume/my-cv.pdf#toolbar=0&navpanes=0&scrollbar=1&view=FitH&page=1"
+                type="application/pdf"
+                className="w-full h-full"
+                style={{ border: 'none' }}
+              />
+            </div>
+
+            {/* Floating Action Buttons */}
+            <div className="absolute bottom-6 right-6 flex flex-col gap-3">
+              <button
+                onClick={() => window.open('/resume/my-cv.pdf', '_blank')}
+                className={`p-4 rounded-full shadow-2xl backdrop-blur-xl transition-all duration-200 hover:scale-110 ${
+                  isDarkMode 
+                    ? 'bg-slate-800/90 text-white hover:bg-slate-700' 
+                    : 'bg-white/90 text-slate-900 hover:bg-slate-100'
+                }`}
+                title="Open in new tab"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.2s ease-out;
+        }
+      `}</style>
+
       <FloatingWhatsApp
       phoneNumber="+212777191684"
       accountName="Abdellatyf en-neiymy"
@@ -148,14 +253,6 @@ export default function Home() {
         bottom: '5%',
       }}
     />
-      {/* {isScrolling && (
-        <div
-          className="animate-bounce fixed bottom-[8%] left-4 cursor-pointer z-50"
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        >
-          <FaArrowCircleUp className="text-[#00BD95] text-4xl" />
-        </div>
-      )} */}
     </div>
   );
 }

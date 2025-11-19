@@ -3,16 +3,23 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Typewriter from 'typewriter-effect/dist/core';
 import { useDarkMode } from './context';
-import { FaGithub, FaLinkedin, FaEnvelope, FaDownload, FaCode, FaReact, FaServer } from 'react-icons/fa';
-import { SiNextdotjs, SiTailwindcss, SiTypescript } from 'react-icons/si';
+import { FaGithub, FaLinkedin, FaEnvelope, FaDownload, FaCode, FaReact, FaServer, FaNode, FaGit, FaDocker } from 'react-icons/fa';
+import { SiNextdotjs, SiTailwindcss, SiTypescript, SiPostgresql } from 'react-icons/si';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
-const About = () => {
+const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boolean; setShowResumeModal: (show: boolean) => void }) => {
   const { t } = useTranslation();
   const { isDarkMode } = useDarkMode();
   const [mounted, setMounted] = useState(false);
-  const [showResumeModal, setShowResumeModal] = useState(false);
   const { ref, isVisible } = useScrollAnimation(0.1);
+  const [autoScroll, setAutoScroll] = useState(true);
+  const [isPaused, setIsPaused] = useState(false);
+  const [projectCount, setProjectCount] = useState(0);
+  const [yearsCount, setYearsCount] = useState(0);
+  const [techCount, setTechCount] = useState(0);
+  const techScrollRef = React.useRef<HTMLDivElement>(null);
+  const scrollIntervalRef = React.useRef<NodeJS.Timeout | null>(null);
+  const scrollAmountRef = React.useRef(0);
 
   useEffect(() => {
     setMounted(true);
@@ -27,6 +34,65 @@ const About = () => {
       delay: 100,
     });
   }, [t]);
+
+  // Auto-count animation for stats
+  useEffect(() => {
+    if (!isVisible) return;
+
+    const animationDuration = 1500; // 1.5 seconds
+    const startTime = Date.now();
+
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / animationDuration, 1);
+
+      setProjectCount(Math.floor(progress * 7));
+      setYearsCount(Math.floor(progress * 3));
+      setTechCount(Math.floor(progress * 10));
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+
+    animate();
+  }, [isVisible]);
+
+  // Optimized auto-scroll tech stack
+  useEffect(() => {
+    if (!autoScroll || !techScrollRef.current || isPaused) return;
+
+    const scrollContainer = techScrollRef.current;
+    const scrollSpeed = 1; // pixels per frame - optimized
+    const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+
+    // Only auto-scroll if there's content to scroll
+    if (maxScroll <= 0) return;
+
+    // Clear existing interval
+    if (scrollIntervalRef.current) {
+      clearInterval(scrollIntervalRef.current);
+    }
+
+    scrollIntervalRef.current = setInterval(() => {
+      if (scrollContainer) {
+        scrollAmountRef.current += scrollSpeed;
+        
+        // Reset to start when reaching the end with smooth transition
+        if (scrollAmountRef.current >= maxScroll) {
+          scrollAmountRef.current = 0;
+        }
+        
+        scrollContainer.scrollLeft = scrollAmountRef.current;
+      }
+    }, 50); // Optimized interval for smoother scrolling
+
+    return () => {
+      if (scrollIntervalRef.current) {
+        clearInterval(scrollIntervalRef.current);
+      }
+    };
+  }, [autoScroll, isPaused]);
 
   const socialLinks = [
     { icon: <FaGithub size={24} />, href: "https://github.com/Abdlatif-20", label: "GitHub" },
@@ -69,48 +135,43 @@ const About = () => {
               {t("Availability")}: {t("Open to full-time, part-time and freelance opportunities")}
             </span>
           </div>
-
           {/* Greeting */}
           <h1 className={`text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 ${
             isDarkMode ? 'text-white' : 'text-slate-900'
           }`}>
             {t("Hello")}, <span className="text-[#00BD95]">{t("I'm")}</span>
           </h1>
-
           {/* Typewriter Name */}
           <div className="h-16 mb-4">
             <p className="text-2xl lg:text-3xl xl:text-4xl font-bold text-[#00BD95]" id="text_name"></p>
           </div>
-
           {/* Description */}
           <p className={`text-base lg:text-lg leading-relaxed mb-8 max-w-2xl ${
             isDarkMode ? 'text-slate-300' : 'text-slate-600'
           }`}>
             {t("I'm a passionate Front-End Developer dedicated to building elegant, performant, and responsive web interfaces. With hands-on experience using React, Next.js, and Tailwind CSS, I focus on transforming ideas into intuitive and visually engaging user experiences.")}
           </p>
-
           {/* Quick Stats */}
           <div className="grid grid-cols-3 gap-4 w-full max-w-md mb-8">
             <div className={`text-center p-4 rounded-xl ${
               isDarkMode ? 'bg-slate-800/50' : 'bg-slate-100'
             }`}>
-              <div className="text-2xl font-bold text-[#00BD95]">7+</div>
+              <div className="text-2xl font-bold text-[#00BD95]">{projectCount}+</div>
               <div className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>{t("Projects")}</div>
             </div>
             <div className={`text-center p-4 rounded-xl ${
               isDarkMode ? 'bg-slate-800/50' : 'bg-slate-100'
             }`}>
-              <div className="text-2xl font-bold text-[#00BD95]">3+</div>
+              <div className="text-2xl font-bold text-[#00BD95]">{yearsCount}+</div>
               <div className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>{t("Years")}</div>
             </div>
             <div className={`text-center p-4 rounded-xl ${
               isDarkMode ? 'bg-slate-800/50' : 'bg-slate-100'
             }`}>
-              <div className="text-2xl font-bold text-[#00BD95]">10+</div>
+              <div className="text-2xl font-bold text-[#00BD95]">{techCount}+</div>
               <div className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>{t("Technologies")}</div>
             </div>
           </div>
-
           {/* CTAs */}
           <div className="flex flex-wrap gap-4 mb-8">
             <button
@@ -123,7 +184,6 @@ const About = () => {
               </span>
               <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
             </button>
-            
             <a
               href="#contact"
               className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 ${
@@ -135,7 +195,6 @@ const About = () => {
               {t("Contact me")}
             </a>
           </div>
-
           {/* Social Links */}
           <div className="flex gap-4">
             {socialLinks.map((social, index) => (
@@ -149,16 +208,14 @@ const About = () => {
                   isDarkMode 
                     ? 'bg-slate-800 text-slate-300 hover:bg-[#00BD95] hover:text-white' 
                     : 'bg-slate-100 text-slate-700 hover:bg-[#00BD95] hover:text-white'
-                }`}
-              >
+                }`}>
                 {social.icon}
               </a>
             ))}
           </div>
         </div>
-
         {/* Right Content - Image & Tech Stack */}
-        <div className={`order-1 lg:order-2 w-full lg:w-[45%] flex flex-col items-center gap-8 transition-all duration-700 delay-400 ${
+        <div className={`order-1 lg:order-2 w-full mt-6 lg:mt-0 lg:w-[45%] flex flex-col items-center gap-8 transition-all duration-700 delay-400 ${
           isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'
         }`}>
           {/* Profile Image with Enhanced Design */}
@@ -208,90 +265,8 @@ const About = () => {
               </div>
             ))}
           </div>
-
-          {/* Experience Card */}
-          <div className={`w-full max-w-md p-6 rounded-2xl backdrop-blur-sm ${
-            isDarkMode 
-              ? 'bg-slate-800/50 border border-slate-700' 
-              : 'bg-white/80 border border-gray-200'
-          } shadow-xl`}>
-            <h3 className={`text-lg font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
-              {t("Tech Stack")}
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Node.js', 'Docker', 'PostgreSQL', 'Git'].map((tech, index) => (
-                <span
-                  key={index}
-                  className={`px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105 ${
-                    isDarkMode 
-                      ? 'bg-slate-700 text-slate-200 hover:bg-[#00BD95] hover:text-white' 
-                      : 'bg-slate-100 text-slate-700 hover:bg-[#00BD95] hover:text-white'
-                  }`}
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
-
-      {/* Resume Modal */}
-      {showResumeModal && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
-          onClick={() => setShowResumeModal(false)}
-        >
-          <div 
-            className={`relative w-full max-w-4xl h-[90vh] rounded-2xl shadow-2xl overflow-hidden ${
-              isDarkMode ? 'bg-slate-900' : 'bg-white'
-            }`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Header */}
-            <div className={`flex items-center justify-between p-4 border-b ${
-              isDarkMode ? 'border-slate-700' : 'border-slate-200'
-            }`}>
-              <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
-                {t("My Resume")}
-              </h3>
-              <div className="flex items-center gap-2">
-                <a
-                  href="/resume/my-cv.pdf"
-                  download
-                  className="p-2 rounded-lg bg-[#00BD95] text-white hover:bg-cyan-600 transition-colors"
-                  title={t("Download Resume")}
-                >
-                  <FaDownload size={18} />
-                </a>
-                <button
-                  onClick={() => setShowResumeModal(false)}
-                  className={`p-2 rounded-lg transition-colors ${
-                    isDarkMode 
-                      ? 'hover:bg-slate-800 text-slate-400 hover:text-white' 
-                      : 'hover:bg-slate-100 text-slate-600 hover:text-slate-900'
-                  }`}
-                  aria-label="Close modal"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            {/* PDF Viewer */}
-            <div className="w-full h-[calc(100%-4rem)] overflow-hidden">
-              <embed
-                src="/resume/my-cv.pdf#toolbar=0&navpanes=0&scrollbar=0&view=FitH"
-                type="application/pdf"
-                className="w-full h-full"
-                style={{ border: 'none' }}
-              />
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* CSS for animations */}
       <style jsx>{`
@@ -310,6 +285,50 @@ const About = () => {
           to {
             transform: rotate(360deg);
           }
+        }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px) scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 0.5;
+          }
+          50% {
+            opacity: 1;
+          }
+        }
+        @keyframes shimmer {
+          0% {
+            background-position: -1000px 0;
+          }
+          100% {
+            background-position: 1000px 0;
+          }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.2s ease-out;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
       `}</style>
     </section>

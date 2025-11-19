@@ -236,7 +236,7 @@ const Contact = () => {
                     className={`w-full px-4 py-3 rounded-xl transition-all duration-300 ${
                       isDarkMode 
                         ? "bg-slate-700/50 border-2 border-slate-600 text-white placeholder-slate-400" 
-                        : "bg-white border-2 border-slate-200 text-slate-900 placeholder-slate-400"
+                        : "bg-slate-50 border-2 border-slate-300 text-slate-900 placeholder-slate-500"
                     } ${
                       focusedInput === 'name' ? "border-[#00BD95] ring-4 ring-[#00BD95]/20" : ""
                     } focus:outline-none`}
@@ -261,7 +261,7 @@ const Contact = () => {
                     className={`w-full px-4 py-3 rounded-xl transition-all duration-300 ${
                       isDarkMode 
                         ? "bg-slate-700/50 border-2 border-slate-600 text-white placeholder-slate-400" 
-                        : "bg-white border-2 border-slate-200 text-slate-900 placeholder-slate-400"
+                        : "bg-slate-50 border-2 border-slate-300 text-slate-900 placeholder-slate-500"
                     } ${
                       focusedInput === 'email' ? "border-[#00BD95] ring-4 ring-[#00BD95]/20" : ""
                     } focus:outline-none`}
@@ -286,7 +286,7 @@ const Contact = () => {
                     className={`w-full px-4 py-3 rounded-xl transition-all duration-300 resize-none ${
                       isDarkMode 
                         ? "bg-slate-700/50 border-2 border-slate-600 text-white placeholder-slate-400" 
-                        : "bg-white border-2 border-slate-200 text-slate-900 placeholder-slate-400"
+                        : "bg-slate-50 border-2 border-slate-300 text-slate-900 placeholder-slate-500"
                     } ${
                       focusedInput === 'message' ? "border-[#00BD95] ring-4 ring-[#00BD95]/20" : ""
                     } focus:outline-none`}

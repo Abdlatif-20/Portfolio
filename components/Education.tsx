@@ -68,7 +68,7 @@ export default function Education() {
         {/* Timeline Container */}
         <div className="relative">
           {/* Vertical Line */}
-          <div className={`absolute left-0 md:left-1/2 transform md:-translate-x-1/2 h-full w-1 ${
+          <div className={`absolute left-6 md:left-1/2 transform md:-translate-x-px h-full w-1 ${
             isDarkMode ? 'bg-gradient-to-b from-[#00BD95] via-cyan-600 to-slate-700' : 'bg-gradient-to-b from-[#00BD95] via-cyan-500 to-slate-300'
           }`} />
 
@@ -89,7 +89,7 @@ export default function Education() {
                 style={{ transitionDelay: `${idx * 200}ms` }}
               >
                 {/* Timeline Dot */}
-                <div className="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 z-10">
+                <div className="absolute left-6 md:left-1/2 transform -translate-x-1/2 z-10">
                   <div className={`w-12 h-12 rounded-full flex items-center justify-center shadow-lg ${
                     edu.status === 'In Progress' 
                       ? 'bg-gradient-to-br from-[#00BD95] to-cyan-600 animate-pulse' 
