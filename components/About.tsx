@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Typewriter from 'typewriter-effect/dist/core';
 import { useDarkMode } from './context';
-import { FaGithub, FaLinkedin, FaEnvelope, FaDownload, FaCode, FaReact, FaServer, FaNode, FaGit, FaDocker } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaEnvelope, FaDownload, FaCode, FaReact, FaServer, FaNode, FaGit, FaDocker, FaTerminal } from 'react-icons/fa';
 import { SiNextdotjs, SiTailwindcss, SiTypescript, SiPostgresql } from 'react-icons/si';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
@@ -17,9 +17,24 @@ const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boole
   const [projectCount, setProjectCount] = useState(0);
   const [yearsCount, setYearsCount] = useState(0);
   const [techCount, setTechCount] = useState(0);
+  const [showTerminal, setShowTerminal] = useState(false);
+  const [isTerminalMinimized, setIsTerminalMinimized] = useState(false);
+  const [isTerminalMaximized, setIsTerminalMaximized] = useState(false);
+  const [isTerminalFloating, setIsTerminalFloating] = useState(false);
+  const [terminalInput, setTerminalInput] = useState('');
+  const [terminalHistory, setTerminalHistory] = useState<string[]>([
+    ' Welcome to  My Terminal 🚀',
+    '',
+    'Hello! I\'m Abdellatyf En-Neiymy',
+    'This is an interactive terminal where you can learn more about me.',
+    '',
+    'Type "help" to see available commands or just explore around!',
+    ''
+  ]);
   const techScrollRef = React.useRef<HTMLDivElement>(null);
   const scrollIntervalRef = React.useRef<NodeJS.Timeout | null>(null);
   const scrollAmountRef = React.useRef(0);
+  const terminalContentRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -94,11 +109,99 @@ const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boole
     };
   }, [autoScroll, isPaused]);
 
+  // Scroll terminal to top when opened
+  useEffect(() => {
+    if (showTerminal && terminalContentRef.current) {
+      setTimeout(() => {
+        if (terminalContentRef.current) {
+          terminalContentRef.current.scrollTop = 0;
+        }
+      }, 0);
+    }
+  }, [showTerminal]);
+
+  // Scroll terminal to bottom when new message is added
+  useEffect(() => {
+    if (terminalContentRef.current) {
+      setTimeout(() => {
+        if (terminalContentRef.current) {
+          terminalContentRef.current.scrollTop = 0;
+        }
+      }, 0);
+    }
+  }, [terminalHistory]);
+
   const socialLinks = [
     { icon: <FaGithub size={24} />, href: "https://github.com/Abdlatif-20", label: "GitHub" },
     { icon: <FaLinkedin size={24} />, href: "https://www.linkedin.com/in/aben-nei/", label: "LinkedIn" },
     { icon: <FaEnvelope size={24} />, href: "mailto:ab.enneiymy@gmail.com", label: "Email" },
   ];
+
+  const handleTerminalCommand = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== 'Enter') return;
+    
+    const command = terminalInput.trim().toLowerCase();
+    const newHistory = [...terminalHistory, `$ ${terminalInput}`];
+    
+    let response = '';
+    
+    switch(command) {
+      case 'help':
+        response = `Available commands:\n  about - Show about me\n education - Show education background\n  skills - List my skills\n  contact - Show contact information\n  projects - List recent projects\n  open to work - Show my availability\n  clear - Clear the terminal\n  exit - Close the terminal`;
+        break;
+      case 'about':
+        response = 'I am Abdellatyf En-Neiymy, a Front-End Developer specializing in building responsive and user-friendly web applications using React, Next.js, and Tailwind CSS.';
+        break;
+      case 'education':
+        response = 'I\'m Currently Studying Software Engineering at 1337 School in Khouribga, Morocco. I have completed various courses and projects that have strengthened my skills in web development and programming.';
+        break;
+      case 'skills':
+        response = 'My Skills in Front-End Development:\n- React\n- Next.js\n- TypeScript\n- Tailwind CSS\n- JavaScript\n- HTML & CSS\n\n\nAnd also familiar with Back-End basics:\n- Django\n- PostgreSQL\n- Git & GitHub\n- Docker';
+        break;
+      case 'contact':
+        response = 'You can reach me at Email: ab.enneiymy@gmail.com | GitHub: github.com/Abdlatif-20 | LinkedIn: linkedin.com/in/aben-nei/ | Whatsapp: +212777191684';
+        break;
+      case 'projects':
+        response = 'Recent Projects:\n1. Portfolio Website - A personal portfolio built with Next.js and Tailwind CSS.\n2. PongGame - A classic pong game using Nextjs and TypeScript in front end and Django in back end.\n3. HR Stats for Employees - An HR management dashboard built with React and Chart.js.\nYou can find more on my Projects section';
+        break;
+      case 'Open To Work':
+        response = 'I am currently open to full-time, part-time, and freelance opportunities. Feel free to contact me for collaborations or job offers!';
+        break;
+      case 'exit':
+        resetTerminal();
+        break;
+      case 'clear':
+        setTerminalHistory(['$ Terminal cleared']);
+        setTerminalInput('');
+        return;
+      default:
+        response = command ? `Command not found: ${command}. Type "help" for available commands.` : '';
+    }
+    
+    if (response) {
+      newHistory.push(response);
+    }
+    
+    setTerminalHistory(newHistory);
+    setTerminalInput('');
+  };
+
+  const resetTerminal = () => {
+    setShowTerminal(false);
+    setIsTerminalMinimized(false);
+    setIsTerminalMaximized(false);
+    setIsTerminalFloating(false);
+    setTerminalHistory([
+      ' Welcome to  My Terminal 🚀',
+      '',
+      'Hello! I\'m Abdellatyf En-Neiymy',
+      'This is an interactive terminal where you can learn more about me.',
+      '',
+      'Type "help" to see available commands or just explore around!',
+      ''
+    ]);
+    setTerminalInput('');
+  };
 
   const techIcons = [
     { icon: <FaReact size={32} />, name: "React" },
@@ -121,9 +224,9 @@ const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boole
         }`} />
       </div>
 
-      <div className="relative z-10 flex flex-col lg:flex-row justify-between items-center w-full max-w-6xl mx-auto gap-12 lg:gap-20">
+      <div className="relative z-10 flex flex-col lg:flex-row justify-between items-start w-full max-w-6xl mx-auto gap-12 lg:gap-20">
         {/* Left Content */}
-        <div className={`flex flex-col order-2 lg:order-1 justify-center items-center lg:items-start w-full lg:w-[55%] transition-all duration-700 delay-200 ${
+        <div className={`flex flex-col order-2 lg:order-1 justify-start items-center lg:items-start w-full lg:w-[55%] transition-all duration-700 delay-200 ${
           isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-20'
         }`}>
           {/* Badge */}
@@ -136,21 +239,66 @@ const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boole
             </span>
           </div>
           {/* Greeting */}
-          <h1 className={`text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 ${
-            isDarkMode ? 'text-white' : 'text-slate-900'
-          }`}>
-            {t("Hello")}, <span className="text-[#00BD95]">{t("I'm")}</span>
-          </h1>
+          <div className="mb-2">
+            <h1 className={`text-3xl lg:text-3xl font-mono font-bold mb-0 ${
+              isDarkMode ? 'text-white' : 'text-slate-900'
+            }`}>
+              <span className={isDarkMode ? 'text-blue-400' : 'text-blue-600'}>function</span> <span className={isDarkMode ? 'text-cyan-300' : 'text-cyan-600'}>hello</span><span className={isDarkMode ? 'text-slate-400' : 'text-slate-500'}>()</span> <span className={isDarkMode ? 'text-orange-400' : 'text-orange-500'}>{`{`}</span>
+            </h1>
+          </div>
           {/* Typewriter Name */}
-          <div className="h-16 mb-4">
-            <p className="text-2xl lg:text-3xl xl:text-4xl font-bold text-[#00BD95]" id="text_name"></p>
+          <div className="h-16 mb-2">
+            <p className="text-2xl lg:text-4xl font-mono font-bold" id="text_name" style={{
+              background: isDarkMode 
+                ? 'linear-gradient(135deg, #00BD95, #06b6d4)' 
+                : 'linear-gradient(135deg, #00BD95, #0066ff)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}></p>
+          </div>
+          {/* Closing bracket */}
+          <div className="mb-4">
+            <h2 className={`text-4xl lg:text-4xl font-mono font-bold ${
+              isDarkMode ? 'text-orange-400' : 'text-orange-500'
+            }`}>
+              <span className={isDarkMode ? 'text-slate-400' : 'text-slate-500'}>/</span><span className={isDarkMode ? 'text-orange-400' : 'text-orange-500'}>{`}`}</span>
+            </h2>
+            
           </div>
           {/* Description */}
-          <p className={`text-base lg:text-lg leading-relaxed mb-8 max-w-2xl ${
-            isDarkMode ? 'text-slate-300' : 'text-slate-600'
+          <div className={`text-base lg:text-lg leading-relaxed mb-8 max-w-2xl p-4 lg:p-6 rounded-lg font-mono border-l-4 ${
+            isDarkMode 
+              ? 'bg-slate-900/40 border-l-[#00BD95] text-slate-200 shadow-lg shadow-[#00BD95]/10' 
+              : 'bg-slate-50 border-l-cyan-500 text-slate-700 shadow-lg shadow-cyan-500/10'
           }`}>
-            {t("I'm a passionate Front-End Developer dedicated to building elegant, performant, and responsive web interfaces. With hands-on experience using React, Next.js, and Tailwind CSS, I focus on transforming ideas into intuitive and visually engaging user experiences.")}
-          </p>
+            <div className="space-y-2">
+              <div className="text-[#00BD95] text-sm lg:text-base">
+                <span className={isDarkMode ? 'text-blue-400' : 'text-blue-600'}>const</span> <span className={isDarkMode ? 'text-purple-300' : 'text-purple-600'}>aboutMe</span> <span className={isDarkMode ? 'text-slate-400' : 'text-slate-500'}>=</span> <span className={isDarkMode ? 'text-orange-400' : 'text-orange-500'}>{`{`}</span>
+              </div>
+              <div className="text-sm lg:text-base ml-4 space-y-1">
+                <div>
+                  <span className={isDarkMode ? 'text-slate-400' : 'text-slate-500'}>// </span>
+                  <span className={isDarkMode ? 'text-green-400' : 'text-green-600'}>I'm a passionate Front-End Developer</span>
+                </div>
+                <div>
+                  <span className={isDarkMode ? 'text-slate-400' : 'text-slate-500'}>// </span>
+                  <span className={isDarkMode ? 'text-green-400' : 'text-green-600'}>Building elegant, performant web experiences</span>
+                </div>
+                <div>
+                  <span className={isDarkMode ? 'text-slate-400' : 'text-slate-500'}>// </span>
+                  <span className={isDarkMode ? 'text-green-400' : 'text-green-600'}>with React, Next.js & Tailwind CSS</span>
+                </div>
+                <div>
+                  <span className={isDarkMode ? 'text-slate-400' : 'text-slate-500'}>// </span>
+                  <span className={isDarkMode ? 'text-green-400' : 'text-green-600'}>Transforming ideas into intuitive UX/UI</span>
+                </div>
+              </div>
+              <div className="text-[#00BD95] text-sm lg:text-base">
+                <span className={isDarkMode ? 'text-orange-400' : 'text-orange-500'}>{`}`}</span><span className={isDarkMode ? 'text-slate-400' : 'text-slate-500'}>;</span>
+              </div>
+            </div>
+          </div>
           {/* Quick Stats */}
           <div className="grid grid-cols-3 gap-4 w-full max-w-md mb-8">
             <div className={`text-center p-4 rounded-xl ${
@@ -184,6 +332,17 @@ const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boole
               </span>
               <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
             </button>
+            <button
+              onClick={() => setShowTerminal(!showTerminal)}
+              className={`group relative px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 flex items-center gap-2 ${
+                isDarkMode 
+                  ? 'bg-slate-800 text-white hover:bg-slate-700 border border-[#00BD95]/30' 
+                  : 'bg-slate-100 text-slate-900 hover:bg-slate-200 border border-[#00BD95]/30'
+              }`}
+            >
+              <FaTerminal size={18} />
+              Terminal
+            </button>
             <a
               href="#contact"
               className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 ${
@@ -196,7 +355,7 @@ const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boole
             </a>
           </div>
           {/* Social Links */}
-          <div className="flex gap-4">
+          <div className="flex gap-4 relative">
             {socialLinks.map((social, index) => (
               <a
                 key={index}
@@ -212,10 +371,28 @@ const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boole
                 {social.icon}
               </a>
             ))}
+            
+            {/* Floating Terminal Icon */}
+            {isTerminalFloating && (
+              <button
+                onClick={() => {
+                  setShowTerminal(true);
+                  setIsTerminalFloating(false);
+                }}
+                className={`p-3 rounded-full transition-all duration-300 transform hover:scale-110 hover:-translate-y-1 animate-bounce ${
+                  isDarkMode 
+                    ? 'bg-slate-800 text-slate-300 hover:bg-[#00BD95] hover:text-white' 
+                    : 'bg-slate-100 text-slate-700 hover:bg-[#00BD95] hover:text-white'
+                }`}
+                title="Click to open terminal"
+              >
+                <FaTerminal size={24} />
+              </button>
+            )}
           </div>
         </div>
         {/* Right Content - Image & Tech Stack */}
-        <div className={`order-1 lg:order-2 w-full mt-6 lg:mt-0 lg:w-[45%] flex flex-col items-center gap-8 transition-all duration-700 delay-400 ${
+        <div className={`order-1 lg:order-2 w-full mt-12 lg:mt-20 lg:w-[45%] flex flex-col items-center gap-8 transition-all duration-700 delay-400 ${
           isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'
         }`}>
           {/* Profile Image with Enhanced Design */}
@@ -268,7 +445,104 @@ const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boole
         </div>
       </div>
 
-      {/* CSS for animations */}
+      {/* Interactive Terminal Modal */}
+      {showTerminal && (
+        <div 
+          className={`fixed inset-0 z-[9998] flex items-center justify-center ${
+            isTerminalMaximized ? 'bg-black' : 'bg-black/50 backdrop-blur-sm'
+          }`}
+          onClick={() => !isTerminalMaximized && setShowTerminal(false)}
+        >
+          <div 
+            className={`transform transition-all ${
+              isTerminalMinimized 
+                ? 'w-[95vw] md:w-[300px] h-[50px] rounded-lg' 
+                : isTerminalMaximized 
+                ? 'w-screen h-screen rounded-none' 
+                : 'w-[95vw] md:w-[80vw] lg:w-[600px] h-[500px] rounded-lg'
+            } shadow-2xl flex flex-col overflow-hidden ${
+              isDarkMode ? 'bg-slate-900 border border-slate-700' : 'bg-white border border-slate-200'
+            } ${isTerminalMaximized ? 'border-none' : ''}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Terminal Header */}
+            <div className={`px-4 py-3 flex items-center justify-between border-b ${
+              isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-slate-50 border-slate-200'
+            }`}>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => resetTerminal()}
+                  className="w-3 h-3 rounded-full bg-red-500 hover:bg-red-600 transition-colors"
+                  title="Close"
+                ></button>
+                <button
+                  onClick={() => {
+                    setIsTerminalFloating(!isTerminalFloating);
+                    if (!isTerminalFloating) {
+                      setShowTerminal(false);
+                    }
+                  }}
+                  className="w-3 h-3 rounded-full bg-yellow-500 hover:bg-yellow-600 transition-colors"
+                  title="Minimize"
+                ></button>
+                <button
+                  onClick={() => setIsTerminalMaximized(!isTerminalMaximized)}
+                  className="w-3 h-3 rounded-full bg-green-500 hover:bg-green-600 transition-colors"
+                  title="Maximize"
+                ></button>
+                <span className={`ml-3 font-mono text-sm font-bold ${
+                  isDarkMode ? 'text-slate-300' : 'text-slate-700'
+                }`}>Interactive Terminal</span>
+              </div>
+            <button
+              onClick={() => resetTerminal()}
+              className={`p-1 rounded hover:bg-slate-700 transition-colors ${
+                isDarkMode ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-black'
+              }`}
+            >
+              ✕
+            </button>
+            </div>
+
+            {/* Terminal Content */}
+            {!isTerminalMinimized && (
+              <>
+                <div 
+                  ref={terminalContentRef}
+                  className={`flex-1 overflow-y-auto p-4 font-mono text-sm space-y-1 ${
+                  isDarkMode ? 'bg-slate-950 text-slate-200' : 'bg-slate-50 text-slate-800'
+                }`}>
+                  {terminalHistory.map((line, idx) => (
+                    <div key={idx} className={line.includes('//') ? (isDarkMode ? 'text-green-400' : 'text-green-600') : ''}>
+                      {line.split('\n').map((subline, subidx) => (
+                        <div key={subidx}>{subline}</div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Terminal Input */}
+                <div className={`px-4 py-3 border-t flex items-center gap-2 ${
+                  isDarkMode ? 'bg-slate-900 border-slate-700' : 'bg-slate-100 border-slate-200'
+                }`}>
+                  <span className="text-[#00BD95] font-mono font-bold">$</span>
+                  <input
+                    type="text"
+                    value={terminalInput}
+                    onChange={(e) => setTerminalInput(e.target.value)}
+                    onKeyDown={handleTerminalCommand}
+                    autoFocus
+                    placeholder="Type command..."
+                    className={`flex-1 bg-transparent outline-none font-mono ${
+                      isDarkMode ? 'text-white placeholder-slate-500' : 'text-slate-900 placeholder-slate-400'
+                    }`}
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
       <style jsx>{`
         @keyframes float {
           0%, 100% {

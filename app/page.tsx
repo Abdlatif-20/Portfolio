@@ -35,7 +35,7 @@ export default function Home() {
         } else {
           setProgress(current);
         }
-      }, 30);
+      }, 50);
     }
     window.onscroll = () => {
       window.scrollY > 500 ? setIsScrolling(true) : setIsScrolling(false);
@@ -51,58 +51,101 @@ export default function Home() {
     return (
       <div className={`fixed inset-0 flex flex-col items-center justify-center z-[9999] ${isDarkMode ? 'bg-gradient-to-br from-[#071827] via-[#0b1220] to-[#21272F]' : 'bg-gradient-to-br from-white via-slate-50 to-slate-100'}`}>
         {/* Animated Logo/Icon */}
-        <div className="mb-8 relative">
+        <div className="mb-12 relative">
           <div className="absolute inset-0 animate-ping opacity-20">
             <div className="w-20 h-20 rounded-full bg-[#00BD95]"></div>
           </div>
           <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-[#00BD95] to-cyan-600 flex items-center justify-center shadow-2xl animate-pulse">
-            <span className="text-3xl font-bold text-white">AE</span>
+            <span className="text-2xl font-bold text-white font-mono">{'<AE/>'}</span>
           </div>
         </div>
 
-        {/* Loading Text */}
-        <h2 className={`text-2xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
-          Loading Portfolio
-        </h2>
-        <p className={`text-sm mb-8 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
-          Please wait...
-        </p>
+        {/* Loading Text with Developer Style */}
+        <div className={`mb-12 font-mono text-center ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
+          <div className={`text-sm mb-2 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>
+            {'// Loading Portfolio...'}
+          </div>
+          <h2 className={`text-2xl font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+            {'const portfolio = {'}
+          </h2>
+          <p className={`text-sm mb-2 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+            {'  status: "initializing"'}
+          </p>
+        </div>
 
-        {/* Modern Progress Bar Container */}
-        <div className="w-80 relative">
-          {/* Progress Bar Background */}
-          <div className={`h-2 rounded-full overflow-hidden ${isDarkMode ? 'bg-slate-800' : 'bg-slate-200'} shadow-inner`}>
-            {/* Animated Progress Bar */}
-            <div
-              className="h-full rounded-full transition-all duration-300 relative overflow-hidden"
-              style={{
-                width: `${progress}%`,
-                background: 'linear-gradient(90deg, #00BD95 0%, #06b6d4 50%, #00BD95 100%)',
-                backgroundSize: '200% 100%',
-                animation: 'shimmer 2s infinite linear',
-              }}
-            >
-              {/* Shine effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
+        {/* Dev-Style Progress Bar */}
+        <div className="w-96 relative mb-8">
+          {/* Terminal-like container */}
+          <div className={`border rounded-lg overflow-hidden ${isDarkMode ? 'border-slate-700 bg-slate-900/50' : 'border-slate-300 bg-slate-50/50'}`}>
+            {/* Terminal Header */}
+            <div className={`px-4 py-3 flex items-center gap-2 border-b ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-slate-100 border-slate-300'}`}>
+              <div className="w-3 h-3 rounded-full bg-red-500"></div>
+              <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div className="w-3 h-3 rounded-full bg-green-500"></div>
+              <span className={`ml-2 font-mono text-xs font-bold ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+                loading-progress
+              </span>
+            </div>
+
+            {/* Progress Content */}
+            <div className={`px-6 py-8 ${isDarkMode ? 'bg-slate-950' : 'bg-white'}`}>
+              {/* Code-style progress display */}
+              <div className={`text-xs font-mono mb-6 leading-relaxed ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
+                <div className={`${isDarkMode ? 'text-cyan-400' : 'text-blue-600'}`}>{'$'} npm run build</div>
+                <div className={`mt-3 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>{'✓'} Compiling assets...</div>
+              </div>
+
+              {/* Bracket-style Progress Bar */}
+              <div className={`flex items-center gap-3 mb-4 ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
+                <span className="font-mono text-sm">{'['}</span>
+                <div className="flex-1 relative h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden border border-slate-300 dark:border-slate-700">
+                  <div
+                    className="h-full transition-all duration-300 relative overflow-hidden rounded-full"
+                    style={{
+                      width: `${progress}%`,
+                      background: 'linear-gradient(90deg, #00BD95 0%, #06b6d4 50%, #00BD95 100%)',
+                      backgroundSize: '200% 100%',
+                      animation: 'shimmer 2s infinite linear',
+                    }}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"></div>
+                  </div>
+                </div>
+                <span className="font-mono text-sm">{']'}</span>
+              </div>
+
+              {/* Progress info */}
+              <div className={`flex justify-between items-center font-mono text-xs ${isDarkMode ? 'text-slate-500' : 'text-slate-500'}`}>
+                <span>progress</span>
+                <span className={`font-bold ${isDarkMode ? 'text-[#00BD95]' : 'text-[#00BD95]'}`}>
+                  {progress}%
+                </span>
+              </div>
+
+              {/* Status indicators */}
+              <div className={`mt-6 pt-4 border-t ${isDarkMode ? 'border-slate-700' : 'border-slate-300'}`}>
+                <div className={`text-xs font-mono leading-relaxed ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+                  {progress < 33 && (
+                    <><span className={isDarkMode ? 'text-yellow-400' : 'text-yellow-600'}>⚡</span> Fetching dependencies...</>
+                  )}
+                  {progress >= 33 && progress < 66 && (
+                    <><span className={isDarkMode ? 'text-blue-400' : 'text-blue-600'}>⚙️</span> Building components...</>
+                  )}
+                  {progress >= 66 && progress < 100 && (
+                    <><span className={isDarkMode ? 'text-cyan-400' : 'text-cyan-600'}>🔧</span> Optimizing bundle...</>
+                  )}
+                  {progress === 100 && (
+                    <><span className={isDarkMode ? 'text-green-400' : 'text-green-600'}>✅</span> Ready to launch!</>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
-
-          {/* Progress Percentage */}
-          <div className="flex justify-between items-center mt-3">
-            <span className={`text-xs font-medium ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>
-              Loading assets...
-            </span>
-            <span className={`text-sm font-bold ${isDarkMode ? 'text-[#00BD95]' : 'text-[#00BD95]'}`}>
-              {progress}%
-            </span>
-          </div>
         </div>
 
-        {/* Animated Dots */}
-        <div className="flex gap-2 mt-6">
-          <div className={`w-2 h-2 rounded-full ${isDarkMode ? 'bg-[#00BD95]' : 'bg-[#00BD95]'} animate-bounce`} style={{ animationDelay: '0ms' }}></div>
-          <div className={`w-2 h-2 rounded-full ${isDarkMode ? 'bg-[#00BD95]' : 'bg-[#00BD95]'} animate-bounce`} style={{ animationDelay: '150ms' }}></div>
-          <div className={`w-2 h-2 rounded-full ${isDarkMode ? 'bg-[#00BD95]' : 'bg-[#00BD95]'} animate-bounce`} style={{ animationDelay: '300ms' }}></div>
+        {/* Cursor blink animation */}
+        <div className={`font-mono text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+          <span className="inline-block animate-pulse">▊</span>
         </div>
 
         {/* CSS Animations */}
@@ -110,13 +153,6 @@ export default function Home() {
           @keyframes shimmer {
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
-          }
-          .animate-shimmer {
-            animation: shimmer-slide 2s infinite;
-          }
-          @keyframes shimmer-slide {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
           }
         `}</style>
       </div>

@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { MdOutlineLightMode, MdDarkMode } from "react-icons/md";
 import { IoMdMenu, IoMdClose } from "react-icons/io";
 import { HiHome } from "react-icons/hi";
-import { FaCode, FaGraduationCap, FaTools, FaEnvelope } from "react-icons/fa";
+import { FaCode, FaGraduationCap, FaTools, FaBriefcase, FaEnvelope } from "react-icons/fa";
 import '../i18n';
 import { useTranslation } from 'react-i18next';
 import { useDarkMode } from './context';
@@ -107,14 +107,19 @@ const Header = () => {
     const sectionButtons = [
         { id: 'about', label: t('About'), target: '#about', icon: <HiHome size={18} /> },
         { id: 'projects', label: t('Projects'), target: '#projects', icon: <FaCode size={16} /> },
-        { id: 'education', label: t('Education'), target: '#education', icon: <FaGraduationCap size={16} /> },
+        { 
+            id: 'education',
+            label: isActivated === 'experience' ? t('Experience') : t('Education'),
+            target: isActivated === 'experience' ? '#experience' : '#education',
+            icon: isActivated === 'experience' ? <FaBriefcase size={16} /> : <FaGraduationCap size={16} />
+        },
         { id: 'skills', label: t('Skills'), target: '#skills', icon: <FaTools size={16} /> },
         { id: 'contact', label: t('Contact'), target: '#contact', icon: <FaEnvelope size={16} /> },
     ];
 
     return (
         <header 
-            className={`flex justify-between items-center w-full h-[70px] fixed top-0 z-50 px-4 lg:px-8 transition-all duration-300
+            className={`flex justify-between items-center w-full h-[60px] sm:h-[70px] fixed top-0 z-50 px-3 sm:px-4 md:px-6 lg:px-8 transition-all duration-300
                 ${isScrolled 
                     ? isDarkMode 
                         ? 'bg-[#21272F]/95 backdrop-blur-md shadow-lg border-b border-slate-700/50' 
@@ -127,162 +132,228 @@ const Header = () => {
             `}
         >
             {/* Logo */}
-            <div className="flex justify-center items-center h-full">
+            <div className="flex justify-center items-center h-full flex-shrink-0">
                 <button 
                     onClick={() => scrollToSection('#about')}
-                    className="group flex items-center gap-3 transition-all duration-300"
+                    className="group flex items-center gap-1 sm:gap-2 md:gap-3 transition-all duration-300"
                 >
-                    {/* Icon Logo */}
+                    {/* Icon Logo - Developer Style */}
                     <div className="relative">
-                        <div className={`absolute inset-0 rounded-xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity duration-300
-                            bg-gradient-to-br from-[#00BD95] via-cyan-500 to-blue-500`} 
+                        <div className={`absolute inset-0 rounded-lg blur-lg opacity-40 group-hover:opacity-70 transition-opacity duration-300
+                            bg-gradient-to-br from-[#00BD95] via-cyan-500 to-blue-600`} 
                         />
-                        <div className={`relative w-10 h-10 lg:w-12 lg:h-12 rounded-xl flex items-center justify-center font-bold text-lg lg:text-xl
-                            bg-gradient-to-br from-[#00BD95] via-cyan-500 to-blue-500 text-white shadow-lg
-                            group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
-                            <span className="drop-shadow-lg">AE</span>
+                        <div className={`relative md:hidden w-10 h-10 lg:w-12 lg:h-12 rounded-lg flex flex-col items-center justify-center font-mono text-xs sm:text-xs lg:text-sm font-bold
+                            bg-gradient-to-br from-slate-900 to-slate-800 text-transparent bg-clip-text
+                            border border-[#00BD95]/30 shadow-lg
+                            group-hover:scale-110 group-hover:border-[#00BD95]/60 transition-all duration-300
+                            overflow-hidden`}>
+                            {/* Background gradient animation */}
+                            <div className="absolute inset-0 bg-gradient-to-br from-[#00BD95]/10 to-blue-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            {/* Code brackets style */}
+                            <div className="relative z-10 flex items-center justify-center h-full w-full">
+                              <span className="text-[#00BD95]">&lt;</span>
+                              <span className="mx-0.5 text-white text-[12px] sm:text-xs">AE</span>
+                              <span className="text-blue-400">/&gt;</span>
+                            </div>
                         </div>
                     </div>
                     
-                    {/* Text Logo (hidden on mobile) */}
-                    <div className="hidden sm:flex flex-col leading-tight">
-                        <span className={`text-sm lg:text-base font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
-                            Abdellatyf
+                    {/* Text Logo (hidden on mobile, shown from sm) */}
+                    <div className="hidden md:flex flex-col leading-tight md:mr-3">
+                        <span className={`text-xs sm:text-sm lg:text-base font-bold font-mono ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                            <span className="text-[#00BD95]">&lt;</span>AE<span className="text-blue-500">/&gt;</span>
                         </span>
-                        <span className="text-xs lg:text-sm text-[#00BD95] font-semibold">
-                            En-neiymy
+                        <span className="hidden md:block text-[10px] lg:text-xs text-slate-500 font-mono">
+                            Developer
                         </span>
                     </div>
                 </button>
             </div>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-1">
+            {/* Desktop Navigation - Show on medium screens and above */}
+            <nav className="hidden md:flex items-center gap-1 lg:gap-2 flex-1 justify-center">
                 {sectionButtons.map(({ id, label, target, icon }) => (
                     <button
                         key={id}
-                        className={`relative flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300
-                            ${isDarkMode 
-                                ? 'text-slate-300 hover:text-white hover:bg-slate-800/50' 
-                                : 'text-slate-600 hover:text-black hover:bg-gray-100'
+                        className={`relative group flex items-center gap-2 px-3 lg:px-4 py-2 lg:py-2.5 rounded-lg text-xs xl:text-sm font-mono font-medium transition-all duration-300 overflow-hidden
+                            ${(id === 'education' && (isActivated === 'education' || isActivated === 'experience')) || (isActivated === id)
+                                ? isDarkMode 
+                                    ? 'bg-[#00BD95]/20 text-[#00BD95] border border-[#00BD95]/50 shadow-lg shadow-[#00BD95]/20' 
+                                    : 'bg-[#00BD95]/10 text-[#00BD95] border border-[#00BD95]/30 shadow-lg shadow-[#00BD95]/10'
+                                : isDarkMode 
+                                    ? 'text-slate-400 hover:text-white border border-slate-700/50 hover:border-[#00BD95]/50 hover:bg-slate-800/50' 
+                                    : 'text-slate-600 hover:text-black border border-slate-300/50 hover:border-[#00BD95]/50 hover:bg-slate-100/50'
                             }
                         `}
                         onClick={() => {
                             scrollToSection(target);
                         }}
                     >
-                        {icon}
-                        <span>{label}</span>
+                        {/* Active indicator line */}
+                        {((id === 'education' && (isActivated === 'education' || isActivated === 'experience')) || (isActivated === id)) && (
+                            <div className="absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r from-[#00BD95] to-cyan-500"></div>
+                        )}
+                        
+                        {/* Bracket style */}
+                        <span className={`hidden lg:inline ${(id === 'education' && (isActivated === 'education' || isActivated === 'experience')) || (isActivated === id) ? 'text-[#00BD95]' : isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>{'{'}</span>
+                        <span className="flex items-center gap-1">
+                            <span className="opacity-70 text-sm lg:text-base">{icon}</span>
+                            <span className="hidden md:inline">{label}</span>
+                        </span>
+                        <span className={`hidden lg:inline ${(id === 'education' && (isActivated === 'education' || isActivated === 'experience')) || (isActivated === id) ? 'text-cyan-400' : isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>{'}'}</span>
                     </button>
                 ))}
             </nav>
 
-            {/* Actions: Language & Dark Mode */}
-            <div className="hidden lg:flex items-center gap-3">
-                {/* Language Switcher */}
-                <div className={`flex items-center gap-1 p-1 rounded-lg ${isDarkMode ? 'bg-slate-800' : 'bg-gray-100'}`}>
+            {/* Actions: Language & Dark Mode - Show on medium screens and above */}
+            <div className="hidden md:flex items-center gap-2 lg:gap-3 flex-shrink-0">
+                {/* Language Switcher - Dev Style */}
+                <div className={`flex items-center gap-0 p-1 rounded-lg border font-mono text-[10px] lg:text-xs font-bold ${isDarkMode ? 'bg-slate-900/50 border-slate-700/50' : 'bg-slate-50/50 border-slate-300/50'}`}>
                     <button
                         onClick={() => {
                             localStorage.setItem('lang', 'en');
                             setActiveLang('en');
                             i18n?.changeLanguage('en');
                         }}
-                        className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200
+                        className={`px-2 lg:px-3 py-1.5 lg:py-2 rounded-md transition-all duration-200 relative
                             ${activeLang === 'en' 
-                                ? 'bg-[#00BD95] text-white shadow-sm' 
+                                ? isDarkMode
+                                    ? 'bg-[#00BD95]/20 text-[#00BD95] border border-[#00BD95]/50 shadow-lg shadow-[#00BD95]/20'
+                                    : 'bg-[#00BD95]/10 text-[#00BD95] border border-[#00BD95]/30 shadow-lg shadow-[#00BD95]/10'
                                 : isDarkMode 
                                     ? 'text-slate-400 hover:text-white' 
                                     : 'text-slate-600 hover:text-black'
                             }
                         `}
                     >
-                        EN
+                        <span className="hidden sm:inline">&lt;</span>EN<span className="hidden sm:inline">&gt;</span>
                     </button>
+                    <div className={`w-px h-4 lg:h-6 ${isDarkMode ? 'bg-slate-700/50' : 'bg-slate-300/50'}`}></div>
                     <button
                         onClick={() => {
                             localStorage.setItem('lang', 'fr');
                             setActiveLang('fr');
                             i18n?.changeLanguage('fr');
                         }}
-                        className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200
+                        className={`px-2 lg:px-3 py-1.5 lg:py-2 rounded-md transition-all duration-200 relative
                             ${activeLang === 'fr' 
-                                ? 'bg-[#00BD95] text-white shadow-sm' 
+                                ? isDarkMode
+                                    ? 'bg-[#00BD95]/20 text-[#00BD95] border border-[#00BD95]/50 shadow-lg shadow-[#00BD95]/20'
+                                    : 'bg-[#00BD95]/10 text-[#00BD95] border border-[#00BD95]/30 shadow-lg shadow-[#00BD95]/10'
                                 : isDarkMode 
                                     ? 'text-slate-400 hover:text-white' 
                                     : 'text-slate-600 hover:text-black'
                             }
                         `}
                     >
-                        FR
+                        <span className="hidden sm:inline">&lt;</span>FR<span className="hidden sm:inline">&gt;</span>
                     </button>
                 </div>
 
-                {/* Dark Mode Toggle */}
+                {/* Dark Mode Toggle - Dev Style */}
                 <button
                     onClick={() => {
                         setIsDarkMode(!isDarkMode);
                         localStorage.setItem('darkmode', isDarkMode ? 'false' : 'true');
                     }}
-                    className={`p-2.5 rounded-lg transition-all duration-300
+                    className={`p-2 lg:p-2.5 rounded-lg transition-all duration-300 border font-mono text-xs lg:text-sm font-bold
                         ${isDarkMode 
-                            ? 'bg-slate-800 hover:bg-slate-700 text-yellow-400' 
-                            : 'bg-gray-100 hover:bg-gray-200 text-slate-700'
+                            ? 'bg-slate-900/50 border-slate-700/50 text-yellow-400 hover:border-[#00BD95]/50 hover:bg-[#00BD95]/10 hover:text-[#00BD95]' 
+                            : 'bg-slate-50/50 border-slate-300/50 text-slate-700 hover:border-[#00BD95]/50 hover:bg-[#00BD95]/10 hover:text-[#00BD95]'
                         }
                     `}
                     aria-label="Toggle dark mode"
                 >
-                    {isDarkMode ? <MdOutlineLightMode size={22} /> : <MdDarkMode size={22} />}
+                    <span>{isDarkMode ? '☀️' : '🌙'}</span>
                 </button>
             </div>
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Menu Button - Dev Style Navigation Menu */}
             <button 
-                className="lg:hidden p-2 rounded-lg transition-colors"
+                className={`md:hidden p-2 sm:p-2.5 rounded-lg transition-all duration-300 flex-shrink-0 border font-mono font-bold text-sm
+                    ${showMenu
+                        ? isDarkMode
+                            ? 'bg-[#00BD95]/20 text-[#00BD95] border-[#00BD95]/50'
+                            : 'bg-[#00BD95]/10 text-[#00BD95] border-[#00BD95]/30'
+                        : isDarkMode
+                            ? 'border-slate-700/50 text-slate-400 hover:border-[#00BD95]/50 hover:bg-[#00BD95]/10 hover:text-[#00BD95]'
+                            : 'border-slate-300/50 text-slate-600 hover:border-[#00BD95]/50 hover:bg-[#00BD95]/10 hover:text-[#00BD95]'
+                    }
+                `}
                 onClick={() => setShowMenu(!showMenu)}
-                aria-label="Toggle menu"
+                aria-label="Toggle navigation menu"
+                title="Navigation Menu"
             >
-                {showMenu ? <IoMdClose size={28} /> : <IoMdMenu size={28} />}
+                <span className="flex items-center gap-1 tracking-tight">
+                    {showMenu ? (
+                        <>
+                            <span>&lt;</span>
+                            <span className={`transition-opacity duration-300 ${showMenu ? 'opacity-100' : 'opacity-0'}`}>/</span>
+                            <span>&gt;</span>
+                        </>
+                    ) : (
+                        <>
+                            <span>&lt;</span>
+                            <span className={`transition-opacity duration-300 ${!showMenu ? 'opacity-100' : 'opacity-0'}`}>≡</span>
+                            <span>&gt;</span>
+                        </>
+                    )}
+                </span>
             </button>
 
-            {/* Mobile Menu Overlay */}
+            {/* Mobile Menu Overlay - Only on small devices */}
             {showMenu && (
                 <div 
-                    className="fixed inset-0 bg-black/50 backdrop-blur-sm lg:hidden z-40"
+                    className="fixed inset-0 bg-black/50 backdrop-blur-sm md:hidden z-40"
                     onClick={() => setShowMenu(false)}
                 />
             )}
 
-            {/* Mobile Menu Panel */}
+            {/* Mobile Menu Panel - Only on small devices */}
             <div
                 ref={menuRef}
-                className={`fixed top-0 right-0 h-screen w-[280px] lg:hidden transform transition-transform duration-300 ease-in-out z-50
+                className={`fixed top-0 right-0 h-screen w-[75vw] sm:w-[280px] md:hidden transform transition-transform duration-300 ease-in-out z-50
                     ${showMenu ? 'translate-x-0' : 'translate-x-full'}
                     ${isDarkMode ? 'bg-[#21272F] border-l border-slate-700' : 'bg-white border-l border-gray-200'}
                 `}
             >
-                <div className="flex flex-col h-full p-6">
+                <div className="flex flex-col h-full p-4 sm:p-6">
                     {/* Mobile Menu Header */}
-                    <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-700/50">
-                        <h2 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-black'}`}>
+                    <div className="flex items-center justify-between mb-6 sm:mb-8 pb-3 sm:pb-4 border-b border-slate-700/50">
+                        <h2 className={`text-base sm:text-lg font-bold ${isDarkMode ? 'text-white' : 'text-black'}`}>
                             Menu
                         </h2>
                         <button 
                             onClick={() => setShowMenu(false)}
-                            className="p-2 rounded-lg hover:bg-slate-800/50 transition-colors"
+                            className={`p-2 rounded-lg border font-mono font-bold text-sm transition-all duration-300
+                                ${isDarkMode 
+                                    ? 'border-slate-700/50 text-slate-400 hover:border-[#00BD95]/50 hover:bg-[#00BD95]/10 hover:text-[#00BD95]' 
+                                    : 'border-slate-300/50 text-slate-600 hover:border-[#00BD95]/50 hover:bg-[#00BD95]/10 hover:text-[#00BD95]'
+                                }
+                            `}
+                            title="Close menu"
                         >
-                            <IoMdClose size={24} />
+                            <span className="flex items-center gap-1 tracking-tight">
+                                <span>&lt;</span>
+                                <span>/</span>
+                                <span>&gt;</span>
+                            </span>
                         </button>
                     </div>
 
                     {/* Mobile Navigation Links */}
-                    <nav className="flex-1 flex flex-col gap-2">
+                    <nav className="flex-1 flex flex-col gap-1 sm:gap-2">
                         {sectionButtons.map(({ id, label, target, icon }) => (
                             <button
                                 key={id}
-                                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 border-l-4 border-transparent
-                                    ${isDarkMode 
-                                        ? 'text-slate-300 hover:bg-slate-800/50' 
-                                        : 'text-slate-600 hover:bg-gray-100'
+                                className={`relative group flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-left text-xs sm:text-sm transition-all duration-200 font-mono font-medium overflow-hidden
+                                    ${(id === 'education' && (isActivated === 'education' || isActivated === 'experience')) || (isActivated === id)
+                                        ? isDarkMode 
+                                            ? 'bg-[#00BD95]/20 text-[#00BD95] border border-[#00BD95]/50 shadow-lg shadow-[#00BD95]/20' 
+                                            : 'bg-[#00BD95]/10 text-[#00BD95] border border-[#00BD95]/30 shadow-lg shadow-[#00BD95]/10'
+                                        : isDarkMode 
+                                            ? 'text-slate-300 hover:text-white border border-slate-700/50 hover:border-[#00BD95]/50 hover:bg-slate-800/50' 
+                                            : 'text-slate-600 hover:text-black border border-slate-300/50 hover:border-[#00BD95]/50 hover:bg-slate-100/50'
                                     }
                                 `}
                                 onClick={() => {
@@ -290,14 +361,24 @@ const Header = () => {
                                     setShowMenu(false);
                                 }}
                             >
-                                <span>{icon}</span>
-                                <span className="font-medium">{label}</span>
+                                {/* Active indicator line */}
+                                {((id === 'education' && (isActivated === 'education' || isActivated === 'experience')) || (isActivated === id)) && (
+                                    <div className="absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r from-[#00BD95] to-cyan-500"></div>
+                                )}
+                                
+                                {/* Bracket style */}
+                                <span className={`hidden sm:inline text-xs ${(id === 'education' && (isActivated === 'education' || isActivated === 'experience')) || (isActivated === id) ? 'text-[#00BD95]' : isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>{'{'}</span>
+                                <span className="flex items-center gap-1 sm:gap-2">
+                                    <span className="text-sm sm:text-base opacity-70">{icon}</span>
+                                    <span className="font-medium">{label}</span>
+                                </span>
+                                <span className={`hidden sm:inline text-xs ${(id === 'education' && (isActivated === 'education' || isActivated === 'experience')) || (isActivated === id) ? 'text-cyan-400' : isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>{'}'}</span>
                             </button>
                         ))}
                     </nav>
 
                     {/* Mobile Menu Footer */}
-                    <div className={`pt-6 pb-32 border-t ${isDarkMode ? 'border-slate-700' : 'border-gray-200'}`}>
+                    <div className={`pt-4 sm:pt-6 pb-24 sm:pb-32 border-t ${isDarkMode ? 'border-slate-700' : 'border-gray-200'}`}>
                         {/* Language Selector */}
                         <div className="mb-4">
                             <p className={`text-xs font-semibold mb-2 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
@@ -310,7 +391,7 @@ const Header = () => {
                                         setActiveLang('en');
                                         i18n?.changeLanguage('en');
                                     }}
-                                    className={`flex-1 px-3 py-2 rounded-md text-sm font-medium transition-all
+                                    className={`flex-1 px-3 py-2 rounded-md text-xs font-mono font-bold transition-all
                                         ${activeLang === 'en' 
                                             ? 'bg-[#00BD95] text-white' 
                                             : isDarkMode 
@@ -319,7 +400,7 @@ const Header = () => {
                                         }
                                     `}
                                 >
-                                    English
+                                    EN
                                 </button>
                                 <button
                                     onClick={() => {
@@ -327,7 +408,7 @@ const Header = () => {
                                         setActiveLang('fr');
                                         i18n?.changeLanguage('fr');
                                     }}
-                                    className={`flex-1 px-3 py-2 rounded-md text-sm font-medium transition-all
+                                    className={`flex-1 px-3 py-2 rounded-md text-xs font-mono font-bold transition-all
                                         ${activeLang === 'fr' 
                                             ? 'bg-[#00BD95] text-white' 
                                             : isDarkMode 
@@ -336,7 +417,7 @@ const Header = () => {
                                         }
                                     `}
                                 >
-                                    Français
+                                    FR
                                 </button>
                             </div>
                         </div>
