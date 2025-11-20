@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Typewriter from 'typewriter-effect/dist/core';
 import { useDarkMode } from './context';
-import { FaGithub, FaLinkedin, FaEnvelope, FaDownload, FaCode, FaReact, FaServer, FaNode, FaGit, FaDocker, FaTerminal } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaEnvelope, FaDownload, FaCode, FaReact, FaServer, FaNode, FaGit, FaDocker, FaTerminal, FaTimes, FaMinus, FaExpand } from 'react-icons/fa';
 import { SiNextdotjs, SiTailwindcss, SiTypescript, SiPostgresql } from 'react-icons/si';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
@@ -22,15 +22,20 @@ const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boole
   const [isTerminalMaximized, setIsTerminalMaximized] = useState(false);
   const [isTerminalFloating, setIsTerminalFloating] = useState(false);
   const [terminalInput, setTerminalInput] = useState('');
-  const [terminalHistory, setTerminalHistory] = useState<string[]>([
-    ' Welcome to  My Terminal 🚀',
-    '',
-    'Hello! I\'m Abdellatyf En-Neiymy',
-    'This is an interactive terminal where you can learn more about me.',
-    '',
-    'Type "help" to see available commands or just explore around!',
-    ''
-  ]);
+  const [terminalHistory, setTerminalHistory] = useState<string[]>([]);
+
+  // Initialize terminal history with translations
+  useEffect(() => {
+    setTerminalHistory([
+      ` ${t('Welcome to My Terminal')}`,
+      '',
+      t('Hello! I\'m Abdellatyf En-Neiymy'),
+      t('This is an interactive terminal where you can learn more about me.'),
+      '',
+      t('Type help to see available commands or just explore around!'),
+      ''
+    ]);
+  }, [t]);
   const techScrollRef = React.useRef<HTMLDivElement>(null);
   const scrollIntervalRef = React.useRef<NodeJS.Timeout | null>(null);
   const scrollAmountRef = React.useRef(0);
@@ -147,35 +152,59 @@ const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boole
     
     switch(command) {
       case 'help':
-        response = `Available commands:\n  about - Show about me\n education - Show education background\n  skills - List my skills\n  contact - Show contact information\n  projects - List recent projects\n  open to work - Show my availability\n  clear - Clear the terminal\n  exit - Close the terminal`;
+        response = `${t('Available commands:')}
+  about - ${t('Show about me')}
+  education - ${t('Show education background')}
+  skills - ${t('List my skills')}
+  contact - ${t('Show contact information')}
+  projects - ${t('List recent projects')}
+  open to work - ${t('Show my availability')}
+  clear - ${t('Clear the terminal')}
+  exit - ${t('Close the terminal')}`;
         break;
       case 'about':
-        response = 'I am Abdellatyf En-Neiymy, a Front-End Developer specializing in building responsive and user-friendly web applications using React, Next.js, and Tailwind CSS.';
+        response = t('I am Abdellatyf En-Neiymy, a Front-End Developer specializing in building responsive and user-friendly web applications using React, Next.js, and Tailwind CSS.');
         break;
       case 'education':
-        response = 'I\'m Currently Studying Software Engineering at 1337 School in Khouribga, Morocco. I have completed various courses and projects that have strengthened my skills in web development and programming.';
+        response = t('I\'m Currently Studying Software Engineering at 1337 School in Khouribga, Morocco. I have completed various courses and projects that have strengthened my skills in web development and programming.');
         break;
       case 'skills':
-        response = 'My Skills in Front-End Development:\n- React\n- Next.js\n- TypeScript\n- Tailwind CSS\n- JavaScript\n- HTML & CSS\n\n\nAnd also familiar with Back-End basics:\n- Django\n- PostgreSQL\n- Git & GitHub\n- Docker';
+        response = `${t('My Skills in Front-End Development:')}
+- React
+- Next.js
+- TypeScript
+- Tailwind CSS
+- JavaScript
+- HTML & CSS
+
+${t('And also familiar with Back-End basics:')}
+- Django
+- PostgreSQL
+- Git & GitHub
+- Docker`;
         break;
       case 'contact':
-        response = 'You can reach me at Email: ab.enneiymy@gmail.com | GitHub: github.com/Abdlatif-20 | LinkedIn: linkedin.com/in/aben-nei/ | Whatsapp: +212777191684';
+        response = t('You can reach me at Email: ab.enneiymy@gmail.com | GitHub: github.com/Abdlatif-20 | LinkedIn: linkedin.com/in/aben-nei/ | Whatsapp: +212777191684');
         break;
       case 'projects':
-        response = 'Recent Projects:\n1. Portfolio Website - A personal portfolio built with Next.js and Tailwind CSS.\n2. PongGame - A classic pong game using Nextjs and TypeScript in front end and Django in back end.\n3. HR Stats for Employees - An HR management dashboard built with React and Chart.js.\nYou can find more on my Projects section';
+        response = `${t('Recent Projects:')}
+1. ${t('Portfolio Website - A personal portfolio built with Next.js and Tailwind CSS.')}
+2. ${t('PongGame - A classic pong game using Nextjs and TypeScript in front end and Django in back end.')}
+3. ${t('HR Stats for Employees - An HR management dashboard built with React and Chart.js.')}
+${t('You can find more on my Projects section')}`;
         break;
-      case 'Open To Work':
-        response = 'I am currently open to full-time, part-time, and freelance opportunities. Feel free to contact me for collaborations or job offers!';
+      case 'open to work':
+        response = t('I am currently open to full-time, part-time, and freelance opportunities. Feel free to contact me for collaborations or job offers!');
         break;
       case 'exit':
         resetTerminal();
-        break;
+        return;
       case 'clear':
-        setTerminalHistory(['$ Terminal cleared']);
+        setTerminalHistory([`$ ${t('Terminal cleared')}`]);
         setTerminalInput('');
         return;
       default:
-        response = command ? `Command not found: ${command}. Type "help" for available commands.` : '';
+        response = command ? `${t('Command not found. Type help for available commands.')}` : '';
     }
     
     if (response) {
@@ -192,12 +221,12 @@ const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boole
     setIsTerminalMaximized(false);
     setIsTerminalFloating(false);
     setTerminalHistory([
-      ' Welcome to  My Terminal 🚀',
+      ` ${t('Welcome to My Terminal')}`,
       '',
-      'Hello! I\'m Abdellatyf En-Neiymy',
-      'This is an interactive terminal where you can learn more about me.',
+      t('Hello! I\'m Abdellatyf En-Neiymy'),
+      t('This is an interactive terminal where you can learn more about me.'),
       '',
-      'Type "help" to see available commands or just explore around!',
+      t('Type help to see available commands or just explore around!'),
       ''
     ]);
     setTerminalInput('');
@@ -249,12 +278,11 @@ const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boole
           {/* Typewriter Name */}
           <div className="h-16 mb-2">
             <p className="text-2xl lg:text-4xl font-mono font-bold" id="text_name" style={{
-              background: isDarkMode 
-                ? 'linear-gradient(135deg, #00BD95, #06b6d4)' 
-                : 'linear-gradient(135deg, #00BD95, #0066ff)',
+              background: 'linear-gradient(135deg, #0066ff, #00BD95)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text'
+              backgroundClip: 'text',
+              color: 'transparent'
             }}></p>
           </div>
           {/* Closing bracket */}
@@ -279,19 +307,19 @@ const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boole
               <div className="text-sm lg:text-base ml-4 space-y-1">
                 <div>
                   <span className={isDarkMode ? 'text-slate-400' : 'text-slate-500'}>// </span>
-                  <span className={isDarkMode ? 'text-green-400' : 'text-green-600'}>I'm a passionate Front-End Developer</span>
+                  <span className={isDarkMode ? 'text-green-400' : 'text-green-600'}>{t('I\'m a passionate Front-End Developer')}</span>
                 </div>
                 <div>
                   <span className={isDarkMode ? 'text-slate-400' : 'text-slate-500'}>// </span>
-                  <span className={isDarkMode ? 'text-green-400' : 'text-green-600'}>Building elegant, performant web experiences</span>
+                  <span className={isDarkMode ? 'text-green-400' : 'text-green-600'}>{t('Building elegant, performant web experiences')}</span>
                 </div>
                 <div>
                   <span className={isDarkMode ? 'text-slate-400' : 'text-slate-500'}>// </span>
-                  <span className={isDarkMode ? 'text-green-400' : 'text-green-600'}>with React, Next.js & Tailwind CSS</span>
+                  <span className={isDarkMode ? 'text-green-400' : 'text-green-600'}>{t('with React, Next.js & Tailwind CSS')}</span>
                 </div>
                 <div>
                   <span className={isDarkMode ? 'text-slate-400' : 'text-slate-500'}>// </span>
-                  <span className={isDarkMode ? 'text-green-400' : 'text-green-600'}>Transforming ideas into intuitive UX/UI</span>
+                  <span className={isDarkMode ? 'text-green-400' : 'text-green-600'}>{t('Transforming ideas into intuitive UX/UI')}</span>
                 </div>
               </div>
               <div className="text-[#00BD95] text-sm lg:text-base">
@@ -341,7 +369,7 @@ const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boole
               }`}
             >
               <FaTerminal size={18} />
-              Terminal
+              {t('Terminal')}
             </button>
             <a
               href="#contact"
@@ -384,7 +412,7 @@ const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boole
                     ? 'bg-slate-800 text-slate-300 hover:bg-[#00BD95] hover:text-white' 
                     : 'bg-slate-100 text-slate-700 hover:bg-[#00BD95] hover:text-white'
                 }`}
-                title="Click to open terminal"
+                title={t('Click to open terminal')}
               >
                 <FaTerminal size={24} />
               </button>
@@ -472,9 +500,11 @@ const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boole
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => resetTerminal()}
-                  className="w-3 h-3 rounded-full bg-red-500 hover:bg-red-600 transition-colors"
-                  title="Close"
-                ></button>
+                  className="w-4 h-4 rounded-full bg-red-500 hover:bg-red-600 transition-colors flex items-center justify-center group"
+                  title={t('Close')}
+                >
+                  <FaTimes size={8} className="text-white group-hover:scale-110 transition-transform" />
+                </button>
                 <button
                   onClick={() => {
                     setIsTerminalFloating(!isTerminalFloating);
@@ -482,17 +512,21 @@ const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boole
                       setShowTerminal(false);
                     }
                   }}
-                  className="w-3 h-3 rounded-full bg-yellow-500 hover:bg-yellow-600 transition-colors"
-                  title="Minimize"
-                ></button>
+                  className="w-4 h-4 rounded-full bg-yellow-500 hover:bg-yellow-600 transition-colors flex items-center justify-center group"
+                  title={t('Minimize')}
+                >
+                  <FaMinus size={8} className="text-white group-hover:scale-110 transition-transform" />
+                </button>
                 <button
                   onClick={() => setIsTerminalMaximized(!isTerminalMaximized)}
-                  className="w-3 h-3 rounded-full bg-green-500 hover:bg-green-600 transition-colors"
-                  title="Maximize"
-                ></button>
+                  className="w-4 h-4 rounded-full bg-green-500 hover:bg-green-600 transition-colors flex items-center justify-center group"
+                  title={t('Maximize')}
+                >
+                  <FaExpand size={8} className="text-white group-hover:scale-110 transition-transform" />
+                </button>
                 <span className={`ml-3 font-mono text-sm font-bold ${
                   isDarkMode ? 'text-slate-300' : 'text-slate-700'
-                }`}>Interactive Terminal</span>
+                }`}>{t('Interactive Terminal')}</span>
               </div>
             <button
               onClick={() => resetTerminal()}
@@ -532,7 +566,7 @@ const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boole
                     onChange={(e) => setTerminalInput(e.target.value)}
                     onKeyDown={handleTerminalCommand}
                     autoFocus
-                    placeholder="Type command..."
+                    placeholder={t('Type command...')}
                     className={`flex-1 bg-transparent outline-none font-mono ${
                       isDarkMode ? 'text-white placeholder-slate-500' : 'text-slate-900 placeholder-slate-400'
                     }`}

@@ -13,7 +13,7 @@ import {
   FaCode,
   FaUserFriends,
 } from "react-icons/fa";
-import { SiTypescript, SiDjango, SiI18Next } from "react-icons/si";
+import { SiTypescript, SiDjango, SiI18Next, SiStrapi, SiPostman } from "react-icons/si";
 import { RiNextjsFill, RiTailwindCssFill } from "react-icons/ri";
 import { BiLogoPostgresql } from "react-icons/bi";
 import { TbApi } from "react-icons/tb";
@@ -80,6 +80,8 @@ const Skills = () => {
         { name: "Vim", icon: <DiVim />, level: 70, color: "#019733" },
         { name: "VSCode", icon: <VscVscode />, level: 90, color: "#007ACC" },
         { name: "Git/GitHub", icon: <FaGithub />, level: 88, color: "#181717" },
+        { name: "Strapi", icon: <SiStrapi />, level: 70, color: "#2F74C0" },
+        { name: "Postman", icon: <SiPostman />, level: 75, color: "#FF6C37" },
       ],
     },
   ];
@@ -168,7 +170,7 @@ const Skills = () => {
       <div 
         className={`absolute bottom-0 right-0 w-24 h-24 opacity-5 transition-opacity duration-300 group-hover:opacity-10`}
         style={{
-          background: `linear-gradient(135deg, transparent 50%, ${isDarkMode ? "#00BD95" : "#00BD95"} 50%)`,
+          backgroundImage: `linear-gradient(135deg, transparent 50%, ${isDarkMode ? "#00BD95" : "#00BD95"} 50%)`,
         }}
       />
     </div>

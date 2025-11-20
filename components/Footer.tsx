@@ -34,7 +34,7 @@ const Footer = () => {
           <div className={`px-6 py-8 font-mono text-sm space-y-6 ${isDarkMode ? 'bg-slate-950' : 'bg-white'}`}>
             {/* Code comment */}
             <div className={`${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>
-              {'// Built with passion and modern technologies'}
+              {`// ${t('Built with passion and modern technologies')}`}
             </div>
 
             {/* Technology Stack */}
@@ -72,10 +72,10 @@ const Footer = () => {
             <div className={`flex flex-col md:flex-row md:items-center md:justify-between gap-4 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
               <div className="text-xs">
                 <div className={`${isDarkMode ? 'text-slate-300' : 'text-slate-800'} mb-1`}>
-                  {'© 2024 Abdellatyf En-Neiymy. All rights reserved.'}
+                  {`© 2024 Abdellatyf En-Neiymy. ${t('All rights reserved')}.`}
                 </div>
                 <div className="text-xs">
-                  {'Designed & Developed with '}<span className="text-[#00BD95]">{'<3'}</span>{' by AE'}
+                  {`${t('Designed & Developed with ')} `}<span className="text-[#00BD95]">{' <3 '}</span>{` ${t('by AE')}`}
                 </div>
               </div>
 
@@ -87,9 +87,9 @@ const Footer = () => {
                     ? 'bg-gradient-to-r from-[#00BD95] to-cyan-500 text-white hover:shadow-lg hover:shadow-[#00BD95]/50' 
                     : 'bg-gradient-to-r from-[#00BD95] to-cyan-500 text-white hover:shadow-lg hover:shadow-[#00BD95]/50'
                 }`}
-                aria-label="Back to top"
+                aria-label={t('Back to top')}
               >
-                <span>{'$ scrollTo(top)'}</span>
+                <span>{t('Back to top')}</span>
                 <FaChevronUp size={14} />
               </button>
             </div>
@@ -100,7 +100,7 @@ const Footer = () => {
         <div className={`flex items-center justify-between text-xs font-mono ${isDarkMode ? 'text-slate-500' : 'text-slate-500'}`}>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-[#00BD95] animate-pulse"></div>
-            <span>status: ready</span>
+            <span>{t('status: ready')}</span>
           </div>
           <span>{new Date().getFullYear()} • v1.0.0</span>
         </div>

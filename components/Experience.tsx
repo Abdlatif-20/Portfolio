@@ -14,34 +14,34 @@ const Experience = () => {
 
   const experiences = [
     {
-      title: "Full Stack Developer",
+      title: t("Full Stack Developer"),
       company: "Freelance",
       companyLogo: "🚀",
-      location: "Remote",
-      period: "2025 - Present",
-      description: "Working as a freelance full-stack developer, creating custom web applications for various clients. Specializing in modern JavaScript frameworks and Python backend development.",
+      location: t("Remote"),
+      period: t("2025 - Present"),
+      description: t("Working as a freelance full-stack developer, creating custom web applications for various clients. Specializing in modern JavaScript frameworks and Python backend development."),
       achievements: [
-        "Delivered 10+ successful projects for international clients",
-        "Built scalable web applications using Next.js, React, and Django",
-        "Maintained 100% client satisfaction with on-time delivery and quality code"
+        t("Delivered 4+ successful projects for international clients"),
+        t("Built scalable web applications using Next.js, React, and Django"),
+        t("Maintained 100% client satisfaction with on-time delivery and quality code")
       ],
       technologies: ["React", "Next.js", "TypeScript", "Django", "PostgreSQL", "Tailwind CSS"],
-      type: "Freelance"
+      type: t("Freelance")
     },
     {
-      title: "Frontend Developer",
-      company: "talentech Solutions",
+      title: t("Frontend Developer"),
+      company: t("talentech Solutions"),
       companyLogo: "💼",
-      location: "Technopark, Casablanca",
-      period: "2025/01 - 2025/07",
-      description: "Developed two complete web platforms from scratch using Next.js, React, and Tailwind CSS, ensuring responsive layouts and smooth user experience.",
+      location: t("Technopark, Casablanca"),
+      period: t("2025/01 - 2025/07"),
+      description: t("Developed two complete web platforms from scratch using Next.js, React, and Tailwind CSS, ensuring responsive layouts and smooth user experience."),
       achievements: [
-        "Implemented clean component structures and optimized rendering, reducing UI load time and improving overall UX.",
-        "Delivered 2 projects with 100% satisfaction rate",
-        "Optimized web applications for maximum speed and scalability."
+        t("Implemented clean component structures and optimized rendering, reducing UI load time and improving overall UX."),
+        t("Delivered 2 projects with 100% satisfaction rate"),
+        t("Optimized web applications for maximum speed and scalability.")
       ],
       technologies: ["React", "TypeScript", "Tailwind CSS", "Strapi", "Git"],
-      type: "Internship"
+      type: t("Internship")
     },
   ];
 
@@ -196,7 +196,7 @@ const Experience = () => {
                       {/* Key Achievements */}
                       <div className="mb-4">
                         <h4 className={`text-xs font-semibold mb-2 ${isDarkMode ? "text-slate-200" : "text-slate-700"}`}>
-                          Key Achievements
+                          {t("Key Achievements")}
                         </h4>
                         <div className="space-y-1.5">
                           {exp.achievements.map((achievement, i) => (
@@ -213,7 +213,7 @@ const Experience = () => {
                       {/* Technologies */}
                       <div>
                         <h4 className={`text-xs font-semibold mb-2 ${isDarkMode ? "text-slate-200" : "text-slate-700"}`}>
-                          Technologies Used
+                          {t("Technologies Used")}
                         </h4>
                         <div className="flex flex-wrap gap-1.5">
                           {exp.technologies.map((tech, techIndex) => (
