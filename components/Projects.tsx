@@ -5,6 +5,7 @@ import { useDarkMode } from "@/components/context";
 import { FaExternalLinkAlt, FaGithub, FaGlobe, FaCode, FaServer, FaReact } from "react-icons/fa";
 import { SiDocker, SiNextdotjs, SiCplusplus } from "react-icons/si";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import Image from 'next/image';
 
 type Project = {
   title: string;
@@ -19,11 +20,21 @@ type Project = {
 
 const projects: Project[] = [
   {
-    title: "Pong Game",
-    description: "Pong Game_desc",
-    href: "https://github.com/Abdlatif-20/ft_transcendence",
-    techStack: ["TypeScript", "Next.js", "Tailwind", "Postgres", "Redis", "WebSockets"],
-    image: "/projects/pong.jpg",
+    title: "Portfolio",
+    description: "Portfolio_desc",
+    href: "https://github.com/Abdlatif-20/Portfolio",
+    techStack: ["Next.js", "TailwindCSS", "i18next"],
+    image: "/projects/portfolio.webp",
+    category: "Web Development",
+    featured: true,
+  },
+  {
+    title: "MyJoboard",
+    description: "MyJoboard_desc",
+    href: "https://www.job.myjoboard-ma.com/",
+    techStack: ["React", "Tailwind", "Express", "Postgres"],
+    live: true,
+    image: "/projects/myjoboard.webp",
     category: "Web Development",
     featured: true,
   },
@@ -33,24 +44,24 @@ const projects: Project[] = [
     href: "https://rhmetrics.ma/",
     techStack: ["React", "Tailwind", "Strapi", "Postgres"],
     live: true,
-    image: "/projects/rhmetrics.png",
+    image: "/projects/rhmetrics.webp",
     category: "Web Development",
-    featured: true,
   },
   {
-    title: "Cub3D",
-    description: "Cub3D_desc",
-    href: "https://github.com/Abdlatif-20/cub3D_42",
-    techStack: ["C", "raycasting", "minilibx"],
-    image: "/projects/cub3d42.png",
-    category: "Systems Programming",
+    title: "Pong Game",
+    description: "Pong Game_desc",
+    href: "https://github.com/Abdlatif-20/ft_transcendence",
+    techStack: ["TypeScript", "Next.js", "Tailwind", "Postgres", "Redis", "WebSockets"],
+    image: "/projects/pong.webp",
+    category: "Web Development",
+    
   },
   {
     title: "Web Server",
     description: "Web Server_desc",
     href: "https://github.com/Abdlatif-20/webserv",
     techStack: ["C++", "HTTP", "Server"],
-    image: "/projects/webserver.png",
+    image: "/projects/webserver.webp",
     category: "Systems Programming",
   },
   {
@@ -58,25 +69,16 @@ const projects: Project[] = [
     description: "Inception_desc",
     href: "https://github.com/Abdlatif-20/Inception_42",
     techStack: ["Docker", "nginx", "WordPress", "mySQL"],
-    image: "/projects/inception.png",
+    image: "/projects/inception.webp",
     category: "DevOps",
   },
   {
-    title: "Portfolio",
-    description: "Portfolio_desc",
-    href: "https://github.com/Abdlatif-20/Portfolio",
-    techStack: ["Next.js", "TailwindCSS", "i18next"],
-    image: "/projects/portfolio.png",
-    category: "Web Development",
-  },
-  {
-    title: "MyJoboard",
-    description: "MyJoboard_desc",
-    href: "https://www.job.myjoboard-ma.com/",
-    techStack: ["React", "Tailwind", "Express", "Postgres"],
-    live: true,
-    image: "/projects/myjoboard.png",
-    category: "Web Development",
+    title: "Cub3D",
+    description: "Cub3D_desc",
+    href: "https://github.com/Abdlatif-20/cub3D_42",
+    techStack: ["C", "raycasting", "minilibx"],
+    image: "/projects/cub3d42.webp",
+    category: "Systems Programming",
   },
 ];
 
@@ -338,10 +340,12 @@ function ProjectCard({
       <div className="relative h-48 overflow-hidden bg-gradient-to-br from-slate-800 to-slate-900">
         {project.image && (
           <>
-            <img 
+            <Image
               src={project.image} 
               alt={project.title} 
-              className={`w-full h-full object-cover transition-all duration-700 ${
+              layout="fill"
+              objectFit="cover"
+              className={`transition-all duration-700 ${
                 isHovered ? "scale-110 blur-[2px]" : "scale-100"
               }`}
             />

@@ -10,11 +10,6 @@ import { RiCodeView } from "react-icons/ri";
 export const metadata: Metadata = {
   title: "Abdellatyf En-Neiymy",
   description: "Abdellatyf En-Neiymy's Portfolio",
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
-  },
 };
 
 export default function RootLayout({

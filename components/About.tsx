@@ -6,7 +6,7 @@ import { useDarkMode } from './context';
 import { FaGithub, FaLinkedin, FaEnvelope, FaDownload, FaCode, FaReact, FaServer, FaNode, FaGit, FaDocker, FaTerminal, FaTimes, FaMinus, FaExpand } from 'react-icons/fa';
 import { SiNextdotjs, SiTailwindcss, SiTypescript, SiPostgresql } from 'react-icons/si';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-
+import Image from 'next/image';
 const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boolean; setShowResumeModal: (show: boolean) => void }) => {
   const { t } = useTranslation();
   const { isDarkMode } = useDarkMode();
@@ -440,10 +440,12 @@ ${t('You can find more on my Projects section')}`;
               isDarkMode ? 'bg-[#21272F]' : 'bg-white'
             } shadow-2xl`}>
               <div className="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-full overflow-hidden border-4 border-[#00BD95]/30">
-                <img
-                  src="images/mee.png"
+                <Image
+                  src="/images/mee.webp"
                   alt="Abdellatyf En-neiymy"
-                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                  layout="fill"
+                  objectFit="cover"
+                  className="transform group-hover:scale-110 transition-transform duration-500"
                 />
               </div>
             </div>

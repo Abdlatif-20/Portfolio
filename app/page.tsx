@@ -280,7 +280,7 @@ export default function Home() {
       darkMode={true}
       notificationDelay={10}
       statusMessage="Typically replies within 30 minutes"
-      avatar="images/mee.png"
+      avatar="images/mee.webp"
       chatMessage="Hello, how can I help you?"
       allowEsc={true}
       style={{
