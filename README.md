@@ -1,36 +1,156 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💻 Abdellatyf En-Neiymy's Portfolio
 
-## Getting Started
+A modern, interactive portfolio website built with cutting-edge web technologies. Featuring a developer-style terminal interface, multi-language support, and stunning animations.
 
-First, run the development server:
+## ✨ Features
 
-```bash
+- **Interactive Terminal** - Browse my skills and experience through a command-line interface
+- **Multi-Language Support** - English and French localization with i18next
+- **Dark/Light Mode** - Seamless theme switching
+- **Responsive Design** - Perfect display on desktop, tablet, and mobile devices
+- **PDF Resume Viewer** - View and download my CV directly in the browser
+- **Smooth Animations** - Beautiful scroll animations and transitions
+- **Modern UI** - Built with Tailwind CSS and modern design patterns
+- **TypeScript** - Fully typed for better development experience
+
+## 🚀 Tech Stack
+
+- **Framework**: Next.js 15
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Internationalization**: react-i18next
+- **PDF Rendering**: react-pdf
+- **Icons**: react-icons
+- **Animations**: Framer Motion, GSAP
+- **Email**: EmailJS for contact forms
+- **Deployment**: Optimized for Vercel
+
+## 📋 Sections
+
+1. **About** - Introduction with interactive terminal and profile information
+2. **Projects** - Showcase of recent work with detailed descriptions
+3. **Experience** - Professional background and achievements
+4. **Education** - Academic credentials
+5. **Skills** - Technical expertise
+6. **Contact** - Get in touch via email or social links
+
+## 🎮 Terminal Commands
+
+Type these commands in the interactive terminal:
+
+- `help` - Show all available commands
+- `about` - Learn about me
+- `education` - View my education background
+- `skills` - See my technical skills
+- `contact` - Get my contact information
+- `projects` - View my recent projects
+- `open to work` - Check my availability
+- `clear` - Clear terminal history
+- `exit` - Close the terminal
+
+## 🌐 Languages Supported
+
+- 🇬🇧 English
+- 🇫🇷 French
+
+Switch languages using the language selector in the header.
+
+## 📱 Responsive Breakpoints
+
+- **Mobile**: Below 768px (column layout)
+- **Tablet**: 768px - 1024px (row layout)
+- **Desktop**: 1024px and above (full layout)
+
+## 🛠️ Installation & Setup
+
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+
+### Installation
+
+\`\`\`bash
+# Clone the repository
+git clone https://github.com/Abdlatif-20/portfolio.git
+
+# Install dependencies
+npm install
+# or
+yarn install
+\`\`\`
+
+### Development
+
+\`\`\`bash
 npm run dev
 # or
 yarn dev
+\`\`\`
+
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
+### Build
+
+\`\`\`bash
+npm run build
+npm start
 # or
-pnpm dev
-# or
-bun dev
-```
+yarn build
+yarn start
+\`\`\`
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🎨 Customization
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Colors
+Main theme colors are defined in Tailwind config:
+- Primary: `#00BD95` (Teal)
+- Secondary: `#0066ff` (Blue)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Content
+- Update experience in `components/Experience.tsx`
+- Modify projects in `components/Projects.tsx`
+- Change skills in `components/Skills.tsx`
+- Edit translations in `public/locales/`
 
-## Learn More
+## 📄 Resume
 
-To learn more about Next.js, take a look at the following resources:
+Your CV should be placed at:
+\`\`\`
+/public/resume/my-cv.pdf
+\`\`\`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🌍 Deployment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Vercel (Recommended)
 
-## Deploy on Vercel
+\`\`\`bash
+npm install -g vercel
+vercel
+\`\`\`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Alternative Platforms
+- Netlify
+- GitHub Pages
+- Self-hosted
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📞 Contact
+
+- **Email**: ab.enneiymy@gmail.com
+- **GitHub**: [github.com/Abdlatif-20](https://github.com/Abdlatif-20)
+- **LinkedIn**: [linkedin.com/in/aben-nei](https://www.linkedin.com/in/aben-nei/)
+- **WhatsApp**: +212777191684
+
+## 📜 License
+
+This portfolio is open source and available under the MIT License.
+
+## 🙏 Acknowledgments
+
+- Built with [Next.js](https://nextjs.org)
+- Styled with [Tailwind CSS](https://tailwindcss.com)
+- Icons from [react-icons](https://react-icons.github.io/react-icons/)
+- Hosted on [Vercel](https://vercel.com)
+
+---
+
+**Made with ❤️ by Abdellatyf En-Neiymy**
