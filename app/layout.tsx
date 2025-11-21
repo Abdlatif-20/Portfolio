@@ -19,6 +19,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/faveicon.png" />
+      </head>
       <body
         className={`w-screen min-h-screen font-iosevka overflow-y-auto no-scrollbar overflow-x-hidden
         `}
