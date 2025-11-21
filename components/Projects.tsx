@@ -24,7 +24,7 @@ const projects: Project[] = [
     description: "Portfolio_desc",
     href: "https://github.com/Abdlatif-20/Portfolio",
     techStack: ["Next.js", "TailwindCSS", "i18next"],
-    image: "/projects/portfolio.webp",
+    image: "/projects/portfolio.png",
     category: "Web Development",
     featured: true,
   },
