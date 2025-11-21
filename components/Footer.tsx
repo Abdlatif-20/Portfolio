@@ -48,10 +48,6 @@ const Footer = () => {
                   <span className={isDarkMode ? 'text-slate-300' : 'text-slate-700'}>Next.js</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <FaReact size={20} className="text-cyan-500" />
-                  <span className={isDarkMode ? 'text-slate-300' : 'text-slate-700'}>React</span>
-                </div>
-                <div className="flex items-center gap-2">
                   <SiTailwindcss size={20} className="text-cyan-400" />
                   <span className={isDarkMode ? 'text-slate-300' : 'text-slate-700'}>Tailwind CSS</span>
                 </div>
