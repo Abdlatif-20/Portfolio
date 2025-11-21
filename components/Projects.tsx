@@ -2,8 +2,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDarkMode } from "@/components/context";
-import { FaExternalLinkAlt, FaGithub, FaGlobe, FaCode, FaServer, FaReact } from "react-icons/fa";
-import { SiDocker, SiNextdotjs, SiCplusplus } from "react-icons/si";
+import { FaExternalLinkAlt, FaGithub, FaGlobe} from "react-icons/fa";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import Image from 'next/image';
 

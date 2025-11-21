@@ -6,6 +6,7 @@ import Projects from "@/components/Projects";
 import Skills from "@/components/Skills";
 import Education from "@/components/Education";
 import Experience from "@/components/Experience";
+import Terminal from "@/components/Terminal";
 import { useEffect, useState } from "react";
 import { FaArrowCircleUp, FaDownload } from "react-icons/fa";
 import React from 'react';
@@ -18,6 +19,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [showResumeModal, setShowResumeModal] = useState(false);
+  const [showTerminal, setShowTerminal] = useState(false);
   const { isDarkMode } = useDarkMode();
 
   useEffect(() => {
@@ -165,12 +167,15 @@ export default function Home() {
         ${isDarkMode ? 'bg-[#21272F] text-white' : 'bg-white text-black'}
       `}
     >
-      <About showResumeModal={showResumeModal} setShowResumeModal={setShowResumeModal} />
+      <About showResumeModal={showResumeModal} setShowResumeModal={setShowResumeModal} showTerminal={showTerminal} setShowTerminal={setShowTerminal} />
       <Projects />
       <Education />
       <Experience />
       <Skills />
       <Contact />
+
+      {/* Global Terminal Component */}
+      <Terminal showTerminal={showTerminal} setShowTerminal={setShowTerminal} />
 
       {/* Resume Modal - Full Screen Floating - Global */}
       {showResumeModal && (
