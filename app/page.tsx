@@ -6,7 +6,7 @@ import Projects from "@/components/Projects";
 import Skills from "@/components/Skills";
 import Education from "@/components/Education";
 import Experience from "@/components/Experience";
-import Terminal from "@/components/Terminal";
+import Terminal from "../components/Terminal";
 import { useEffect, useState } from "react";
 import { FaArrowCircleUp, FaDownload } from "react-icons/fa";
 import React from 'react';
