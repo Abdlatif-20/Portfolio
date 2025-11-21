@@ -43,16 +43,21 @@ const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boole
 
   useEffect(() => {
     setMounted(true);
-    new Typewriter('#text_name', {
-      strings: [
-        "Abdellatyf En-neiymy",
-        t("Front End Developer"),
-      ],
-      autoStart: true,
-      loop: true,
-      deleteSpeed: 30,
-      delay: 100,
-    });
+    // Defer typewriter animation to improve LCP
+    const timer = setTimeout(() => {
+      new Typewriter('#text_name', {
+        strings: [
+          "Abdellatyf En-neiymy",
+          t("Front End Developer"),
+        ],
+        autoStart: true,
+        loop: true,
+        deleteSpeed: 30,
+        delay: 100,
+      });
+    }, 300); // Delay by 300ms to prioritize other content
+    
+    return () => clearTimeout(timer);
   }, [t]);
 
   // Auto-count animation for stats
@@ -445,6 +450,8 @@ ${t('You can find more on my Projects section')}`;
                   alt="Abdellatyf En-neiymy"
                   layout="fill"
                   objectFit="cover"
+                  priority={true}
+                  quality={85}
                   className="transform group-hover:scale-110 transition-transform duration-500"
                 />
               </div>

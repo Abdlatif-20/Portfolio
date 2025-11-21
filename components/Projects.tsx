@@ -345,6 +345,7 @@ function ProjectCard({
               alt={project.title} 
               layout="fill"
               objectFit="cover"
+              priority={project.featured}
               className={`transition-all duration-700 ${
                 isHovered ? "scale-110 blur-[2px]" : "scale-100"
               }`}
