@@ -8,7 +8,7 @@ import Education from "@/components/Education";
 import Experience from "@/components/Experience";
 import Terminal from "../components/Terminal";
 import { useEffect, useState } from "react";
-import { FaArrowCircleUp, FaDownload } from "react-icons/fa";
+import { FaArrowCircleUp, FaDownload, FaTerminal } from "react-icons/fa";
 import React from 'react';
 import { FloatingWhatsApp } from 'react-floating-whatsapp';
 import { useTranslation } from 'react-i18next';
@@ -20,6 +20,7 @@ export default function Home() {
   const [progress, setProgress] = useState(0);
   const [showResumeModal, setShowResumeModal] = useState(false);
   const [showTerminal, setShowTerminal] = useState(false);
+  const [isTerminalFloating, setIsTerminalFloating] = useState(false);
   const { isDarkMode } = useDarkMode();
 
   useEffect(() => {
@@ -175,7 +176,30 @@ export default function Home() {
       <Contact />
 
       {/* Global Terminal Component */}
-      <Terminal showTerminal={showTerminal} setShowTerminal={setShowTerminal} />
+      <Terminal 
+        showTerminal={showTerminal} 
+        setShowTerminal={setShowTerminal}
+        isTerminalFloating={isTerminalFloating}
+        setIsTerminalFloating={setIsTerminalFloating}
+      />
+
+      {/* Floating Terminal Icon */}
+      {isTerminalFloating && (
+        <button
+          onClick={() => {
+            setShowTerminal(true);
+            setIsTerminalFloating(false);
+          }}
+          className={`fixed bottom-24 right-6 z-[9997] p-4 rounded-full transition-all duration-300 transform hover:scale-110 shadow-2xl animate-bounce ${
+            isDarkMode 
+              ? 'bg-slate-800 text-slate-300 hover:bg-[#00BD95] hover:text-white border-2 border-[#00BD95]/30' 
+              : 'bg-slate-100 text-slate-700 hover:bg-[#00BD95] hover:text-white border-2 border-[#00BD95]/30'
+          }`}
+          title="Click to open terminal"
+        >
+          <FaTerminal size={24} />
+        </button>
+      )}
 
       {/* Resume Modal - Full Screen Floating - Global */}
       {showResumeModal && (

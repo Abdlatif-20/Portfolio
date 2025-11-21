@@ -7,14 +7,15 @@ import { FaTimes, FaMinus, FaExpand } from 'react-icons/fa';
 interface TerminalProps {
   showTerminal: boolean;
   setShowTerminal: (show: boolean) => void;
+  isTerminalFloating: boolean;
+  setIsTerminalFloating: (floating: boolean) => void;
 }
 
-export default function Terminal({ showTerminal, setShowTerminal }: TerminalProps) {
+export default function Terminal({ showTerminal, setShowTerminal, isTerminalFloating, setIsTerminalFloating }: TerminalProps) {
   const { t } = useTranslation();
   const { isDarkMode } = useDarkMode();
   const [isTerminalMinimized, setIsTerminalMinimized] = useState(false);
   const [isTerminalMaximized, setIsTerminalMaximized] = useState(false);
-  const [isTerminalFloating, setIsTerminalFloating] = useState(false);
   const [terminalInput, setTerminalInput] = useState('');
   const [terminalHistory, setTerminalHistory] = useState<string[]>([]);
   const [terminalPosition, setTerminalPosition] = useState({ x: 0, y: 0 });
@@ -38,6 +39,9 @@ export default function Terminal({ showTerminal, setShowTerminal }: TerminalProp
   // Center terminal on screen when opened
   useEffect(() => {
     if (showTerminal) {
+      // Reset minimized state when reopening
+      setIsTerminalMinimized(false);
+      
       // Center terminal on screen
       const centerX = (window.innerWidth - 600) / 2;
       const centerY = (window.innerHeight - 500) / 2;
@@ -251,10 +255,9 @@ ${t('You can find more on my Projects section')}`;
             </button>
             <button
               onClick={() => {
-                setIsTerminalFloating(!isTerminalFloating);
-                if (!isTerminalFloating) {
-                  setShowTerminal(false);
-                }
+                setIsTerminalMinimized(true);
+                setShowTerminal(false);
+                setIsTerminalFloating(true);
               }}
               className="w-4 h-4 rounded-full bg-yellow-500 hover:bg-yellow-600 transition-colors flex items-center justify-center group"
               title={t('Minimize')}
@@ -270,7 +273,7 @@ ${t('You can find more on my Projects section')}`;
             </button>
             <span className={`ml-3 font-mono text-sm font-bold ${
               isDarkMode ? 'text-slate-300' : 'text-slate-700'
-            }`}>{t('Interactive Terminal')}</span>
+            }`}>{t('Abdellatyf\'S Terminal')}</span>
           </div>
           <button
             onClick={() => resetTerminal()}
