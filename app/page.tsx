@@ -35,7 +35,7 @@ export default function Home() {
         } else {
           setProgress(current);
         }
-      }, 50);
+      }, 40);
     }
     window.onscroll = () => {
       window.scrollY > 500 ? setIsScrolling(true) : setIsScrolling(false);

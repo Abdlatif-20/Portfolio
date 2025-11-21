@@ -98,7 +98,7 @@ const Footer = () => {
             <div className="w-2 h-2 rounded-full bg-[#00BD95] animate-pulse"></div>
             <span>{t('status: ready')}</span>
           </div>
-          <span>{new Date().getFullYear()} • v1.0.0</span>
+          <span>{new Date().getFullYear()} • v2.0</span>
         </div>
       </div>
 

@@ -23,7 +23,7 @@ const EDUCATION: EducationItem[] = [
     location: 'Khouribga, Morocco',
     status: 'In Progress',
     note: 'I learned various programming languages and computer science concepts through hands-on projects and peer-to-peer learning.',
-    skills: ['C/C++', 'Algorithms', 'System Programming', 'Web Development']
+    skills: ['C/C++', 'Algorithms', 'System Programming', 'Web Development', 'Collaboration' ,'Problem-Solving', 'Critical Thinking', 'Adaptability', 'Self-Learning', 'Time Management', 'Communication' ,'Teamwork', 'Project Management']
   },
   {
     institution: 'Faculté des Sciences Ben M\'Sik Casablanca',
@@ -32,7 +32,7 @@ const EDUCATION: EducationItem[] = [
     location: 'Casablanca, Morocco',
     status: 'Completed',
     note: 'Completed foundational coursework in physics and mathematics, preparing for advanced studies in computer science.',
-    skills: ['Physics', 'Mathematics', 'Problem Solving']
+    skills: ['Physics', 'Mathematics']
   },
   {
     institution: 'Lycée dakhla',
