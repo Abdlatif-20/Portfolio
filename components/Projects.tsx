@@ -23,7 +23,7 @@ const projects: Project[] = [
     title: "Portfolio",
     description: "Portfolio_desc",
     href: "https://github.com/Abdlatif-20/Portfolio",
-    techStack: ["Next.js", "TailwindCSS", "i18next"],
+    techStack: ["Next.js", "TailwindCSS", "i18next", "Framer Motion", "React Icons", "React Toastify", "i18next"],
     image: "/projects/portfolio.png",
     category: "Web Development",
     featured: true,
@@ -51,7 +51,7 @@ const projects: Project[] = [
     title: "Pong Game",
     description: "Pong Game_desc",
     href: "https://github.com/Abdlatif-20/ft_transcendence",
-    techStack: ["TypeScript", "Next.js", "Tailwind", "Postgres", "Redis", "WebSockets"],
+    techStack: ["TypeScript", "Next.js", "Tailwind", "Postgres", "Redis", "WebSockets", "Docker", "Django", "Python", "REST API", "i18next", "Postman"],
     image: "/projects/pong.webp",
     category: "Web Development",
     
@@ -89,6 +89,7 @@ export default function Projects() {
   const { isDarkMode } = useDarkMode();
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [hoveredProject, setHoveredProject] = useState<number | null>(null);
+  const [expandedTech, setExpandedTech] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const projectsPerPage = 6;
   const { ref, isVisible } = useScrollAnimation(0.1);
@@ -219,6 +220,9 @@ export default function Projects() {
                   isHovered={hoveredProject === index}
                   onHover={() => setHoveredProject(index)}
                   onLeave={() => setHoveredProject(null)}
+                  projectIndex={index}
+                  expandedTech={expandedTech}
+                  setExpandedTech={setExpandedTech}
                 />
               </div>
             ))}
@@ -304,7 +308,10 @@ function ProjectCard({
   t, 
   isHovered, 
   onHover, 
-  onLeave 
+  onLeave,
+  projectIndex,
+  expandedTech,
+  setExpandedTech
 }: { 
   project: Project; 
   isDarkMode: boolean; 
@@ -312,6 +319,9 @@ function ProjectCard({
   isHovered: boolean;
   onHover: () => void;
   onLeave: () => void;
+  projectIndex: number;
+  expandedTech: number | null;
+  setExpandedTech: (index: number | null) => void;
 }) {
   return (
     <div
@@ -418,9 +428,9 @@ function ProjectCard({
 
         {/* Tech Stack */}
         <div className="flex flex-wrap gap-2 mb-4">
-          {project.techStack?.slice(0, 3).map((tech, idx) => (
+          {project.techStack?.slice(0, expandedTech === projectIndex ? undefined : 3).map((tech, techIdx) => (
             <span
-              key={idx}
+              key={techIdx}
               className={`text-xs px-3 py-1 rounded-full font-medium transition-all duration-200 transform hover:scale-105 ${
                 isHovered
                   ? "bg-white/20 text-white backdrop-blur-sm"
@@ -432,14 +442,43 @@ function ProjectCard({
               {tech}
             </span>
           ))}
-          {project.techStack && project.techStack.length > 3 && (
-            <span className={`text-xs px-3 py-1 rounded-full font-medium ${
-              isHovered 
-                ? "bg-white/20 text-white backdrop-blur-sm"
-                : isDarkMode ? "bg-slate-800 text-slate-400" : "bg-slate-100 text-slate-600"
-            }`}>
+          {project.techStack && project.techStack.length > 3 && expandedTech !== projectIndex && (
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setExpandedTech(projectIndex);
+              }}
+              className={`text-xs px-3 py-1 rounded-full font-medium transition-all duration-200 hover:scale-105 cursor-pointer ${
+                isHovered 
+                  ? "bg-white/20 text-white backdrop-blur-sm hover:bg-white/30"
+                  : isDarkMode 
+                    ? "bg-slate-800 text-slate-400 hover:bg-[#00BD95] hover:text-white" 
+                    : "bg-slate-100 text-slate-600 hover:bg-[#00BD95] hover:text-white"
+              }`}
+              title="Show all technologies"
+            >
               +{project.techStack.length - 3}
-            </span>
+            </button>
+          )}
+          {expandedTech === projectIndex && project.techStack && project.techStack.length > 3 && (
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setExpandedTech(null);
+              }}
+              className={`text-xs px-3 py-1 rounded-full font-medium transition-all duration-200 hover:scale-105 cursor-pointer ${
+                isHovered 
+                  ? "bg-white/20 text-white backdrop-blur-sm hover:bg-white/30"
+                  : isDarkMode 
+                    ? "bg-slate-800 text-slate-400 hover:bg-[#00BD95] hover:text-white" 
+                    : "bg-slate-100 text-slate-600 hover:bg-[#00BD95] hover:text-white"
+              }`}
+              title="Show less"
+            >
+              −
+            </button>
           )}
         </div>
 

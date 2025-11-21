@@ -14,7 +14,7 @@ import {
   FaUserFriends,
 } from "react-icons/fa";
 import Image from 'next/image';
-import { SiTypescript, SiDjango, SiI18Next, SiStrapi, SiPostman } from "react-icons/si";
+import { SiTypescript, SiDjango, SiI18Next, SiStrapi, SiPostman, SiExpress} from "react-icons/si";
 import { RiNextjsFill, RiTailwindCssFill } from "react-icons/ri";
 import { BiLogoPostgresql } from "react-icons/bi";
 import { TbApi } from "react-icons/tb";
@@ -59,6 +59,7 @@ const Skills = () => {
       skills: [
         { name: "Django", icon: <SiDjango />, level: 82, color: "#092E20" },
         { name: "Python", icon: <FaPython />, level: 86, color: "#3776AB" },
+        { name: "Express", icon: <SiExpress />, level: 70, color: "#000000" },
         { name: "REST API", icon: <TbApi />, level: 84, color: "#00BD95" },
         { name: "PostgreSQL", icon: <BiLogoPostgresql />, level: 80, color: "#4169E1" },
       ],

@@ -23,6 +23,9 @@ const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boole
   const [isTerminalFloating, setIsTerminalFloating] = useState(false);
   const [terminalInput, setTerminalInput] = useState('');
   const [terminalHistory, setTerminalHistory] = useState<string[]>([]);
+  const [terminalPosition, setTerminalPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
   // Initialize terminal history with translations
   useEffect(() => {
@@ -119,14 +122,27 @@ const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boole
     };
   }, [autoScroll, isPaused]);
 
-  // Scroll terminal to top when opened
+  // Scroll terminal to top when opened and center it
   useEffect(() => {
-    if (showTerminal && terminalContentRef.current) {
-      setTimeout(() => {
-        if (terminalContentRef.current) {
-          terminalContentRef.current.scrollTop = 0;
-        }
-      }, 0);
+    if (showTerminal) {
+      // Scroll page to top of About section
+      const aboutSection = document.getElementById('about');
+      if (aboutSection) {
+        aboutSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      
+      // Center terminal on screen
+      const centerX = (window.innerWidth - 600) / 2; // 600 is terminal width
+      const centerY = (window.innerHeight - 500) / 2; // 500 is terminal height
+      setTerminalPosition({ x: Math.max(0, centerX), y: Math.max(0, centerY) });
+      
+      if (terminalContentRef.current) {
+        setTimeout(() => {
+          if (terminalContentRef.current) {
+            terminalContentRef.current.scrollTop = 0;
+          }
+        }, 0);
+      }
     }
   }, [showTerminal]);
 
@@ -135,11 +151,58 @@ const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boole
     if (terminalContentRef.current) {
       setTimeout(() => {
         if (terminalContentRef.current) {
-          terminalContentRef.current.scrollTop = 0;
+          terminalContentRef.current.scrollTop = terminalContentRef.current.scrollHeight;
         }
       }, 0);
     }
   }, [terminalHistory]);
+
+  // Handle Escape key to close terminal
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && showTerminal) {
+        resetTerminal();
+      }
+    };
+    
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [showTerminal]);
+
+  // Handle drag functionality
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (isTerminalMaximized) return; // Don't allow dragging when maximized
+    setIsDragging(true);
+    setDragStart({
+      x: e.clientX - terminalPosition.x,
+      y: e.clientY - terminalPosition.y
+    });
+  };
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDragging) return;
+      
+      setTerminalPosition({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y
+      });
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    if (isDragging) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging, dragStart]);
 
   const socialLinks = [
     { icon: <FaGithub size={24} />, href: "https://github.com/Abdlatif-20", label: "GitHub" },
@@ -147,9 +210,7 @@ const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boole
     { icon: <FaEnvelope size={24} />, href: "mailto:ab.enneiymy@gmail.com", label: "Email" },
   ];
 
-  const handleTerminalCommand = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key !== 'Enter') return;
-    
+  const executeCommand = () => {
     const command = terminalInput.trim().toLowerCase();
     const newHistory = [...terminalHistory, `$ ${terminalInput}`];
     
@@ -165,7 +226,8 @@ const About = ({ showResumeModal, setShowResumeModal }: { showResumeModal: boole
   projects - ${t('List recent projects')}
   open to work - ${t('Show my availability')}
   clear - ${t('Clear the terminal')}
-  exit - ${t('Close the terminal')}`;
+  
+${t('Tip: Press Escape key to close terminal anytime')}`;
         break;
       case 'about':
         response = t('I am Abdellatyf En-Neiymy, a Front-End Developer specializing in building responsive and user-friendly web applications using React, Next.js, and Tailwind CSS.');
@@ -205,7 +267,7 @@ ${t('You can find more on my Projects section')}`;
         resetTerminal();
         return;
       case 'clear':
-        setTerminalHistory([`$ ${t('Terminal cleared')}`]);
+        setTerminalHistory([``]);
         setTerminalInput('');
         return;
       default:
@@ -220,11 +282,19 @@ ${t('You can find more on my Projects section')}`;
     setTerminalInput('');
   };
 
+  const handleTerminalCommand = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      executeCommand();
+    }
+  };
+
   const resetTerminal = () => {
     setShowTerminal(false);
     setIsTerminalMinimized(false);
     setIsTerminalMaximized(false);
     setIsTerminalFloating(false);
+    setTerminalPosition({ x: 0, y: 0 });
+    setIsDragging(false);
     setTerminalHistory([
       ` ${t('Welcome to My Terminal')}`,
       '',
@@ -485,27 +555,34 @@ ${t('You can find more on my Projects section')}`;
       {/* Interactive Terminal Modal */}
       {showTerminal && (
         <div 
-          className={`fixed inset-0 z-[9998] flex items-center justify-center ${
-            isTerminalMaximized ? 'bg-black' : 'bg-black/50 backdrop-blur-sm'
+          className={`fixed inset-0 z-[9998] ${
+            isTerminalMaximized ? 'bg-black' : 'bg-black/50 backdrop-blur-sm pointer-events-none'
           }`}
-          onClick={() => !isTerminalMaximized && setShowTerminal(false)}
         >
           <div 
-            className={`transform transition-all ${
+            style={!isTerminalMaximized ? {
+              position: 'fixed',
+              left: `${terminalPosition.x}px`,
+              top: `${terminalPosition.y}px`,
+              transform: 'none'
+            } : {}}
+            className={`${!isTerminalMaximized ? 'pointer-events-auto' : ''} ${
               isTerminalMinimized 
                 ? 'w-[95vw] md:w-[300px] h-[50px] rounded-lg' 
                 : isTerminalMaximized 
-                ? 'w-screen h-screen rounded-none' 
+                ? 'w-screen h-screen rounded-none absolute inset-0' 
                 : 'w-[95vw] md:w-[80vw] lg:w-[600px] h-[500px] rounded-lg'
             } shadow-2xl flex flex-col overflow-hidden ${
               isDarkMode ? 'bg-slate-900 border border-slate-700' : 'bg-white border border-slate-200'
-            } ${isTerminalMaximized ? 'border-none' : ''}`}
-            onClick={(e) => e.stopPropagation()}
+            } ${isTerminalMaximized ? 'border-none' : ''} ${isDragging ? 'cursor-grabbing' : ''}`}
           >
             {/* Terminal Header */}
-            <div className={`px-4 py-3 flex items-center justify-between border-b ${
-              isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-slate-50 border-slate-200'
-            }`}>
+            <div 
+              onMouseDown={handleMouseDown}
+              className={`px-4 py-3 flex items-center justify-between border-b ${
+                isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-slate-50 border-slate-200'
+              } ${!isTerminalMaximized ? 'cursor-grab active:cursor-grabbing' : 'cursor-default'}`}
+            >
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => resetTerminal()}
@@ -570,6 +647,7 @@ ${t('You can find more on my Projects section')}`;
                 }`}>
                   <span className="text-[#00BD95] font-mono font-bold">$</span>
                   <input
+                    id="terminal-input"
                     type="text"
                     value={terminalInput}
                     onChange={(e) => setTerminalInput(e.target.value)}
@@ -580,6 +658,22 @@ ${t('You can find more on my Projects section')}`;
                       isDarkMode ? 'text-white placeholder-slate-500' : 'text-slate-900 placeholder-slate-400'
                     }`}
                   />
+                  <button
+                    onClick={executeCommand}
+                    disabled={!terminalInput.trim()}
+                    className={`p-2 rounded-md transition-all duration-200 ${
+                      terminalInput.trim()
+                        ? 'bg-[#00BD95] hover:bg-cyan-600 text-white cursor-pointer'
+                        : isDarkMode
+                        ? 'bg-slate-800 text-slate-600 cursor-not-allowed'
+                        : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                    }`}
+                    title={t('Send command')}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                    </svg>
+                  </button>
                 </div>
               </>
             )}
