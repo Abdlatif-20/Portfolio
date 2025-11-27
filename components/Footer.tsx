@@ -68,7 +68,7 @@ const Footer = () => {
             <div className={`flex flex-col md:flex-row md:items-center md:justify-between gap-4 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
               <div className="text-xs">
                 <div className={`${isDarkMode ? 'text-slate-300' : 'text-slate-800'} mb-1`}>
-                  {`© 2024 Abdellatyf En-Neiymy. ${t('All rights reserved')}.`}
+                  {`© 2025 Abdellatyf En-Neiymy. ${t('All rights reserved')}.`}
                 </div>
                 <div className="text-xs">
                   {`${t('Designed & Developed with ')} `}<span className="text-[#00BD95]">{' <3 '}</span>{` ${t('by AE')}`}
