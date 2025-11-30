@@ -55,6 +55,37 @@ const Contact = () => {
     },
   ];
 
+const DISPOSABLE_DOMAINS = [
+  "mailinator.com",
+  "mailinator.net",
+  "mailinator.org",
+  "yopmail.com",
+  "guerrillamail.com",
+  "guerrillamail.info",
+  "guerrillamail.net",
+  "guerrillamail.org",
+  "10minutemail.com",
+  "temp-mail.org",
+  "temp-mail.io",
+  "tempmail.com",
+  "tempmail.net",
+  "tempmail.org",
+  "trashmail.com",
+  "fakeinbox.com",
+  "emailondeck.com",
+  "dispostable.com",
+  "getnada.com",
+  "nada.email",
+];
+
+function isDisposableEmail(email: string) {
+  const domain = email.split("@")[1]?.toLowerCase();
+  if (!domain) return false;
+  return DISPOSABLE_DOMAINS.includes(domain);
+}
+
+
+
 const form = useRef<HTMLFormElement>(null);
 
 const DAILY_LIMIT = 3;
@@ -63,6 +94,7 @@ const sendEmail = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   if (!form.current) return;
 
+  
   // --- DAILY RATE LIMIT LOGIC ---
   const storedCount = Number(localStorage.getItem("sendCount") || "0");
   const resetDate = Number(localStorage.getItem("resetDate") || "0");
@@ -101,6 +133,11 @@ const sendEmail = async (e: React.FormEvent<HTMLFormElement>) => {
     toast.error(t("Please fill in all fields"));
     return;
   }
+
+  if (isDisposableEmail(email)) {
+  toast.error(t("Temporary email providers are not allowed."));
+  return;
+}
 
   setIsSending(true);
 
