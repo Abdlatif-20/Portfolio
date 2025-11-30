@@ -55,41 +55,71 @@ const Contact = () => {
     },
   ];
 
-  const form = useRef<HTMLFormElement>(null);
+const form = useRef<HTMLFormElement>(null);
 
-  const sendEmail = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!form.current) return;
+const DAILY_LIMIT = 3;
 
-    const formElements = form.current?.elements as typeof form.current.elements & {
-      full_name: HTMLInputElement;
-      email: HTMLInputElement;
-      message: HTMLTextAreaElement;
-    };
-    
-    const fullName = formElements?.full_name.value;
-    const email = formElements?.email.value;
-    const message = formElements?.message.value;
+const sendEmail = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  if (!form.current) return;
 
-    if (!fullName || !email || !message) {
-      toast.error(t('Please fill in all fields'));
-      return;
-    }
+  // --- DAILY RATE LIMIT LOGIC ---
+  const storedCount = Number(localStorage.getItem("sendCount") || "0");
+  const resetDate = Number(localStorage.getItem("resetDate") || "0");
+  const now = Date.now();
 
-    setIsSending(true);
-    
-    try {
-      await emailjs.sendForm('service_8omx4go', 'template_eeg0mof', form.current, {
-        publicKey: '0ABzKUxfF6zbu1lkZ',
-      });
-      toast.success(t('Message sent successfully'));
-      form.current?.reset();
-    } catch (error) {
-      toast.error(t('An error occurred, Please try again later'));
-    } finally {
-      setIsSending(false);
-    }
+  // If reset time passed → clear count
+  if (resetDate && now > resetDate) {
+    localStorage.setItem("sendCount", "0");
+  }
+
+  // Check limit again after resetting
+  const currentCount = Number(localStorage.getItem("sendCount") || "0");
+  if (currentCount >= DAILY_LIMIT) {
+    toast.error(t("You reached today's message limit. Try again tomorrow."));
+    return;
+  }
+
+  // Prepare next reset date if not set
+  if (!resetDate || now > resetDate) {
+    const tomorrow = new Date();
+    tomorrow.setHours(24, 0, 0, 0); // midnight
+    localStorage.setItem("resetDate", tomorrow.getTime().toString());
+  }
+
+  const formElements = form.current.elements as typeof form.current.elements & {
+    full_name: HTMLInputElement;
+    email: HTMLInputElement;
+    message: HTMLTextAreaElement;
   };
+
+  const fullName = formElements.full_name.value;
+  const email = formElements.email.value;
+  const message = formElements.message.value;
+
+  if (!fullName || !email || !message) {
+    toast.error(t("Please fill in all fields"));
+    return;
+  }
+
+  setIsSending(true);
+
+  try {
+    await emailjs.sendForm('service_8omx4go', 'template_eeg0mof', form.current, {
+      publicKey: '0ABzKUxfF6zbu1lkZ',
+    });
+
+    // 🔥 IMPORTANT: Increment daily count
+    localStorage.setItem("sendCount", (currentCount + 1).toString());
+
+    toast.success(t("Message sent successfully"));
+    form.current.reset();
+  } catch (error) {
+    toast.error(t("An error occurred, Please try again later"));
+  } finally {
+    setIsSending(false);
+  }
+};
 
   return (
     <section ref={ref as React.RefObject<HTMLElement>} id='contact' className={`w-full px-4 py-12 sm:py-16 transition-all duration-1000 ${
