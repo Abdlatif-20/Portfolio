@@ -23,6 +23,10 @@ import { VscTerminalBash, VscVscode } from "react-icons/vsc";
 import { DiVim } from "react-icons/di";
 import { useDarkMode } from "./context";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { FaAngular } from "react-icons/fa";
+import { TbBrandReactNative } from "react-icons/tb";
+
+
 
 const Skills = () => {
   const { t } = useTranslation();
@@ -39,7 +43,7 @@ const Skills = () => {
 
   const skillCategories = [
     {
-      title: "Frontend",
+      title: "Frontend & Mobile",
       icon: <FaReact className="text-[#00BD95]" />,
       color: "from-cyan-500 to-blue-500",
       skills: [
@@ -47,9 +51,11 @@ const Skills = () => {
         { name: "CSS", icon: <FaCss3Alt />, level: 92, color: "#1572B6" },
         { name: "TypeScript", icon: <SiTypescript />, level: 88, color: "#3178C6" },
         { name: "React", icon: <FaReact />, level: 90, color: "#61DAFB" },
+        { name: "React Native", icon: <TbBrandReactNative />, level: 90, color: "#61DAFB" },
         { name: "Next.js", icon: <RiNextjsFill />, level: 85, color: "#000000" },
         { name: "Tailwind CSS", icon: <RiTailwindCssFill />, level: 90, color: "#06B6D4" },
         { name: "i18next", icon: <SiI18Next />, level: 75, color: "#26A69A" },
+        {name: "Angular", icon: <FaAngular />, level: 70, color: "#DD0031" },
       ],
     },
     {
@@ -86,6 +92,7 @@ const Skills = () => {
         { name: "Postman", icon: <SiPostman />, level: 75, color: "#FF6C37" },
       ],
     },
+    
   ];
 
   const SkillCard = ({ 
