@@ -27,7 +27,6 @@ import { FaAngular } from "react-icons/fa";
 import { TbBrandReactNative } from "react-icons/tb";
 
 
-
 const Skills = () => {
   const { t } = useTranslation();
   const { isDarkMode } = useDarkMode();
