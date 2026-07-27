@@ -13,6 +13,7 @@ const NAV = [
   { href: "/admin/contact-info", label: "Contact Info" },
   { href: "/admin/about", label: "About" },
   { href: "/admin/faq", label: "FAQ" },
+  { href: "/admin/resume", label: "Resume" },
 ];
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {

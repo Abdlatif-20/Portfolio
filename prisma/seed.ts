@@ -1,3 +1,5 @@
+import { readFileSync } from "fs";
+import { join } from "path";
 import { PrismaClient } from "../lib/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import faq from "../public/data/profile_faq.json";
@@ -324,6 +326,15 @@ async function main() {
       answer: item.answer,
       order: index,
     })),
+  });
+
+  const resumePath = join(__dirname, "..", "public", "resume", "my-cv.pdf");
+  await prisma.resume.create({
+    data: {
+      filename: "my-cv.pdf",
+      mimeType: "application/pdf",
+      data: readFileSync(resumePath),
+    },
   });
 
   console.log("Seed complete.");

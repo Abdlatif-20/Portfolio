@@ -135,3 +135,11 @@ model FaqItem {
   answer   String
   order    Int    @default(0)
 }
+
+model Resume {
+  id        String   @id @default(cuid())
+  filename  String
+  mimeType  String
+  data      Bytes
+  updatedAt DateTime @updatedAt
+}

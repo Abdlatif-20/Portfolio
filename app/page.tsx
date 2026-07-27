@@ -235,7 +235,7 @@ export default function Home() {
               
               <div className="flex items-center gap-2">
                 <a
-                  href="/resume/my-cv.pdf"
+                  href="/api/public/resume"
                   download
                   className="group flex items-center gap-2 px-4 py-2 rounded-xl bg-[#00BD95] text-white hover:bg-cyan-600 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105"
                   title="Download Resume"
@@ -262,7 +262,7 @@ export default function Home() {
             {/* PDF Viewer - Full Height */}
             <div className="w-full h-full pt-20 md:pt-24">
               <embed
-                src="/resume/my-cv.pdf#toolbar=0&navpanes=0&scrollbar=1&view=FitH&page=1"
+                src="/api/public/resume#toolbar=0&navpanes=0&scrollbar=1&view=FitH&page=1"
                 type="application/pdf"
                 className="w-full h-full"
                 style={{ border: 'none' }}
@@ -272,7 +272,7 @@ export default function Home() {
             {/* Floating Action Buttons */}
             <div className="absolute bottom-6 right-6 flex flex-col gap-3">
               <button
-                onClick={() => window.open('/resume/my-cv.pdf', '_blank')}
+                onClick={() => window.open('/api/public/resume', '_blank')}
                 className={`p-4 rounded-full shadow-2xl backdrop-blur-xl transition-all duration-200 hover:scale-110 ${
                   isDarkMode 
                     ? 'bg-slate-800/90 text-white hover:bg-slate-700' 

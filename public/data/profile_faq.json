@@ -9,7 +9,7 @@
   },
   {
     "question": "Where can I find your resume?",
-    "answer": "You can download my resume here: /resume/resume.pdf"
+    "answer": "You can download my resume here: /api/public/resume"
   },
   {
     "question": "What are your main skills?",
