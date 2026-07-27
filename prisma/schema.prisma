@@ -1,0 +1,137 @@
+// Prisma schema for the portfolio backoffice.
+// learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  href        String
+  techStack   String[] @default([])
+  live        Boolean  @default(false)
+  image       String?
+  category    String?
+  featured    Boolean  @default(false)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model EducationItem {
+  id          String   @id @default(cuid())
+  institution String
+  degree      String
+  period      String
+  note        String?
+  location    String?
+  status      String?
+  skills      String[] @default([])
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ExperienceCompany {
+  id            String           @id @default(cuid())
+  name          String
+  logo          String?
+  totalDuration String
+  startDate     String
+  endDate       String
+  order         Int              @default(0)
+  roles         ExperienceRole[]
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+}
+
+model ExperienceRole {
+  id           String            @id @default(cuid())
+  companyId    String
+  company      ExperienceCompany @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  title        String
+  type         String
+  period       String
+  duration     String
+  location     String
+  description  String
+  achievements String[]          @default([])
+  technologies String[]          @default([])
+  order        Int               @default(0)
+
+  @@index([companyId])
+}
+
+model SkillCategory {
+  id        String   @id @default(cuid())
+  title     String
+  icon      String
+  color     String
+  order     Int      @default(0)
+  skills    Skill[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Skill {
+  id         String        @id @default(cuid())
+  categoryId String
+  category   SkillCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  name       String
+  icon       String
+  level      Int      @default(0)
+  color      String
+  order      Int      @default(0)
+
+  @@index([categoryId])
+}
+
+model SocialLink {
+  id       String  @id @default(cuid())
+  platform String
+  icon     String
+  url      String
+  username String?
+  color    String?
+  order    Int     @default(0)
+}
+
+model ContactInfoItem {
+  id    String  @id @default(cuid())
+  icon  String
+  label String
+  value String
+  link  String?
+  order Int     @default(0)
+}
+
+model TechIcon {
+  id    String @id @default(cuid())
+  name  String
+  icon  String
+  order Int    @default(0)
+}
+
+model AboutContent {
+  id               String   @id @default(cuid())
+  typewriterPhrases String[] @default([])
+  bio              String
+  projectCount     Int      @default(0)
+  yearsCount       Int      @default(0)
+  techCount        Int      @default(0)
+  updatedAt        DateTime @updatedAt
+}
+
+model FaqItem {
+  id       String @id @default(cuid())
+  question String
+  answer   String
+  order    Int    @default(0)
+}

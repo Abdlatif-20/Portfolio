@@ -1,10 +1,8 @@
 import "./globals.css";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import SiteChrome from "@/components/SiteChrome";
 import { ThemeProvider } from "@/components/context";
 import { Metadata } from "next";
 import { ToastContainer } from 'react-toastify';
-import { RiCodeView } from "react-icons/ri";
 
 
 export const metadata: Metadata = {
@@ -27,11 +25,7 @@ export default function RootLayout({
         `}
         >
         <ThemeProvider>
-        <Header />
-        <div className="w-full h-[calc(100%-6rem)] flex justify-center items-center lg:mt-10">
-        {children}
-        </div>
-        <Footer />
+        <SiteChrome>{children}</SiteChrome>
         <ToastContainer
           autoClose={2000}
           stacked={true}

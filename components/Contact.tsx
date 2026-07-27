@@ -6,8 +6,13 @@ import { useDarkMode } from './context';
 import { useRef } from 'react';
 import emailjs from '@emailjs/browser';
 import { toast } from 'react-toastify';
-import { FaLinkedin, FaGithub, FaInstagram, FaEnvelope, FaPhone, FaMapMarkerAlt, FaPaperPlane } from 'react-icons/fa';
+import { FaPaperPlane } from 'react-icons/fa';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { usePublicContent } from '@/hooks/usePublicContent';
+import { Icon } from '@/lib/icon-registry';
+
+type SocialLink = { id?: string; platform: string; icon: string; url: string; username?: string | null; color?: string | null };
+type ContactInfoItem = { id?: string; icon: string; label: string; value: string; link?: string | null };
 
 const Contact = () => {
   const { t } = useTranslation();
@@ -16,44 +21,10 @@ const Contact = () => {
   const [focusedInput, setFocusedInput] = useState<string | null>(null);
   const { ref, isVisible } = useScrollAnimation(0.1);
 
-  const socialMedia = [
-    {
-      name: 'LinkedIn',
-      username: 'aben-nei',
-      icon: <FaLinkedin />,
-      link: 'https://www.linkedin.com/in/aben-nei/',
-      color: '#0A66C2',
-    },
-    {
-      name: 'GitHub',
-      username: 'Abdlatif-20',
-      icon: <FaGithub />,
-      link: 'https://www.github.com/Abdlatif-20',
-      color: '#181717',
-    },
-    {
-      name: 'Instagram',
-      username: 'Abdellatyf_en_neiymy',
-      icon: <FaInstagram />,
-      link: 'https://www.instagram.com/Abdellatyf_en_neiymy',
-      color: '#E4405F',
-    },
-  ];
-
-  const contactInfo = [
-    {
-      icon: <FaEnvelope />,
-      label: 'Email',
-      value: 'ab.enneiymy@gmail.com',
-      link: 'mailto:ab.enneiymy@gmail.com',
-    },
-    {
-      icon: <FaMapMarkerAlt />,
-      label: 'Location',
-      value: 'Casablanca, Morocco',
-      link: null,
-    },
-  ];
+  const { data: fetchedSocialMedia } = usePublicContent<SocialLink[]>('social-links');
+  const { data: fetchedContactInfo } = usePublicContent<ContactInfoItem[]>('contact-info');
+  const socialMedia = fetchedSocialMedia ?? [];
+  const contactInfo = fetchedContactInfo ?? [];
 
 const DISPOSABLE_DOMAINS = [
   "mailinator.com",
@@ -189,11 +160,11 @@ const sendEmail = async (e: React.FormEvent<HTMLFormElement>) => {
               </h3>
               <div className="space-y-4">
                 {contactInfo.map((info, index) => (
-                  <div key={index} className="flex items-start gap-3">
+                  <div key={info.id ?? index} className="flex items-start gap-3">
                     <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
                       isDarkMode ? "bg-[#00BD95]/20 text-[#00BD95]" : "bg-[#00BD95]/10 text-[#00BD95]"
                     }`}>
-                      <span className="text-lg">{info.icon}</span>
+                      <span className="text-lg"><Icon name={info.icon} /></span>
                     </div>
                     <div className="flex-1">
                       <p className={`text-xs font-medium ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
@@ -231,25 +202,25 @@ const sendEmail = async (e: React.FormEvent<HTMLFormElement>) => {
               <div className="space-y-3">
                 {socialMedia.map((social, index) => (
                   <a
-                    key={index}
-                    href={social.link}
+                    key={social.id ?? index}
+                    href={social.url}
                     target='_blank'
                     rel='noreferrer'
                     className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-300 group ${
-                      isDarkMode 
-                        ? "bg-slate-800/50 hover:bg-slate-700/50" 
+                      isDarkMode
+                        ? "bg-slate-800/50 hover:bg-slate-700/50"
                         : "bg-slate-50 hover:bg-white hover:shadow-md"
                     }`}
                   >
-                    <div 
+                    <div
                       className="w-10 h-10 rounded-lg flex items-center justify-center text-white text-xl transition-transform duration-300 group-hover:scale-110"
-                      style={{ backgroundColor: social.color }}
+                      style={{ backgroundColor: social.color ?? undefined }}
                     >
-                      {social.icon}
+                      <Icon name={social.icon} />
                     </div>
                     <div className="flex-1">
                       <p className={`font-semibold text-sm ${isDarkMode ? "text-white" : "text-slate-900"}`}>
-                        {social.name}
+                        {social.platform}
                       </p>
                       <p className="text-xs text-slate-400">@{social.username}</p>
                     </div>

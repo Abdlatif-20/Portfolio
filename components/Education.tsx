@@ -4,8 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { useDarkMode } from './context';
 import { FaGraduationCap, FaCalendar, FaMapMarkerAlt, FaCheckCircle } from 'react-icons/fa';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { usePublicContent } from '@/hooks/usePublicContent';
 
 type EducationItem = {
+  id?: string;
   institution: string;
   degree: string;
   period: string;
@@ -15,41 +17,14 @@ type EducationItem = {
   skills?: string[];
 };
 
-const EDUCATION: EducationItem[] = [
-  {
-    institution: '1337 (UM6P)',
-    degree: "Software Engineering",
-    period: '2022 — PRESENT',
-    location: 'Khouribga, Morocco',
-    status: 'In Progress',
-    note: 'I learned various programming languages and computer science concepts through hands-on projects and peer-to-peer learning.',
-    skills: ['C/C++', 'Algorithms', 'System Programming', 'Web Development', 'Collaboration' ,'Problem-Solving', 'Critical Thinking', 'Adaptability', 'Self-Learning', 'Time Management', 'Communication' ,'Teamwork', 'Project Management']
-  },
-  {
-    institution: 'Faculté des Sciences Ben M\'Sik Casablanca',
-    degree: 'PHYSICAL SCIENCES',
-    period: '2021 — 2022',
-    location: 'Casablanca, Morocco',
-    status: 'Completed',
-    note: 'Completed foundational coursework in physics and mathematics, preparing for advanced studies in computer science.',
-    skills: ['Physics', 'Mathematics']
-  },
-  {
-    institution: 'Lycée dakhla',
-    degree: 'Life and Earth Sciences Baccalaureate',
-    period: '2019 — 2020',
-    location: 'Casablanca, Morocco',
-    status: 'Graduated',
-    note: 'Graduated with a focus on life and earth sciences, developing analytical and scientific skills.',
-    skills: ['Life Sciences', 'Earth Sciences', 'Analytical Thinking']
-  },
-];
-
 export default function Education() {
   const { isDarkMode } = useDarkMode();
   const { t } = useTranslation();
+  const { data: EDUCATION } = usePublicContent<EducationItem[]>('education');
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
   const { ref, isVisible } = useScrollAnimation(0.1);
+
+  const educationItems = EDUCATION ?? [];
 
   return (
     <section ref={ref as React.RefObject<HTMLElement>} className={`w-full px-4 py-12 sm:py-16 transition-all duration-1000 ${
@@ -74,7 +49,7 @@ export default function Education() {
 
           {/* Education Items */}
           <div className="space-y-8 md:space-y-12">
-            {EDUCATION.map((edu, idx) => (
+            {educationItems.map((edu, idx) => (
               <div
                 key={idx}
                 className={`relative flex items-center transition-all duration-700 ${

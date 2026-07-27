@@ -2,30 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  FaHtml5,
-  FaCss3Alt,
-  FaReact,
-  FaDocker,
-  FaGithub,
-  FaPython,
-  FaStar,
-  FaCode,
-  FaUserFriends,
-} from "react-icons/fa";
 import Image from 'next/image';
-import { SiTypescript, SiDjango, SiI18Next, SiStrapi, SiPostman, SiExpress} from "react-icons/si";
-import { RiNextjsFill, RiTailwindCssFill } from "react-icons/ri";
-import { BiLogoPostgresql } from "react-icons/bi";
-import { TbApi } from "react-icons/tb";
-import { PiFileCppFill } from "react-icons/pi";
-import { VscTerminalBash, VscVscode } from "react-icons/vsc";
-import { DiVim } from "react-icons/di";
 import { useDarkMode } from "./context";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { FaAngular } from "react-icons/fa";
-import { TbBrandReactNative } from "react-icons/tb";
+import { usePublicContent } from "@/hooks/usePublicContent";
+import { Icon } from "@/lib/icon-registry";
 
+type Skill = { id?: string; name: string; icon: string; level: number; color: string };
+type SkillCategory = { id?: string; title: string; icon: string; color: string; skills: Skill[] };
 
 const Skills = () => {
   const { t } = useTranslation();
@@ -34,65 +18,17 @@ const Skills = () => {
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
   const [activeCategoryIndex, setActiveCategoryIndex] = useState(0);
   const { ref, isVisible } = useScrollAnimation(0.1);
+  const { data: fetchedCategories } = usePublicContent<SkillCategory[]>("skill-categories");
+  const skillCategories = fetchedCategories ?? [];
 
   useEffect(() => {
     const id = setTimeout(() => setMounted(true), 60);
     return () => clearTimeout(id);
   }, []);
 
-  const skillCategories = [
-    {
-      title: "Frontend & Mobile",
-      icon: <FaReact className="text-[#00BD95]" />,
-      color: "from-cyan-500 to-blue-500",
-      skills: [
-        { name: "HTML", icon: <FaHtml5 />, level: 95, color: "#E34F26" },
-        { name: "CSS", icon: <FaCss3Alt />, level: 92, color: "#1572B6" },
-        { name: "TypeScript", icon: <SiTypescript />, level: 88, color: "#3178C6" },
-        { name: "React", icon: <FaReact />, level: 90, color: "#61DAFB" },
-        { name: "React Native", icon: <TbBrandReactNative />, level: 90, color: "#61DAFB" },
-        { name: "Next.js", icon: <RiNextjsFill />, level: 85, color: "#000000" },
-        { name: "Tailwind CSS", icon: <RiTailwindCssFill />, level: 90, color: "#06B6D4" },
-        { name: "i18next", icon: <SiI18Next />, level: 75, color: "#26A69A" },
-        {name: "Angular", icon: <FaAngular />, level: 70, color: "#DD0031" },
-      ],
-    },
-    {
-      title: "Backend & APIs",
-      icon: <FaPython className="text-[#00BD95]" />,
-      color: "from-green-500 to-emerald-500",
-      skills: [
-        { name: "Django", icon: <SiDjango />, level: 82, color: "#092E20" },
-        { name: "Python", icon: <FaPython />, level: 86, color: "#3776AB" },
-        { name: "Express", icon: <SiExpress />, level: 70, color: "#000000" },
-        { name: "REST API", icon: <TbApi />, level: 84, color: "#00BD95" },
-        { name: "PostgreSQL", icon: <BiLogoPostgresql />, level: 80, color: "#4169E1" },
-      ],
-    },
-    {
-      title: "Systems & DevOps",
-      icon: <FaDocker className="text-[#00BD95]" />,
-      color: "from-blue-500 to-indigo-500",
-      skills: [
-        { name: "Docker", icon: <FaDocker />, level: 78, color: "#2496ED" },
-        { name: "C/C++", icon: <PiFileCppFill />, level: 82, color: "#00599C" },
-        { name: "Bash", icon: <VscTerminalBash />, level: 80, color: "#4EAA25" },
-      ],
-    },
-    {
-      title: "Tools & Others",
-      icon: <FaGithub className="text-[#00BD95]" />,
-      color: "from-purple-500 to-pink-500",
-      skills: [
-        { name: "Vim", icon: <DiVim />, level: 70, color: "#019733" },
-        { name: "VSCode", icon: <VscVscode />, level: 90, color: "#007ACC" },
-        { name: "Git/GitHub", icon: <FaGithub />, level: 88, color: "#181717" },
-        { name: "Strapi", icon: <SiStrapi />, level: 70, color: "#2F74C0" },
-        { name: "Postman", icon: <SiPostman />, level: 75, color: "#FF6C37" },
-      ],
-    },
-    
-  ];
+  if (skillCategories.length === 0) {
+    return null;
+  }
 
   const SkillCard = ({ 
     category, 
@@ -119,7 +55,7 @@ const Skills = () => {
           <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
             isDarkMode ? "bg-slate-700/50" : "bg-slate-100"
           }`}>
-            <span className="text-2xl">{category.icon}</span>
+            <span className="text-2xl text-[#00BD95]"><Icon name={category.icon} /></span>
           </div>
           <div>
             <h3 className={`text-xl font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
@@ -159,7 +95,7 @@ const Skills = () => {
                     : isDarkMode ? "#00BD95" : "#00BD95" 
                 }}
               >
-                {skill.icon}
+                <Icon name={skill.icon} />
               </span>
               <span className={`font-semibold ${isDarkMode ? "text-white" : "text-slate-800"}`}>
                 {skill.name}
@@ -216,7 +152,7 @@ const Skills = () => {
                 }`}
                 title={t(category.title)}
               >
-                <span className="text-3xl sm:text-lg">{category.icon}</span>
+                <span className="text-3xl sm:text-lg"><Icon name={category.icon} /></span>
                 <span className="hidden sm:inline text-sm">{t(category.title)}</span>
               </button>
             ))}

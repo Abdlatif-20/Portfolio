@@ -5,111 +5,44 @@ import Image from "next/image";
 import { useTranslation } from "react-i18next";
 import { useDarkMode } from "./context";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { usePublicContent } from "@/hooks/usePublicContent";
 import { FaBriefcase, FaCalendar, FaMapMarkerAlt, FaExternalLinkAlt, FaBuilding, FaChevronRight, FaChevronDown } from "react-icons/fa";
+
+type Role = {
+  id?: string;
+  title: string;
+  type: string;
+  period: string;
+  duration: string;
+  location: string;
+  description: string;
+  achievements: string[];
+  technologies: string[];
+};
+
+type Company = {
+  id: string;
+  name: string;
+  logo?: string | null;
+  totalDuration: string;
+  startDate: string;
+  endDate: string;
+  roles: Role[];
+};
 
 const Experience = () => {
   const { t } = useTranslation();
   const { isDarkMode } = useDarkMode();
   const { ref, isVisible } = useScrollAnimation(0.1);
+  const { data: fetchedCompanies } = usePublicContent<Company[]>("experience");
+  const companies = fetchedCompanies ?? [];
   const [hoveredCompanyIndex, setHoveredCompanyIndex] = useState<number | null>(null);
-  const [expandedCompanies, setExpandedCompanies] = useState<{ [key: string]: boolean }>({
-    "Z.system": true,
-    "Freelance": true,
-    "talentech Solutions": true,
-  });
+  const [expandedCompanies, setExpandedCompanies] = useState<{ [key: string]: boolean }>({});
 
-  const companies = [
-    {
-      name: "Z.system",
-      logo: "/images/logos/zsystems1_logo.jpeg",
-      totalDuration: t("4 months"),
-      startDate: "2025/12",
-      endDate: "Present",
-      roles: [
-        {
-          title: t("Full Stack Developer"),
-          type: t("Full-time"),
-          period: t("2026/04 - Present"),
-          duration: t("1 month"),
-          location: t("Casablanca"),
-          description: t("Worked on the front-end development of the backoffice platform, building responsive interfaces and improving internal tools for better usability and workflow efficiency"),
-          achievements: [
-            // t("Leading frontend architecture and best practices implementation"),
-            // t("Mentoring junior developers and code review"),
-            // t("Driving performance optimization initiatives"),
-            // t("Contributing to technical decision-making and project planning")
-          ],
-          technologies: ["React", "TypeScript", "Tailwind CSS", "Angular", "Git", "Next.js", "React Native", "Express.js", "PostgreSQL", "Spring Boot", "Docker"],
-        },
-        {
-          title: t("Frontend Developer"),
-          type: t("Internship"),
-          period: t("2025/12 - 2026/04"),
-          duration: t("5 months"),
-          location: t("Casablanca"),
-          description: t("Started internship developing responsive web applications using React and TypeScript. Implemented clean component structures, optimized rendering, and contributed to multiple client projects."),
-          achievements: [
-            // t("Implemented clean component structures and optimized rendering, reducing UI load time"),
-            // t("Delivered 2 projects with 100% client satisfaction rate"),
-            // t("Promoted to full-time role based on exceptional performance and contributions"),
-            // t("Optimized web applications for maximum speed and scalability")
-          ],
-          technologies: ["React", "TypeScript", "Tailwind CSS", "Angular", "Git", "Next.js", ]
-        },
-      ]
-    },
-    {
-      name: "Freelance",
-      logo: "/images/logos/fiverr-logo.jpg",
-      totalDuration: t("Ongoing"),
-      startDate: "2025",
-      endDate: "Present",
-      roles: [
-        {
-          title: t("Full Stack Developer"),
-          type: t("Freelance"),
-          period: t("2025 - Present"),
-          duration: t("1+ yr"),
-          location: t("Remote"),
-          description: t("Working as a freelance full-stack developer, creating custom web applications for various clients. Specializing in modern JavaScript frameworks and Python backend development."),
-          achievements: [
-            t("Delivered 4+ successful projects for international clients"),
-            t("Built scalable web applications using Next.js, React, and Django"),
-            t("Maintained 100% client satisfaction with on-time delivery and quality code")
-          ],
-          technologies: ["React", "Next.js", "TypeScript", "Django", "PostgreSQL", "Tailwind CSS"],
-        },
-      ]
-    },
-    {
-      name: "talentech Solutions",
-      logo: "/images/logos/talentech.jpeg",
-      totalDuration: t("7 months"),
-      startDate: "2025/01",
-      endDate: "2025/07",
-      roles: [
-        {
-          title: t("Frontend Developer"),
-          type: t("Internship"),
-          period: t("2025/01 - 2025/07"),
-          duration: t("7 months"),
-          location: t("Technopark, Casablanca"),
-          description: t("Developed two complete web platforms from scratch using Next.js, React, and Tailwind CSS, ensuring responsive layouts and smooth user experience."),
-          achievements: [
-            t("Implemented clean component structures and optimized rendering, reducing UI load time and improving overall UX."),
-            t("Delivered 2 projects with 100% satisfaction rate"),
-            t("Optimized web applications for maximum speed and scalability.")
-          ],
-          technologies: ["React", "TypeScript", "Tailwind CSS", "Strapi", "Git"],
-        },
-      ]
-    },
-  ];
-
-  const toggleCompanyExpanded = (companyName: string) => {
+  const toggleCompanyExpanded = (companyId: string) => {
     setExpandedCompanies(prev => ({
       ...prev,
-      [companyName]: !prev[companyName]
+      [companyId]: !prev[companyId]
     }));
   };
 
@@ -147,7 +80,7 @@ const Experience = () => {
           <div className="space-y-12 md:space-y-16">
             {companies.map((company, companyIndex) => (
               <div
-                key={companyIndex}
+                key={company.id}
                 onMouseEnter={() => setHoveredCompanyIndex(companyIndex)}
                 onMouseLeave={() => setHoveredCompanyIndex(null)}
                 className={`relative transition-all duration-700 ${
@@ -176,7 +109,7 @@ const Experience = () => {
                 <div className="md:ml-16">
                   {/* Company Header */}
                   <div
-                    onClick={() => toggleCompanyExpanded(company.name)}
+                    onClick={() => toggleCompanyExpanded(company.id)}
                     className={`group relative rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer ${
                       hoveredCompanyIndex === companyIndex
                         ? "shadow-xl shadow-[#00BD95]/10 -translate-y-1"
@@ -204,16 +137,18 @@ const Experience = () => {
                                 : "bg-gradient-to-br from-white to-slate-100 border border-slate-200"
                             }`}
                           >
-                            <Image
-                              src={company.logo}
-                              alt={`${company.name} logo`}
-                              width={48}
-                              height={48}
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                e.currentTarget.style.display = "none";
-                              }}
-                            />
+                            {company.logo && (
+                              <Image
+                                src={company.logo}
+                                alt={`${company.name} logo`}
+                                width={48}
+                                height={48}
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = "none";
+                                }}
+                              />
+                            )}
                           </div>
 
                           {/* Company Info */}
@@ -234,7 +169,7 @@ const Experience = () => {
                             : "hover:bg-slate-100"
                         }`}>
                           <FaChevronDown className={`transition-transform duration-300 ${
-                            expandedCompanies[company.name] ? "rotate-180" : ""
+                            expandedCompanies[company.id] ? "rotate-180" : ""
                           } ${isDarkMode ? "text-slate-400" : "text-slate-600"}`} />
                         </button>
                       </div>
@@ -246,11 +181,11 @@ const Experience = () => {
                   </div>
 
                   {/* Roles (Expandable) */}
-                  {expandedCompanies[company.name] && (
+                  {expandedCompanies[company.id] && (
                     <div className="mt-4 space-y-4 md:space-y-6">
                       {company.roles.map((role, roleIndex) => (
                         <div
-                          key={roleIndex}
+                          key={role.id ?? roleIndex}
                           className={`relative md:ml-0 transition-all duration-500 ${
                             isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-20"
                           }`}

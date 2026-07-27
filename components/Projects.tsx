@@ -1,12 +1,14 @@
 "use client";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDarkMode } from "@/components/context";
 import { FaExternalLinkAlt, FaGithub, FaGlobe} from "react-icons/fa";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { usePublicContent } from "@/hooks/usePublicContent";
 import Image from 'next/image';
 
 type Project = {
+  id?: string;
   title: string;
   description: string;
   href: string;
@@ -17,75 +19,15 @@ type Project = {
   featured?: boolean;
 };
 
-const projects: Project[] = [
-  {
-    title: "Portfolio",
-    description: "Portfolio_desc",
-    href: "https://github.com/Abdlatif-20/Portfolio",
-    techStack: ["Next.js", "TailwindCSS", "i18next", "Framer Motion", "React Icons", "React Toastify", "i18next"],
-    image: "/projects/portfolio.png",
-    category: "Web Development",
-    featured: true,
-  },
-  {
-    title: "MyJoboard",
-    description: "MyJoboard_desc",
-    href: "https://www.job.myjoboard-ma.com/",
-    techStack: ["React", "Tailwind", "Express", "Postgres"],
-    live: true,
-    image: "/projects/myjoboard.webp",
-    category: "Web Development",
-    featured: true,
-  },
-  {
-    title: "rhmetrics",
-    description: "rhmetrics_desc",
-    href: "https://rhmetrics.ma/",
-    techStack: ["React", "Tailwind", "Strapi", "Postgres"],
-    live: true,
-    image: "/projects/rhmetrics.webp",
-    category: "Web Development",
-  },
-  {
-    title: "Pong Game",
-    description: "Pong Game_desc",
-    href: "https://github.com/Abdlatif-20/ft_transcendence",
-    techStack: ["TypeScript", "Next.js", "Tailwind", "Postgres", "Redis", "WebSockets", "Docker", "Django", "Python", "REST API", "i18next", "Postman"],
-    image: "/projects/pong.webp",
-    category: "Web Development",
-    
-  },
-  {
-    title: "Web Server",
-    description: "Web Server_desc",
-    href: "https://github.com/Abdlatif-20/webserv",
-    techStack: ["C++", "HTTP", "Server"],
-    image: "/projects/webserver.webp",
-    category: "Systems Programming",
-  },
-  {
-    title: "Inception",
-    description: "Inception_desc",
-    href: "https://github.com/Abdlatif-20/Inception_42",
-    techStack: ["Docker", "nginx", "WordPress", "mySQL"],
-    image: "/projects/inception.webp",
-    category: "DevOps",
-  },
-  {
-    title: "Cub3D",
-    description: "Cub3D_desc",
-    href: "https://github.com/Abdlatif-20/cub3D_42",
-    techStack: ["C", "raycasting", "minilibx"],
-    image: "/projects/cub3d42.webp",
-    category: "Systems Programming",
-  },
-];
-
-const categories = ["All", "Web Development", "Systems Programming", "DevOps"];
-
 export default function Projects() {
   const { t } = useTranslation();
   const { isDarkMode } = useDarkMode();
+  const { data: fetchedProjects, loading } = usePublicContent<Project[]>("projects");
+  const projects = fetchedProjects ?? [];
+  const categories = useMemo(() => {
+    const distinct = Array.from(new Set(projects.map((p) => p.category).filter(Boolean))) as string[];
+    return ["All", ...distinct];
+  }, [projects]);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [hoveredProject, setHoveredProject] = useState<number | null>(null);
   const [expandedTech, setExpandedTech] = useState<number | null>(null);
@@ -93,8 +35,8 @@ export default function Projects() {
   const projectsPerPage = 6;
   const { ref, isVisible } = useScrollAnimation(0.1);
 
-  const filteredProjects = selectedCategory === "All" 
-    ? projects 
+  const filteredProjects = selectedCategory === "All"
+    ? projects
     : projects.filter(p => p.category === selectedCategory);
 
   // Calculate pagination
@@ -195,6 +137,17 @@ export default function Projects() {
         </div>
 
         {/* Professional Grid Layout */}
+        {loading && projects.length === 0 ? (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-4">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div
+                key={i}
+                className={`h-80 rounded-2xl animate-pulse ${isDarkMode ? "bg-slate-800/50" : "bg-slate-100"}`}
+              />
+            ))}
+          </div>
+        ) : (
+        <>
         <div
           className="w-full"
         >
@@ -294,6 +247,8 @@ export default function Projects() {
           <div className={`text-center py-12 ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
             <p className="text-lg">{t("No projects found in this category")}</p>
           </div>
+        )}
+        </>
         )}
       </div>
     </section>

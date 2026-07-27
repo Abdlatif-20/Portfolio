@@ -3,12 +3,25 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Typewriter from 'typewriter-effect/dist/core';
 import { useDarkMode } from './context';
-import { FaGithub, FaLinkedin, FaEnvelope, FaDownload, FaCode, FaReact, FaServer, FaNode, FaGit, FaDocker, FaTerminal } from 'react-icons/fa';
-import { SiNextdotjs, SiTailwindcss, SiTypescript, SiPostgresql } from 'react-icons/si';
+import { FaDownload, FaTerminal } from 'react-icons/fa';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { usePublicContent } from '@/hooks/usePublicContent';
+import { Icon } from '@/lib/icon-registry';
 import Image from 'next/image';
-const About = ({ showResumeModal, setShowResumeModal, showTerminal, setShowTerminal }: { 
-  showResumeModal: boolean; 
+
+type SocialLink = { id?: string; platform: string; icon: string; url: string };
+type TechIcon = { id?: string; name: string; icon: string };
+type AboutContent = {
+  typewriterPhrases: string[];
+  bio: string;
+  projectCount: number;
+  yearsCount: number;
+  techCount: number;
+  techIcons: TechIcon[];
+};
+
+const About = ({ showResumeModal, setShowResumeModal, showTerminal, setShowTerminal }: {
+  showResumeModal: boolean;
   setShowResumeModal: (show: boolean) => void;
   showTerminal: boolean;
   setShowTerminal: (show: boolean) => void;
@@ -23,33 +36,40 @@ const About = ({ showResumeModal, setShowResumeModal, showTerminal, setShowTermi
   const [yearsCount, setYearsCount] = useState(0);
   const [techCount, setTechCount] = useState(0);
 
+  const { data: about } = usePublicContent<AboutContent>('about');
+  const { data: socialLinks } = usePublicContent<SocialLink[]>('social-links');
+  const techIcons = about?.techIcons ?? [];
+
   const techScrollRef = React.useRef<HTMLDivElement>(null);
   const scrollIntervalRef = React.useRef<NodeJS.Timeout | null>(null);
   const scrollAmountRef = React.useRef(0);
 
   useEffect(() => {
     setMounted(true);
+    const strings = about?.typewriterPhrases?.length
+      ? about.typewriterPhrases
+      : ["Abdellatyf En-neiymy", t("Front End Developer")];
     // Defer typewriter animation to improve LCP
     const timer = setTimeout(() => {
       new Typewriter('#text_name', {
-        strings: [
-          "Abdellatyf En-neiymy",
-          t("Front End Developer"),
-        ],
+        strings,
         autoStart: true,
         loop: true,
         deleteSpeed: 30,
         delay: 100,
       });
     }, 300); // Delay by 300ms to prioritize other content
-    
+
     return () => clearTimeout(timer);
-  }, [t]);
+  }, [t, about]);
 
   // Auto-count animation for stats
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isVisible || !about) return;
 
+    const targetProjects = about.projectCount ?? 0;
+    const targetYears = about.yearsCount ?? 0;
+    const targetTech = about.techCount ?? 0;
     const animationDuration = 1500; // 1.5 seconds
     const startTime = Date.now();
 
@@ -57,9 +77,9 @@ const About = ({ showResumeModal, setShowResumeModal, showTerminal, setShowTermi
       const elapsed = Date.now() - startTime;
       const progress = Math.min(elapsed / animationDuration, 1);
 
-      setProjectCount(Math.floor(progress * 7));
-      setYearsCount(Math.floor(progress * 3));
-      setTechCount(Math.floor(progress * 10));
+      setProjectCount(Math.floor(progress * targetProjects));
+      setYearsCount(Math.floor(progress * targetYears));
+      setTechCount(Math.floor(progress * targetTech));
 
       if (progress < 1) {
         requestAnimationFrame(animate);
@@ -67,7 +87,7 @@ const About = ({ showResumeModal, setShowResumeModal, showTerminal, setShowTermi
     };
 
     animate();
-  }, [isVisible]);
+  }, [isVisible, about]);
 
   // Optimized auto-scroll tech stack
   useEffect(() => {
@@ -104,19 +124,6 @@ const About = ({ showResumeModal, setShowResumeModal, showTerminal, setShowTermi
       }
     };
   }, [autoScroll, isPaused]);
-
-  const socialLinks = [
-    { icon: <FaGithub size={24} />, href: "https://github.com/Abdlatif-20", label: "GitHub" },
-    { icon: <FaLinkedin size={24} />, href: "https://www.linkedin.com/in/aben-nei/", label: "LinkedIn" },
-    { icon: <FaEnvelope size={24} />, href: "mailto:ab.enneiymy@gmail.com", label: "Email" },
-  ];
-
-  const techIcons = [
-    { icon: <FaReact size={32} />, name: "React" },
-    { icon: <SiNextdotjs size={32} />, name: "Next.js" },
-    { icon: <SiTypescript size={32} />, name: "TypeScript" },
-    { icon: <SiTailwindcss size={32} />, name: "Tailwind" },
-  ];
 
   return (
     <section ref={ref as React.RefObject<HTMLElement>} id="about" className={`relative flex flex-col justify-center items-center w-full px-4 py-16 sm:py-20 lg:py-32 overflow-hidden transition-all duration-1000 ${
@@ -204,6 +211,11 @@ const About = ({ showResumeModal, setShowResumeModal, showTerminal, setShowTermi
               <div className="text-[#00BD95] text-sm lg:text-base">
                 <span className={isDarkMode ? 'text-orange-400' : 'text-orange-500'}>{`}`}</span><span className={isDarkMode ? 'text-slate-400' : 'text-slate-500'}>;</span>
               </div>
+              {about?.bio && (
+                <div className={`pt-2 text-sm lg:text-base ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>
+                  {about.bio}
+                </div>
+              )}
             </div>
           </div>
           {/* Quick Stats */}
@@ -263,19 +275,19 @@ const About = ({ showResumeModal, setShowResumeModal, showTerminal, setShowTermi
           </div>
           {/* Social Links */}
           <div className="flex gap-4 relative">
-            {socialLinks.map((social, index) => (
+            {(socialLinks ?? []).map((social) => (
               <a
-                key={index}
-                href={social.href}
+                key={social.id ?? social.platform}
+                href={social.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={social.label}
+                aria-label={social.platform}
                 className={`p-3 rounded-full transition-all duration-300 transform hover:scale-110 hover:-translate-y-1 ${
-                  isDarkMode 
-                    ? 'bg-slate-800 text-slate-300 hover:bg-[#00BD95] hover:text-white' 
+                  isDarkMode
+                    ? 'bg-slate-800 text-slate-300 hover:bg-[#00BD95] hover:text-white'
                     : 'bg-slate-100 text-slate-700 hover:bg-[#00BD95] hover:text-white'
                 }`}>
-                {social.icon}
+                <Icon name={social.icon} size={24} />
               </a>
             ))}
           </div>
@@ -316,7 +328,7 @@ const About = ({ showResumeModal, setShowResumeModal, showTerminal, setShowTermi
             {/* Floating tech icons */}
             {techIcons.map((tech, index) => (
               <div
-                key={index}
+                key={tech.id ?? tech.name}
                 className={`absolute ${
                   index === 0 ? 'top-0 left-0' :
                   index === 1 ? 'top-0 right-0' :
@@ -331,7 +343,7 @@ const About = ({ showResumeModal, setShowResumeModal, showTerminal, setShowTermi
                 }}
                 title={tech.name}
               >
-                {tech.icon}
+                <Icon name={tech.icon} size={32} />
               </div>
             ))}
           </div>

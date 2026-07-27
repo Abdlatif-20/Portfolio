@@ -3,6 +3,14 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDarkMode } from './context';
 import { FaTimes, FaMinus, FaExpand } from 'react-icons/fa';
+import { usePublicContent } from '@/hooks/usePublicContent';
+
+type SkillCategory = { title: string; skills: { name: string }[] };
+type AboutContent = { bio: string };
+type SocialLink = { platform: string; url: string };
+type ContactInfoItem = { label: string; value: string };
+type ProjectItem = { title: string; description: string };
+type EducationItem = { institution: string; degree: string; note?: string };
 
 interface TerminalProps {
   showTerminal: boolean;
@@ -22,6 +30,13 @@ export default function Terminal({ showTerminal, setShowTerminal, isTerminalFloa
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const terminalContentRef = useRef<HTMLDivElement>(null);
+
+  const { data: skillCategories } = usePublicContent<SkillCategory[]>('skill-categories');
+  const { data: about } = usePublicContent<AboutContent>('about');
+  const { data: socialLinks } = usePublicContent<SocialLink[]>('social-links');
+  const { data: contactInfo } = usePublicContent<ContactInfoItem[]>('contact-info');
+  const { data: projects } = usePublicContent<ProjectItem[]>('projects');
+  const { data: education } = usePublicContent<EducationItem[]>('education');
 
   // Initialize terminal history with translations
   useEffect(() => {
@@ -136,35 +151,36 @@ export default function Terminal({ showTerminal, setShowTerminal, isTerminalFloa
 ${t('Tip: Press Escape key to close terminal anytime')}`;
         break;
       case 'about':
-        response = t('I am Abdellatyf En-Neiymy, a Front-End Developer specializing in building responsive and user-friendly web applications using React, Next.js, and Tailwind CSS.');
+        response = about?.bio
+          ? about.bio
+          : t('I am Abdellatyf En-Neiymy, a Front-End Developer specializing in building responsive and user-friendly web applications using React, Next.js, and Tailwind CSS.');
         break;
       case 'education':
-        response = t('I\'m Currently Studying Software Engineering at 1337 School in Khouribga, Morocco. I have completed various courses and projects that have strengthened my skills in web development and programming.');
+        response = education && education.length > 0
+          ? education.map((e) => `${e.institution} — ${e.degree}${e.note ? `\n  ${e.note}` : ''}`).join('\n\n')
+          : t('Loading education history...');
         break;
       case 'skills':
-        response = `${t('My Skills in Front-End Development:')}
-- React
-- Next.js
-- TypeScript
-- Tailwind CSS
-- JavaScript
-- HTML & CSS
-
-${t('And also familiar with Back-End basics:')}
-- Django
-- PostgreSQL
-- Git & GitHub
-- Docker`;
+        response = skillCategories && skillCategories.length > 0
+          ? skillCategories
+              .map((cat) => `${t(cat.title)}:\n${cat.skills.map((s) => `- ${s.name}`).join('\n')}`)
+              .join('\n\n')
+          : t('Loading skills...');
         break;
       case 'contact':
-        response = t('You can reach me at Email: ab.enneiymy@gmail.com | GitHub: github.com/Abdlatif-20 | LinkedIn: linkedin.com/in/aben-nei/ | Whatsapp: +212777191684');
+        response = contactInfo && socialLinks
+          ? [
+              ...contactInfo.map((c) => `${c.label}: ${c.value}`),
+              ...socialLinks.map((s) => `${s.platform}: ${s.url}`),
+            ].join(' | ')
+          : t('Loading contact info...');
         break;
       case 'projects':
-        response = `${t('Recent Projects:')}
-1. ${t('Portfolio Website - A personal portfolio built with Next.js and Tailwind CSS.')}
-2. ${t('PongGame - A classic pong game using Nextjs and TypeScript in front end and Django in back end.')}
-3. ${t('HR Stats for Employees - An HR management dashboard built with React and Chart.js.')}
-${t('You can find more on my Projects section')}`;
+        response = projects && projects.length > 0
+          ? `${t('Recent Projects:')}\n${projects
+              .map((p, i) => `${i + 1}. ${p.title} - ${p.description}`)
+              .join('\n')}\n${t('You can find more on my Projects section')}`
+          : t('Loading projects...');
         break;
       case 'open to work':
         response = t('I am currently open to full-time, part-time, and freelance opportunities. Feel free to contact me for collaborations or job offers!');
