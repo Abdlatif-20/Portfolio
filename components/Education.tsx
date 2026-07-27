@@ -5,6 +5,7 @@ import { useDarkMode } from './context';
 import { FaGraduationCap, FaCalendar, FaMapMarkerAlt, FaCheckCircle } from 'react-icons/fa';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { usePublicContent } from '@/hooks/usePublicContent';
+import { SkeletonGrid } from './SkeletonBlocks';
 
 type EducationItem = {
   id?: string;
@@ -20,7 +21,7 @@ type EducationItem = {
 export default function Education() {
   const { isDarkMode } = useDarkMode();
   const { t } = useTranslation();
-  const { data: EDUCATION } = usePublicContent<EducationItem[]>('education');
+  const { data: EDUCATION, loading } = usePublicContent<EducationItem[]>('education');
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
   const { ref, isVisible } = useScrollAnimation(0.1);
 
@@ -39,6 +40,15 @@ export default function Education() {
             {t("A summary of my academic background and qualifications.")}
           </p>
         </header>
+
+        {/* Loading skeleton */}
+        {loading && educationItems.length === 0 && (
+          <SkeletonGrid
+            count={3}
+            gridClassName="space-y-8 md:space-y-12"
+            itemClassName="h-40 ml-16 md:ml-0 md:w-[calc(50%-3rem)]"
+          />
+        )}
 
         {/* Timeline Container */}
         <div className="relative">

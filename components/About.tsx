@@ -7,6 +7,7 @@ import { FaDownload, FaTerminal } from 'react-icons/fa';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { usePublicContent } from '@/hooks/usePublicContent';
 import { Icon } from '@/lib/icon-registry';
+import { SkeletonGrid } from './SkeletonBlocks';
 import Image from 'next/image';
 
 type SocialLink = { id?: string; platform: string; icon: string; url: string };
@@ -36,8 +37,8 @@ const About = ({ showResumeModal, setShowResumeModal, showTerminal, setShowTermi
   const [yearsCount, setYearsCount] = useState(0);
   const [techCount, setTechCount] = useState(0);
 
-  const { data: about } = usePublicContent<AboutContent>('about');
-  const { data: socialLinks } = usePublicContent<SocialLink[]>('social-links');
+  const { data: about, loading: aboutLoading } = usePublicContent<AboutContent>('about');
+  const { data: socialLinks, loading: socialLoading } = usePublicContent<SocialLink[]>('social-links');
   const techIcons = about?.techIcons ?? [];
 
   const techScrollRef = React.useRef<HTMLDivElement>(null);
@@ -275,6 +276,9 @@ const About = ({ showResumeModal, setShowResumeModal, showTerminal, setShowTermi
           </div>
           {/* Social Links */}
           <div className="flex gap-4 relative">
+            {socialLoading && !socialLinks?.length && (
+              <SkeletonGrid count={3} gridClassName="flex gap-4" itemClassName="!rounded-full h-11 w-11" />
+            )}
             {(socialLinks ?? []).map((social) => (
               <a
                 key={social.id ?? social.platform}
@@ -326,6 +330,18 @@ const About = ({ showResumeModal, setShowResumeModal, showTerminal, setShowTermi
             </div>
 
             {/* Floating tech icons */}
+            {aboutLoading && techIcons.length === 0 &&
+              [0, 1, 2, 3].map((index) => (
+                <div
+                  key={index}
+                  className={`absolute animate-pulse ${
+                    index === 0 ? 'top-0 left-0' :
+                    index === 1 ? 'top-0 right-0' :
+                    index === 2 ? 'bottom-0 left-0' :
+                    'bottom-0 right-0'
+                  } h-12 w-12 rounded-full ${isDarkMode ? 'bg-slate-800' : 'bg-slate-100'}`}
+                />
+              ))}
             {techIcons.map((tech, index) => (
               <div
                 key={tech.id ?? tech.name}

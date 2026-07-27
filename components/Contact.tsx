@@ -10,6 +10,7 @@ import { FaPaperPlane } from 'react-icons/fa';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { usePublicContent } from '@/hooks/usePublicContent';
 import { Icon } from '@/lib/icon-registry';
+import { SkeletonGrid } from './SkeletonBlocks';
 
 type SocialLink = { id?: string; platform: string; icon: string; url: string; username?: string | null; color?: string | null };
 type ContactInfoItem = { id?: string; icon: string; label: string; value: string; link?: string | null };
@@ -21,8 +22,8 @@ const Contact = () => {
   const [focusedInput, setFocusedInput] = useState<string | null>(null);
   const { ref, isVisible } = useScrollAnimation(0.1);
 
-  const { data: fetchedSocialMedia } = usePublicContent<SocialLink[]>('social-links');
-  const { data: fetchedContactInfo } = usePublicContent<ContactInfoItem[]>('contact-info');
+  const { data: fetchedSocialMedia, loading: socialLoading } = usePublicContent<SocialLink[]>('social-links');
+  const { data: fetchedContactInfo, loading: contactInfoLoading } = usePublicContent<ContactInfoItem[]>('contact-info');
   const socialMedia = fetchedSocialMedia ?? [];
   const contactInfo = fetchedContactInfo ?? [];
 
@@ -158,6 +159,9 @@ const sendEmail = async (e: React.FormEvent<HTMLFormElement>) => {
               <h3 className={`text-lg font-bold mb-4 ${isDarkMode ? "text-white" : "text-slate-900"}`}>
                 {t("Contact Information")}
               </h3>
+              {contactInfoLoading && contactInfo.length === 0 && (
+                <SkeletonGrid count={2} gridClassName="space-y-4" itemClassName="h-12" />
+              )}
               <div className="space-y-4">
                 {contactInfo.map((info, index) => (
                   <div key={info.id ?? index} className="flex items-start gap-3">
@@ -199,6 +203,9 @@ const sendEmail = async (e: React.FormEvent<HTMLFormElement>) => {
               <h3 className={`text-lg font-bold mb-4 ${isDarkMode ? "text-white" : "text-slate-900"}`}>
                 {t("Connect with me")}
               </h3>
+              {socialLoading && socialMedia.length === 0 && (
+                <SkeletonGrid count={3} gridClassName="space-y-3" itemClassName="h-14" />
+              )}
               <div className="space-y-3">
                 {socialMedia.map((social, index) => (
                   <a

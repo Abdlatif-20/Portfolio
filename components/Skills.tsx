@@ -7,6 +7,7 @@ import { useDarkMode } from "./context";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { usePublicContent } from "@/hooks/usePublicContent";
 import { Icon } from "@/lib/icon-registry";
+import { SkeletonGrid } from "./SkeletonBlocks";
 
 type Skill = { id?: string; name: string; icon: string; level: number; color: string };
 type SkillCategory = { id?: string; title: string; icon: string; color: string; skills: Skill[] };
@@ -18,7 +19,7 @@ const Skills = () => {
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
   const [activeCategoryIndex, setActiveCategoryIndex] = useState(0);
   const { ref, isVisible } = useScrollAnimation(0.1);
-  const { data: fetchedCategories } = usePublicContent<SkillCategory[]>("skill-categories");
+  const { data: fetchedCategories, loading } = usePublicContent<SkillCategory[]>("skill-categories");
   const skillCategories = fetchedCategories ?? [];
 
   useEffect(() => {
@@ -132,6 +133,13 @@ const Skills = () => {
         </header>
 
         {/* Skills Grid - Mobile: Single Card with Navigation, Desktop: Grid */}
+        {loading && skillCategories.length === 0 && (
+          <SkeletonGrid
+            count={4}
+            gridClassName="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8"
+            itemClassName="h-64"
+          />
+        )}
         {skillCategories.length > 0 && (
           <div className="mb-8">
             {/* Mobile Navigation - Category Tabs (Visible on small devices) */}

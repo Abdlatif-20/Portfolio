@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useDarkMode } from "./context";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { usePublicContent } from "@/hooks/usePublicContent";
+import { SkeletonGrid } from "./SkeletonBlocks";
 import { FaBriefcase, FaCalendar, FaMapMarkerAlt, FaExternalLinkAlt, FaBuilding, FaChevronRight, FaChevronDown } from "react-icons/fa";
 
 type Role = {
@@ -34,7 +35,7 @@ const Experience = () => {
   const { t } = useTranslation();
   const { isDarkMode } = useDarkMode();
   const { ref, isVisible } = useScrollAnimation(0.1);
-  const { data: fetchedCompanies } = usePublicContent<Company[]>("experience");
+  const { data: fetchedCompanies, loading } = usePublicContent<Company[]>("experience");
   const companies = fetchedCompanies ?? [];
   const [hoveredCompanyIndex, setHoveredCompanyIndex] = useState<number | null>(null);
   const [expandedCompanies, setExpandedCompanies] = useState<{ [key: string]: boolean }>({});
@@ -64,6 +65,15 @@ const Experience = () => {
             {t("My professional journey and work experience")}
           </p>
         </header>
+
+        {/* Loading skeleton */}
+        {loading && companies.length === 0 && (
+          <SkeletonGrid
+            count={3}
+            gridClassName="space-y-12 md:space-y-16"
+            itemClassName="h-48"
+          />
+        )}
 
         {/* Experience Timeline */}
         <div className="relative">
