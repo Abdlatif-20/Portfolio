@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 async function getOrCreateAbout() {
   const existing = await prisma.aboutContent.findFirst();
   if (existing) return existing;
