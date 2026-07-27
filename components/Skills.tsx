@@ -26,10 +26,6 @@ const Skills = () => {
     return () => clearTimeout(id);
   }, []);
 
-  if (skillCategories.length === 0) {
-    return null;
-  }
-
   const SkillCard = ({ 
     category, 
     categoryIndex, 
@@ -136,58 +132,60 @@ const Skills = () => {
         </header>
 
         {/* Skills Grid - Mobile: Single Card with Navigation, Desktop: Grid */}
-        <div className="mb-8">
-          {/* Mobile Navigation - Category Tabs (Visible on small devices) */}
-          <div className="md:hidden flex items-center justify-center gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
-            {skillCategories.map((category, index) => (
-              <button
-                key={category.title}
-                onClick={() => setActiveCategoryIndex(index)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all duration-300 whitespace-nowrap flex-shrink-0 ${
-                  index === activeCategoryIndex
-                    ? "bg-[#00BD95] text-black shadow-lg [&_svg]:text-black"
-                    : isDarkMode
-                      ? "bg-slate-800 text-white hover:bg-slate-700"
-                      : "bg-slate-200 text-black hover:bg-slate-300"
-                }`}
-                title={t(category.title)}
-              >
-                <span className="text-3xl sm:text-lg"><Icon name={category.icon} /></span>
-                <span className="hidden sm:inline text-sm">{t(category.title)}</span>
-              </button>
-            ))}
-          </div>
+        {skillCategories.length > 0 && (
+          <div className="mb-8">
+            {/* Mobile Navigation - Category Tabs (Visible on small devices) */}
+            <div className="md:hidden flex items-center justify-center gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
+              {skillCategories.map((category, index) => (
+                <button
+                  key={category.title}
+                  onClick={() => setActiveCategoryIndex(index)}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all duration-300 whitespace-nowrap flex-shrink-0 ${
+                    index === activeCategoryIndex
+                      ? "bg-[#00BD95] text-black shadow-lg [&_svg]:text-black"
+                      : isDarkMode
+                        ? "bg-slate-800 text-white hover:bg-slate-700"
+                        : "bg-slate-200 text-black hover:bg-slate-300"
+                  }`}
+                  title={t(category.title)}
+                >
+                  <span className="text-3xl sm:text-lg"><Icon name={category.icon} /></span>
+                  <span className="hidden sm:inline text-sm">{t(category.title)}</span>
+                </button>
+              ))}
+            </div>
 
-          {/* Desktop Grid - Visible on md and above */}
-          <div className="hidden md:grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {skillCategories.map((category, categoryIndex) => (
+            {/* Desktop Grid - Visible on md and above */}
+            <div className="hidden md:grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {skillCategories.map((category, categoryIndex) => (
+                <SkillCard
+                  key={category.title}
+                  category={category}
+                  categoryIndex={categoryIndex}
+                  isDarkMode={isDarkMode}
+                  isVisible={isVisible}
+                  hoveredSkill={hoveredSkill}
+                  setHoveredSkill={setHoveredSkill}
+                  t={t}
+                />
+              ))}
+            </div>
+
+            {/* Mobile Single Card - Visible only on small devices */}
+            <div className="md:hidden">
               <SkillCard
-                key={category.title}
-                category={category}
-                categoryIndex={categoryIndex}
+                key={skillCategories[activeCategoryIndex]?.title}
+                category={skillCategories[activeCategoryIndex] ?? skillCategories[0]}
+                categoryIndex={0}
                 isDarkMode={isDarkMode}
                 isVisible={isVisible}
                 hoveredSkill={hoveredSkill}
                 setHoveredSkill={setHoveredSkill}
                 t={t}
               />
-            ))}
+            </div>
           </div>
-
-          {/* Mobile Single Card - Visible only on small devices */}
-          <div className="md:hidden">
-            <SkillCard
-              key={skillCategories[activeCategoryIndex].title}
-              category={skillCategories[activeCategoryIndex]}
-              categoryIndex={0}
-              isDarkMode={isDarkMode}
-              isVisible={isVisible}
-              hoveredSkill={hoveredSkill}
-              setHoveredSkill={setHoveredSkill}
-              t={t}
-            />
-          </div>
-        </div>
+        )}
       </div>
 
       {/* Add shimmer animation */}
