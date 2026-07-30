@@ -22,7 +22,7 @@ export default function Education() {
   const { isDarkMode } = useDarkMode();
   const { t } = useTranslation();
   const { data: EDUCATION, loading } = usePublicContent<EducationItem[]>('education');
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const { ref, isVisible } = useScrollAnimation(0.1);
 
   const educationItems = EDUCATION ?? [];
