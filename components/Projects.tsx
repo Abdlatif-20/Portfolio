@@ -374,11 +374,18 @@ function ProjectCard({
         </h3>
 
         {/* Description */}
-        <p className={`text-sm mb-4 line-clamp-2 transition-colors duration-300 ${
-          isHovered ? "text-white/90" : isDarkMode ? "text-slate-400" : "text-slate-600"
-        }`}>
-          {t(project.description)}
-        </p>
+        <div className="relative mb-4 group/desc">
+          <p className={`text-sm line-clamp-2 transition-colors duration-300 ${
+            isHovered ? "text-white/90" : isDarkMode ? "text-slate-400" : "text-slate-600"
+          }`}>
+            {t(project.description)}
+          </p>
+          <div className={`absolute left-0 top-0 z-30 w-full rounded-xl p-3 text-sm shadow-2xl opacity-0 invisible scale-95 transition-all duration-200 group-hover/desc:opacity-100 group-hover/desc:visible group-hover/desc:scale-100 ${
+            isDarkMode ? "bg-slate-800 border border-slate-700 text-slate-200" : "bg-white border border-slate-200 text-slate-700"
+          }`}>
+            {t(project.description)}
+          </div>
+        </div>
 
         {/* Tech Stack */}
         <div className="flex flex-wrap gap-2 mb-4">
